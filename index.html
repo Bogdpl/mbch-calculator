@@ -2,13 +2,11 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Калькулятор питательных сред МБЧ</title>
+<title>Калькулятор МБЧ</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* -------------------------------- */
-/*            ГЛОБАЛЬНЫЕ СТИЛИ       */
-/* -------------------------------- */
+/* ---- ГЛАВНЫЕ СТИЛИ (как у тебя, неизменённые) ---- */
 
 body {
     font-family: Arial;
@@ -20,20 +18,431 @@ body {
     transition: 0.3s;
     position: relative;
 }
+body.dark-mode { background: #1a1a1a; color: #e6e6e6; }
 
-/* тёмная тема */
-body.dark-mode {
-    background: #1a1a1a;
-    color: #e6e6e6;
+/* Тема – смещаем вправо */
+.theme-toggle {
+    position: absolute;
+    left: 40px;
+    top: 15px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 0.5px solid rgba(0,0,0,0.3);
+    background: rgba(0,0,0,0.1);
+    color: #333;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+body.dark-mode .theme-toggle {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border-color: rgba(255,255,255,0.5);
 }
 
-/* Заголовок */
-h2 {
-    text-align: center;
+/* Скругления */
+.block, table, button, input, select { border-radius: 20px; }
+.block {
+    padding: 15px; border: 1px solid #ccc; margin-bottom: 20px;
+}
+body.dark-mode .block { border-color: #555; }
+
+/* Имя первой пробы */
+input[type=text] {
+    padding: 14px 18px;
+    border-radius: 16px;
+    border: 1px solid #aaa;
+    width: calc(100% - 35px);
+    font-size: 16px;
+    text-align: left;
     margin-top: 15px;
-    margin-bottom: 20px;
+}
+body.dark-mode input[type=text] { background: #333; color: #fff; border-color: #666; }
+
+/* Имя пробы */
+input.probe-name {
+    width: 120px; padding: 6px 10px;
+    border-radius: 12px; border: 1px solid #aaa;
+    text-align: center;
+}
+body.dark-mode input.probe-name {
+    background: #333; color: #fff; border-color: #666;
 }
 
+/* Счётчик */
+.counter { display: flex; justify-content: center; align-items: center; gap: 18px; }
+.counter button {
+    width: 28px; height: 28px;
+    font-size: 18px; border-radius: 50%;
+    border: 0.5px solid rgba(0,0,0,0.3);
+    background: transparent;
+}
+body.dark-mode .counter button { border-color: rgba(255,255,255,0.3); color: #fff; }
+
+/* Таблица */
+table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+th, td { border: 1px solid #ccc; padding: 6px; text-align: center; }
+body.dark-mode th, body.dark-mode td { border-color: #555; }
+
+/* Кнопки */
+button.calculate-btn {
+    width: 100%; padding: 12px; background: #2d7dff;
+    color: white; border: none; font-size: 18px; margin-top: 15px;
+}
+button.export-btn {
+    width: 100%; padding: 12px;
+    background: rgba(0,180,0,0.3); color: #004d00;
+    border: none; font-size: 18px; margin-top: 10px;
+}
+body.dark-mode button.export-btn {
+    background: rgba(0,255,0,0.18); color: #66ff66;
+}
+
+.delete-btn {
+    background: none; border: none; color: red;
+    font-size: 20px; cursor: pointer;
+}
+body.dark-mode .delete-btn { color: #ff6666; }
+
+/* Итоги */
+.total-line {
+    padding: 3px 0; font-size: 16px;
+    display: flex; justify-content: space-between;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    margin-bottom: 6px;
+}
+body.dark-mode .total-line { border-bottom-color: rgba(255,255,255,0.2); }
+</style>
+</head>
+
+<body>
+<button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+
+<h2>Калькулятор МБЧ</h2>
+
+<div class="block">
+    <h3 style="text-align:center;">Первая проба</h3>
+    <input type="text" id="firstProbe" placeholder="Например: FP-1856">
+</div>
+
+<div class="block">
+    <h3 style="text-align:center;">Количество проб</h3>
+    <div class="counter">
+        <button onclick="changeCount(-1)">−</button>
+        <input type="number" id="sampleCount" value="0" min="0" oninput="updateRows()"
+               style="width:60px;text-align:center;font-size:18px;">
+        <button onclick="changeCount(1)">+</button>
+    </div>
+</div>
+
+<table id="samplesTable">
+    <thead>
+        <tr>
+            <th></th>
+            <th>#</th>
+            <th>Проба</th>
+            <th>Формат</th>
+            <th>Категория</th>
+            <th>1:100</th>
+            <th>1:1000</th>
+            <th>FBR</th>
+            <th>TSA</th>
+            <th>SDA</th>
+            <th>TSB</th>
+            <th>Mossel</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<button class="calculate-btn" onclick="calculateAll()">Рассчитать</button>
+<button class="export-btn" onclick="exportExcel()">Экспортировать в Excel</button>
+
+<h3 style="margin-top:25px;">ИТОГО — Среды:</h3>
+
+<div class="total-line">FBR <span id="sum_fbr">0</span> мл</div>
+<div class="total-line">TSA <span id="sum_tsa">0</span> мл</div>
+<div class="total-line">SDA <span id="sum_sda">0</span> мл</div>
+<div class="total-line">TSB <span id="sum_tsb">0</span> мл</div>
+<div class="total-line">Mossel/MacConkey <span id="sum_mossel">0</span> мл</div>
+
+<h3 style="margin-top:25px;">ИТОГО — Инструменты:</h3>
+
+<div class="total-line">Мельнички <span id="sum_grinders">0</span></div>
+<div class="total-line">Ножницы <span id="sum_scissors">0</span></div>
+<div class="total-line">Ложки <span id="sum_spoons">0</span></div>
+<div class="total-line">Флаконы обычные <span id="sum_bottles">0</span></div>
+<div class="total-line">Флаконы 100 мл <span id="sum_bottles100">0</span></div>
+<div class="total-line">Пробирки <span id="sum_tubes">0</span></div>
+<div class="total-line">Штативы <span id="sum_racks">0</span></div>
+<script>
+
+/* ------------------- Тема ------------------- */
+function toggleTheme() {
+    document.body.classList.toggle("dark-mode");
+    document.querySelector(".theme-toggle").textContent =
+        document.body.classList.contains("dark-mode") ? "☀️" : "🌙";
+}
+
+/* ---------------- автоформат ---------------- */
+function detectFormat(probe) {
+    if (!probe) return "Формат образца";
+    probe = probe.toUpperCase();
+
+    if (probe.startsWith("PPM") || probe.startsWith("PM")) return "Ножницы (фикс.)";
+    if (probe.startsWith("FP")) return "Таблетка";
+    if (probe.startsWith("EX")) return "Формат образца";
+
+    return "Формат образца";
+}
+
+/* ---------------- изменение строки ---------------- */
+function updateAutoFormat(input) {
+    const probe = input.value.trim();
+    const row = input.closest("tr");
+    const formatSel = row.querySelector(".format");
+
+    const detected = detectFormat(probe);
+
+    if (detected === "Ножницы (фикс.)") {
+        formatSel.innerHTML = `<option selected>Ножницы (фикс.)</option>`;
+        formatSel.disabled = true;
+    } else {
+        formatSel.disabled = false;
+        formatSel.innerHTML = `
+            <option>Формат образца</option>
+            <option>Таблетка</option>
+            <option>Капсула</option>
+            <option>Порошок</option>
+        `;
+        formatSel.value = detected;
+    }
+}
+
+/* ------------------- добавление строк ------------------- */
+
+function changeCount(d) {
+    let el = document.getElementById("sampleCount");
+    let v = Number(el.value) + d;
+    if (v < 0) v = 0;
+    el.value = v;
+    updateRows();
+}
+
+function updateRows() {
+    const tbody = document.querySelector("#samplesTable tbody");
+    const need = Number(document.getElementById("sampleCount").value);
+    let cur = tbody.children.length;
+
+    while (cur < need) addRow(cur++);
+    while (cur > need) { tbody.removeChild(tbody.lastElementChild); cur--; }
+
+    renumber();
+}
+
+/* имя генерации */
+function parseProbe(name) {
+    let m = name.match(/^([A-Za-z]+)-?(\d+)$/);
+    if (!m) return null;
+    return { p: m[1], n: Number(m[2]) };
+}
+function generateProbeName(base, offset) {
+    let o = parseProbe(base);
+    if (!o) return base;
+    return o.p + "-" + (o.n + offset);
+}
+
+/* НАСЛЕДОВАНИЕ формата и категории */
+function getLastFormatAndCat() {
+    const rows = document.querySelectorAll("#samplesTable tbody tr");
+    if (rows.length === 0) return { format: "Формат образца", cat: "2.2" };
+
+    const last = rows[rows.length - 1];
+
+    return {
+        format: last.querySelector(".format").value,
+        cat: last.querySelector(".cat").value
+    };
+}
+
+/* добавление строки */
+function addRow(index) {
+    const tbody = document.querySelector("#samplesTable tbody");
+
+    const row = document.createElement("tr");
+
+    /* первая проба автоинкремент */
+    let first = document.getElementById("firstProbe").value.trim();
+    let probeValue = first ? generateProbeName(first, index) : "";
+
+    /* наследование */
+    let prev = getLastFormatAndCat();
+
+    row.innerHTML = `
+        <td><button class="delete-btn" onclick="deleteRow(this)">✖</button></td>
+        <td class="rownum"></td>
+
+        <td><input type="text" class="probe-name"
+            value="${probeValue}" oninput="updateAutoFormat(this)"></td>
+
+        <td>
+            <select class="format">
+                <option>Формат образца</option>
+                <option>Таблетка</option>
+                <option>Капсула</option>
+                <option>Порошок</option>
+            </select>
+        </td>
+
+        <td>
+            <select class="cat">
+                <option value="2.2">2.2</option>
+                <option value="3A">3A</option>
+                <option value="4.2">4.2</option>
+                <option value="1.2Б">1.2Б</option>
+                <option value="1.2Б+2.2">1.2Б+2.2</option>
+            </select>
+        </td>
+
+        <td><input type="checkbox" class="d100"></td>
+        <td><input type="checkbox" class="d1000"></td>
+
+        <td class="fbr">0</td>
+        <td class="tsa">0</td>
+        <td class="sda">0</td>
+        <td class="tsb">0</td>
+        <td class="mossel">0</td>
+    `;
+
+    tbody.appendChild(row);
+
+    /* автоформат */
+    updateAutoFormat(row.querySelector(".probe-name"));
+
+    /* НАСЛЕДОВАНИЕ */
+    let formatSel = row.querySelector(".format");
+
+    if (!formatSel.disabled) formatSel.value = prev.format;
+
+    row.querySelector(".cat").value = prev.cat;
+
+    renumber();
+}
+
+function deleteRow(btn) {
+    btn.closest("tr").remove();
+    renumber();
+    document.getElementById("sampleCount").value =
+        document.querySelectorAll("#samplesTable tbody tr").length;
+}
+
+function renumber() {
+    document.querySelectorAll("#samplesTable tbody tr").forEach((tr, i) => {
+        tr.querySelector(".rownum").textContent = i + 1;
+    });
+}
+/* -------------------- РАСЧЁТ -------------------- */
+function calculateAll() {
+    const rows = document.querySelectorAll("#samplesTable tbody tr");
+
+    let totalFBR = 0, totalTSA = 0, totalSDA = 0, totalTSB = 0, totalMoss = 0;
+
+    let grinders = 0, scissors = 0, spoons = 0;
+    let bottles = 0, bottles100 = 0;
+    let tubes = 0;
+
+    rows.forEach(row => {
+
+        const cat = row.querySelector(".cat").value;
+        const d100 = row.querySelector(".d100").checked;
+        const d1000 = row.querySelector(".d1000").checked;
+        const format = row.querySelector(".format").value;
+
+        /* базовая логика сред */
+        let fbr = 90 + (d100 ? 90 : 0) + (d1000 ? 90 : 0);
+        let tsa = 25;
+        let sda = 25;
+
+        let tsb = 100;
+        let moss = 0;
+
+        if (cat === "4.2") { moss = 27; tsb = 190; }
+        if (cat === "1.2Б" || cat === "1.2Б+2.2") moss = 100;
+
+        /* суммирование */
+        totalFBR += fbr; totalTSA += tsa; totalSDA += sda;
+        totalTSB += tsb; totalMoss += moss;
+
+        /* вывод */
+        row.querySelector(".fbr").textContent = fbr;
+        row.querySelector(".tsa").textContent = tsa;
+        row.querySelector(".sda").textContent = sda;
+        row.querySelector(".tsb").textContent = tsb;
+        row.querySelector(".mossel").textContent = moss;
+
+        /* инструменты */
+        if (format === "Таблетка") grinders++;
+        if (format === "Порошок") spoons++;
+        if (format === "Ножницы (фикс.)") scissors++;
+
+        /* флаконы */
+        if (cat === "1.2Б" || cat === "1.2Б+2.2") bottles100++;
+        else bottles++;
+
+        /* пробирки */
+        if (cat === "4.2") tubes += 3;
+    });
+
+    /* вывод итогов */
+    document.getElementById("sum_fbr").textContent = totalFBR;
+    document.getElementById("sum_tsa").textContent = totalTSA;
+    document.getElementById("sum_sda").textContent = totalSDA;
+    document.getElementById("sum_tsb").textContent = totalTSB;
+    document.getElementById("sum_mossel").textContent = totalMoss;
+
+    document.getElementById("sum_grinders").textContent = grinders;
+    document.getElementById("sum_scissors").textContent = scissors;
+    document.getElementById("sum_spoons").textContent = spoons;
+    document.getElementById("sum_bottles").textContent = bottles;
+    document.getElementById("sum_bottles100").textContent = bottles100;
+    document.getElementById("sum_tubes").textContent = tubes;
+    document.getElementById("sum_racks").textContent = Math.ceil(tubes / 40);
+}
+
+/* -------------------- ЭКСПОРТ -------------------- */
+function exportExcel() {
+    calculateAll();
+
+    let csv =
+        "Среда,мл\n" +
+        "FBR," + sum_fbr.textContent + "\n" +
+        "TSA," + sum_tsa.textContent + "\n" +
+        "SDA," + sum_sda.textContent + "\n" +
+        "TSB," + sum_tsb.textContent + "\n" +
+        "Mossel," + sum_mossel.textContent + "\n\n" +
+
+        "Инструмент,кол-во\n" +
+        "Мельнички," + sum_grinders.textContent + "\n" +
+        "Ножницы," + sum_scissors.textContent + "\n" +
+        "Ложки," + sum_spoons.textContent + "\n" +
+        "Флаконы обычные," + sum_bottles.textContent + "\n" +
+        "Флаконы 100 мл," + sum_bottles100.textContent + "\n" +
+        "Пробирки," + sum_tubes.textContent + "\n" +
+        "Штативы," + sum_racks.textContent + "\n";
+
+    let blob = new Blob([csv], {type:"text/csv"});
+    let link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "mbch_media_and_tools.csv";
+    link.click();
+}
+
+</script>
+</body>
+</html>
 /* -------------------------------- */
 /*    ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ (НОВЫЙ)     */
 /* -------------------------------- */
@@ -454,5 +863,6 @@ function exportExcel() {
 </script>
 </body>
 </html>
+
 
 
