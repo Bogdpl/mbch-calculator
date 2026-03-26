@@ -6,138 +6,667 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ---- ГЛАВНЫЕ СТИЛИ (как у тебя, неизменённые) ---- */
-
-body {
-    font-family: Arial;
-    padding: 20px;
-    max-width: 750px;
-    margin: auto;
-    background: #ffffff;
-    color: #000000;
-    transition: 0.3s;
-    position: relative;
+:root {
+    --bg: #ffffff;
+    --text: #000000;
+    --muted-border: rgba(0,0,0,0.18);
+    --soft-bg: rgba(0,0,0,0.03);
+    --soft-icon: rgba(0,0,0,0.06);
+    --table-border: #ccc;
+    --input-border: #aaa;
+    --blue: #2d7dff;
 }
-body.dark-mode { background: #1a1a1a; color: #e6e6e6; }
+* { box-sizing: border-box; }
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    transition: 0.3s;
+    overflow-x: hidden;
+}
+.app-shell {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+.app-main {
+    max-width: 750px;
+    margin: 0 auto;
+}
+.desktop-guide {
+    display: none;
+}
+body.dark-mode {
+    --bg: #1a1a1a;
+    --text: #e6e6e6;
+    --muted-border: rgba(255,255,255,0.20);
+    --soft-bg: rgba(255,255,255,0.05);
+    --soft-icon: rgba(255,255,255,0.09);
+    --table-border: #555;
+    --input-border: #666;
+}
 
-/* Тема – смещаем вправо */
-.theme-toggle {
-    position: absolute;
-    left: 40px;
-    top: 15px;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 0.5px solid rgba(0,0,0,0.3);
-    background: rgba(0,0,0,0.1);
-    color: #333;
-    font-size: 18px;
-    cursor: pointer;
+.header-bar {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+.header-left h2 {
+    margin: 0;
+}
+.header-bar h2 {
+    margin: 0;
+    font-size: clamp(28px, 5vw, 46px);
+    line-height: 1.05;
+}
+.theme-toggle {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: var(--soft-icon);
+    color: #333;
+    cursor: pointer;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
+    padding: 0;
+    margin-right: 4px;
 }
-body.dark-mode .theme-toggle {
-    background: rgba(255,255,255,0.15);
-    color: #fff;
-    border-color: rgba(255,255,255,0.5);
-}
+body.dark-mode .theme-toggle { color: #fff; }
 
-/* Скругления */
 .block, table, button, input, select { border-radius: 20px; }
 .block {
-    padding: 15px; border: 1px solid #ccc; margin-bottom: 20px;
+    padding: 28px;
+    border: 1px solid var(--table-border);
+    margin-bottom: 20px;
 }
-body.dark-mode .block { border-color: #555; }
 
-/* Имя первой пробы */
 input[type=text] {
     padding: 14px 18px;
     border-radius: 16px;
-    border: 1px solid #aaa;
-    width: calc(100% - 35px);
+    border: 1px solid var(--input-border);
+    width: 100%;
     font-size: 16px;
     text-align: left;
     margin-top: 15px;
-}
-body.dark-mode input[type=text] { background: #333; color: #fff; border-color: #666; }
-
-/* Имя пробы */
-input.probe-name {
-    width: 120px; padding: 6px 10px;
-    border-radius: 12px; border: 1px solid #aaa;
-    text-align: center;
-}
-body.dark-mode input.probe-name {
-    background: #333; color: #fff; border-color: #666;
-}
-
-/* Счётчик */
-.counter { display: flex; justify-content: center; align-items: center; gap: 18px; }
-.counter button {
-    width: 28px; height: 28px;
-    font-size: 18px; border-radius: 50%;
-    border: 0.5px solid rgba(0,0,0,0.3);
     background: transparent;
+    color: inherit;
 }
-body.dark-mode .counter button { border-color: rgba(255,255,255,0.3); color: #fff; }
 
-/* Таблица */
+input.probe-name {
+    width: 120px;
+    padding: 6px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--input-border);
+    text-align: center;
+    margin-top: 0;
+}
+
+.counter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+}
+.counter button {
+    width: 28px;
+    height: 28px;
+    font-size: 18px;
+    border-radius: 50%;
+    border: 0.5px solid var(--muted-border);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition: background .18s ease, transform .18s ease, opacity .18s ease;
+}
+.counter button:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+.counter button:not(:disabled):hover,
+.prefix-tab:hover,
+.theme-toggle:hover,
+.guide-close:hover,
+.guide-fab:hover {
+    background: rgba(0,0,0,0.06);
+}
+body.dark-mode .counter button:not(:disabled):hover,
+body.dark-mode .prefix-tab:hover,
+body.dark-mode .theme-toggle:hover,
+body.dark-mode .guide-close:hover,
+body.dark-mode .guide-fab:hover {
+    background: rgba(255,255,255,0.10);
+}
+.calculate-btn {
+    transition: filter .18s ease, transform .18s ease;
+}
+.calculate-btn:hover {
+    filter: brightness(.96);
+}
+.prefix-tab,
+.theme-toggle,
+.guide-close,
+.guide-fab {
+    transition: background .18s ease, transform .18s ease, opacity .18s ease;
+}
+.counter .counter-trash {
+    width: 38px;
+    height: 38px;
+    border: none;
+    background: var(--soft-icon);
+    flex: 0 0 auto;
+}
+.counter .counter-trash svg {
+    width: 18px;
+    height: 18px;
+}
+.counter .counter-trash:hover,
+.theme-toggle:hover,
+.guide-close:hover {
+    background: rgba(0,0,0,0.10);
+}
+body.dark-mode .counter .counter-trash:hover,
+body.dark-mode .theme-toggle:hover,
+body.dark-mode .guide-close:hover {
+    background: rgba(255,255,255,0.14);
+}
+
+.counter-input {
+    width: 120px !important;
+    text-align: center !important;
+    font-size: 18px !important;
+    padding: 10px 8px !important;
+    margin-top: 0 !important;
+}
+
+.hint {
+    text-align: center;
+    font-size: 13px;
+    opacity: 0.7;
+    margin-top: 12px;
+}
+
+.prefix-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+    justify-content: center;
+}
+.prefix-tab {
+    border: 1px solid var(--muted-border);
+    background: transparent;
+    color: inherit;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.prefix-tab:active {
+    transform: translateY(1px);
+}
+
+
+.table-wrap {
+    margin-top: 15px;
+}
+.table-wrap table {
+    margin-top: 0;
+}
+@media (max-width: 900px) {
+    .table-wrap {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 20px;
+    }
+    .table-wrap table {
+        min-width: 920px;
+    }
+    .table-wrap::-webkit-scrollbar {
+        height: 8px;
+    }
+    .table-wrap::-webkit-scrollbar-thumb {
+        background: var(--muted-border);
+        border-radius: 999px;
+    }
+    .table-wrap::-webkit-scrollbar-track {
+        background: transparent;
+    }
+}
 table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-th, td { border: 1px solid #ccc; padding: 6px; text-align: center; }
-body.dark-mode th, body.dark-mode td { border-color: #555; }
+th, td { border: 1px solid var(--table-border); padding: 6px; text-align: center; }
 
-/* Кнопки */
 button.calculate-btn {
-    width: 100%; padding: 12px; background: #2d7dff;
-    color: white; border: none; font-size: 18px; margin-top: 15px;
+    width: 100%;
+    padding: 12px;
+    background: var(--blue);
+    color: white;
+    border: none;
+    font-size: 18px;
+    margin-top: 15px;
+    transition: background .18s ease, transform .18s ease;
 }
-button.export-btn {
-    width: 100%; padding: 12px;
-    background: rgba(0,180,0,0.3); color: #004d00;
-    border: none; font-size: 18px; margin-top: 10px;
-}
-body.dark-mode button.export-btn {
-    background: rgba(0,255,0,0.18); color: #66ff66;
+.calculate-btn:hover {
+    background: #256de0;
 }
 
 .delete-btn {
-    background: none; border: none; color: red;
-    font-size: 20px; cursor: pointer;
+    background: none;
+    border: none;
+    color: #d7263d;
+    font-size: 20px;
+    cursor: pointer;
 }
-body.dark-mode .delete-btn { color: #ff6666; }
 
-/* Итоги */
+.total-box {
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 30px;
+    border: 1px solid var(--muted-border);
+    background: var(--soft-bg);
+}
+
+.total-title {
+    margin: 0 0 14px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icon-circle,
+.line-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--soft-icon);
+    color: inherit;
+    border: none;
+}
+.icon-circle {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+}
+.line-icon {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+}
+.icon-circle svg,
+.line-icon svg,
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.line-icon img {
+    width: 18px;
+    height: 18px;
+    display: block;
+    object-fit: contain;
+}
+.theme-toggle svg {
+    width: 22px;
+    height: 22px;
+}
+
 .total-line {
-    padding: 3px 0; font-size: 16px;
-    display: flex; justify-content: space-between;
-    border-bottom: 1px solid rgba(0,0,0,0.2);
+    padding: 10px 0;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--muted-border);
     margin-bottom: 6px;
 }
-body.dark-mode .total-line { border-bottom-color: rgba(255,255,255,0.2); }
+.total-line:last-child { border-bottom: none; margin-bottom: 0; }
+
+.total-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.guide-card {
+    position: sticky;
+    top: 20px;
+    padding: 22px;
+    border: 1px solid var(--table-border);
+    border-radius: 28px;
+    background: var(--soft-bg);
+    transform-origin: top left;
+    transition: transform .35s ease, opacity .35s ease, filter .35s ease;
+}
+.guide-fab {
+    display: none;
+}
+
+
+.guide-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.guide-head h3 {
+    margin: 0;
+    font-size: 26px;
+}
+.guide-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: var(--soft-icon);
+    color: inherit;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+}
+.guide-step {
+    border: 1px solid var(--muted-border);
+    border-radius: 22px;
+    padding: 16px;
+    margin-bottom: 14px;
+    background: var(--bg);
+}
+.guide-shot {
+    border: 1px solid var(--muted-border);
+    border-radius: 18px;
+    padding: 14px;
+    margin-top: 10px;
+    background: var(--soft-bg);
+}
+.mini-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 8px;
+}
+.mini-pill {
+    min-width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 1px solid var(--muted-border);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+}
+.mini-input {
+    flex: 1;
+    height: 38px;
+    border-radius: 14px;
+    border: 1px solid var(--muted-border);
+    background: var(--bg);
+}
+.mini-table {
+    margin-top: 10px;
+    border: 1px solid var(--muted-border);
+    border-radius: 16px;
+    overflow: hidden;
+}
+.mini-table div {
+    padding: 8px 10px;
+    border-top: 1px solid var(--muted-border);
+}
+.mini-table div:first-child {
+    border-top: none;
+}
+.mini-note {
+    opacity: .75;
+    font-size: 14px;
+    line-height: 1.45;
+}
+.guide-expression {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+}
+.guide-expression .muted {
+    opacity: .2;
+    color: #000;
+}
+body.dark-mode .guide-expression .muted {
+    color: #fff;
+}
+.guide-expression .strong {
+    opacity: 1;
+}
+.mini-select {
+    height: 42px;
+    border: 1px solid var(--muted-border);
+    border-radius: 14px;
+    background: var(--bg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 14px;
+    margin-top: 10px;
+    font-size: 15px;
+}
+.mini-select-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+.mini-prefix-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+.mini-prefix {
+    min-width: 44px;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid var(--muted-border);
+    background: var(--bg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+@media (min-width: 1100px) {
+    .app-shell {
+        display: grid;
+        grid-template-columns: 360px minmax(0, 1fr);
+        gap: 28px;
+        align-items: start;
+        padding: 0 20px 24px;
+    }
+    .desktop-guide {
+        display: block;
+        position: relative;
+        min-height: 120px;
+    }
+    .app-main {
+        max-width: 750px;
+        margin: 0;
+        width: 100%;
+        transition: max-width .35s ease, margin .35s ease;
+    }
+    .guide-fab {
+        position: fixed;
+        left: calc(max(20px, (100vw - 1100px) / 2) - 91px);
+        top: 86px;
+        width: 56px;
+        height: 56px;
+        border: 1px solid var(--muted-border);
+        border-radius: 50%;
+        background: var(--bg);
+        color: inherit;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        line-height: 1;
+        opacity: 0;
+        transform: translateY(12px) scale(.82);
+        pointer-events: none;
+        transition: transform .35s ease, opacity .35s ease;
+        z-index: 30;
+    }
+    .app-shell.guide-collapsed .guide-card {
+        opacity: 0;
+        transform: translateY(36px) scale(.18);
+        filter: blur(1px);
+        pointer-events: none;
+    }
+    .app-shell.guide-collapsed .guide-fab {
+        display: inline-flex;
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+    }
+    .app-shell.guide-collapsed .app-main {
+        max-width: 1100px;
+        width: 100%;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 520px) {
+    body { padding: 16px; }
+    .header-bar h2 { font-size: 30px; }
+    .block { padding: 20px; }
+    .counter-input { width: 128px !important; }
+    input[type=text] { font-size: 16px; }
+}
 </style>
 </head>
 
 <body>
-<button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+<div class="app-shell">
+    <aside class="desktop-guide" id="desktopGuide">
+        <div class="guide-card">
+            <div class="guide-head">
+                <h3>Как пользоваться</h3>
+                <button class="guide-close" onclick="closeGuide()" aria-label="Закрыть подсказку">×</button>
+            </div>
 
-<h2>Калькулятор МБЧ</h2>
+            <div class="guide-step">
+                <b>1. Начало кода важно</b>
+                <div class="mini-note">Если в начале стоит <b>FP</b>, формат автоматически подставится как <b>«Таблетка»</b>. Потом его можно сменить вручную.</div>
+                <div class="guide-shot">
+                    <div class="mini-input" style="display:flex;align-items:center;padding:0 14px;">FP-1535</div>
+                    <div class="mini-select">Таблетка</div>
+                </div>
+            </div>
+
+            <div class="guide-step">
+                <b>2. Количество можно дописывать</b>
+                <div class="mini-note">В поле количества можно писать не только число, но и прибавление / уменьшение.</div>
+                <div class="guide-shot">
+                    <div class="guide-expression">
+                        <span class="muted">2</span>
+                        <span class="strong">+</span>
+                        <span class="muted">5</span>
+                    </div>
+                    <div class="mini-note" style="margin-top:10px;">Например: <b>2+5</b>, <b>+5</b>, <b>-2</b>.</div>
+                </div>
+            </div>
+
+            <div class="guide-step">
+                <b>3. Начало кода управляет подстановкой</b>
+                <div class="mini-note"><b>PPM</b> и <b>PM</b> фиксируют формат <b>«Ножницы (фикс.)»</b>. Для <b>FP</b> автоматически подставляется <b>«Таблетка»</b>.</div>
+                <div class="guide-shot">
+                    <div class="mini-select-row">
+                        <div class="mini-select">PPM, PM → Ножницы (фикс.)</div>
+                        <div class="mini-select">FP → Таблетка</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="guide-step">
+                <b>4. Следующая строка наследует прошлый выбор</b>
+                <div class="mini-note">Когда добавляешь новую пробу, калькулятор подтягивает предыдущие выбранные параметры: категорию, формат и разведения. Это ускоряет заполнение одинаковых серий.</div>
+                <div class="guide-shot">
+                    <div class="mini-table">
+                        <div>1  FP-1535  Таблетка  2.2  1:100</div>
+                        <div>2  FP-1536  Таблетка  2.2  1:100</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="guide-step">
+                <b>5. Проверь таблицу и нажми “Рассчитать”</b>
+                <div class="mini-note">Таблицу можно редактировать вручную. На выходе вы получите расчёт сред и инструментов — пользуйтесь 😊</div>
+                <div class="guide-shot">
+                    <div class="mini-table">
+                        <div>#  Проба  Формат</div>
+                        <div>1  FP-1535  Таблетка</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="guide-fab" type="button" onclick="openGuide()" aria-label="Открыть подсказку" title="Открыть подсказку">?</button>
+    </aside>
+    <main class="app-main">
+
+<div class="header-bar">
+    <div class="header-left">
+        <h2>Калькулятор МБЧ</h2>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" aria-label="Сменить тему"></button>
+    </div>
+</div>
 
 <div class="block">
     <h3 style="text-align:center;">Первая проба</h3>
-    <input type="text" id="firstProbe" placeholder="Например: FP-1856">
+    <input type="text" id="firstProbe" placeholder="Например: FP-1856" oninput="refreshCountControls()">
+    <div class="prefix-tabs">
+        <button class="prefix-tab" type="button" onclick="applyPrefix('FP')">FP</button>
+        <button class="prefix-tab" type="button" onclick="applyPrefix('PPM')">PPM</button>
+        <button class="prefix-tab" type="button" onclick="applyPrefix('EX')">EX</button>
+        <button class="prefix-tab" type="button" onclick="applyPrefix('PM')">PM</button>
+        <button class="prefix-tab" type="button" onclick="applyPrefix('API')">API</button>
+        <button class="prefix-tab" type="button" onclick="applyPrefix('IP')">IP</button>
+    </div>
 </div>
 
 <div class="block">
     <h3 style="text-align:center;">Количество проб</h3>
     <div class="counter">
-        <button onclick="changeCount(-1)">−</button>
-        <input type="number" id="sampleCount" value="0" min="0" oninput="updateRows()"
-               style="width:60px;text-align:center;font-size:18px;">
-        <button onclick="changeCount(1)">+</button>
+        <button class="count-minus" onclick="changeCount(-1)" aria-label="Уменьшить количество проб">−</button>
+        <input type="text" id="sampleCount" value="0" inputmode="text" autocapitalize="off" autocorrect="off" spellcheck="false" onblur="updateRows()" onkeydown="handleCountKey(event)" class="counter-input" disabled>
+        <button class="count-plus" onclick="changeCount(1)" aria-label="Увеличить количество проб" disabled>+</button>
+        <button class="theme-toggle counter-trash" onclick="clearAllSamples()" aria-label="Удалить все пробы" title="Удалить все пробы">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M7 6l1 12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2l1-12"></path><path d="M10 10v6"></path><path d="M14 10v6"></path></svg>
+        </button>
     </div>
+    <div class="hint">Можно писать 12, 2+10, +5 или -2</div>
 </div>
 
+<div class="table-wrap">
 <table id="samplesTable">
     <thead>
         <tr>
@@ -157,37 +686,117 @@ body.dark-mode .total-line { border-bottom-color: rgba(255,255,255,0.2); }
     </thead>
     <tbody></tbody>
 </table>
+</div>
 
 <button class="calculate-btn" onclick="calculateAll()">Рассчитать</button>
-<button class="export-btn" onclick="exportExcel()">Экспортировать в Excel</button>
 
-<h3 style="margin-top:25px;">ИТОГО — Среды:</h3>
+<div class="total-box">
+    <h3 class="total-title">
+        <span class="icon-circle" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M7 9h10"></path><path d="M7 15h10"></path></svg>
+        </span>
+        <span>ИТОГО — Среды:</span>
+    </h3>
 
-<div class="total-line">FBR <span id="sum_fbr">0</span> мл</div>
-<div class="total-line">TSA <span id="sum_tsa">0</span> мл</div>
-<div class="total-line">SDA <span id="sum_sda">0</span> мл</div>
-<div class="total-line">TSB <span id="sum_tsb">0</span> мл</div>
-<div class="total-line">Mossel/MacConkey <span id="sum_mossel">0</span> мл</div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><path d="M9 3v8l-5 8a2 2 0 0 0 1.7 3h12.6A2 2 0 0 0 20 19l-5-8V3"></path><path d="M7 14h10"></path></svg></span>FBR</span><span><span id="sum_fbr">0</span> мл</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="8" rx="7" ry="2.5"></ellipse><path d="M5 8v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V8"></path><ellipse cx="12" cy="14" rx="7" ry="2.5"></ellipse></svg></span>TSA</span><span><span id="sum_tsa">0</span> мл</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="8" rx="7" ry="2.5"></ellipse><path d="M5 8v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V8"></path><ellipse cx="12" cy="14" rx="7" ry="2.5"></ellipse></svg></span>SDA</span><span><span id="sum_sda">0</span> мл</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><path d="M9 3v8l-5 8a2 2 0 0 0 1.7 3h12.6A2 2 0 0 0 20 19l-5-8V3"></path><path d="M8 17h8"></path></svg></span>TSB</span><span><span id="sum_tsb">0</span> мл</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><path d="M10 3v9"></path><path d="M14 3v9"></path><path d="M10 12l-3 7a1.5 1.5 0 0 0 1.4 2h7.2A1.5 1.5 0 0 0 17 19l-3-7"></path><path d="M9.5 15h5"></path></svg></span>Mossel/MacConkey</span><span><span id="sum_mossel">0</span> мл</span></div>
+</div>
 
-<h3 style="margin-top:25px;">ИТОГО — Инструменты:</h3>
+<div class="total-box">
+    <h3 class="total-title">
+        <span class="icon-circle" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M7 9h10"></path><path d="M7 15h10"></path></svg>
+        </span>
+        <span>ИТОГО — Инструменты:</span>
+    </h3>
 
-<div class="total-line">Мельнички <span id="sum_grinders">0</span></div>
-<div class="total-line">Ножницы <span id="sum_scissors">0</span></div>
-<div class="total-line">Ложки <span id="sum_spoons">0</span></div>
-<div class="total-line">Флаконы обычные <span id="sum_bottles">0</span></div>
-<div class="total-line">Флаконы 100 мл <span id="sum_bottles100">0</span></div>
-<div class="total-line">Пробирки <span id="sum_tubes">0</span></div>
-<div class="total-line">Штативы <span id="sum_racks">0</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"></circle><path d="M12 4l2 5-2 1-2-1z"></path><path d="M20 12l-5 2-1-2 1-2z"></path><path d="M12 20l-2-5 2-1 2 1z"></path><path d="M4 12l5-2 1 2-1 2z"></path></svg></span>Мельнички</span><span id="sum_grinders">0</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><circle cx="7" cy="8" r="2.3"></circle><circle cx="7" cy="16" r="2.3"></circle><path d="M9 9l8-5"></path><path d="M9 15l8 5"></path><path d="M9 10.5l4 1.5"></path><path d="M9 13.5l4-1.5"></path></svg></span>Ножницы</span><span id="sum_scissors">0</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><ellipse cx="9" cy="8" rx="3.2" ry="4.1"></ellipse><path d="M11.2 10.8L18.6 18.2"></path></svg></span>Ложки</span><span id="sum_spoons">0</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><path d="M9 3h6"></path><path d="M10 3v4"></path><path d="M14 3v4"></path><path d="M8 7h8v12a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z"></path></svg></span>Флаконы обычные</span><span id="sum_bottles">0</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><path d="M9 3h6"></path><path d="M10 3v4"></path><path d="M14 3v4"></path><path d="M8 7h8v12a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z"></path><path d="M10 12h4"></path></svg></span>Флаконы 100 мл</span><span id="sum_bottles100">0</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><path d="M9 3v8l-5 8a2 2 0 0 0 1.7 3h12.6A2 2 0 0 0 20 19l-5-8V3"></path></svg></span>Пробирки</span><span id="sum_tubes">0</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path><path d="M7 7v10"></path><path d="M12 7v10"></path><path d="M17 7v10"></path></svg></span>Штативы</span><span id="sum_racks">0</span></div>
+</div>
+
+
+    </main>
+</div>
 <script>
-
-/* ------------------- Тема ------------------- */
-function toggleTheme() {
-    document.body.classList.toggle("dark-mode");
-    document.querySelector(".theme-toggle").textContent =
-        document.body.classList.contains("dark-mode") ? "☀️" : "🌙";
+function setThemeIcon() {
+    const btn = document.getElementById('themeToggle');
+    const dark = document.body.classList.contains('dark-mode');
+    btn.innerHTML = dark
+        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.9 4.9l1.4 1.4"></path><path d="M17.7 17.7l1.4 1.4"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M4.9 19.1l1.4-1.4"></path><path d="M17.7 6.3l1.4-1.4"></path></svg>'
+        : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"></path></svg>';
 }
 
-/* ---------------- автоформат ---------------- */
+function toggleTheme() {
+    document.body.classList.toggle("dark-mode");
+    setThemeIcon();
+refreshCountControls();
+}
+
+function closeGuide() {
+    const shell = document.querySelector('.app-shell');
+    if (shell) shell.classList.add('guide-collapsed');
+    try { localStorage.setItem('mbchGuideClosed', '1'); } catch(e) {}
+}
+
+function openGuide() {
+    const shell = document.querySelector('.app-shell');
+    if (shell) shell.classList.remove('guide-collapsed');
+    try { localStorage.setItem('mbchGuideClosed', '0'); } catch(e) {}
+}
+
+function handleCountKey(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        updateRows();
+        event.target.blur();
+    }
+}
+
+function applyPrefix(prefix) {
+    const input = document.getElementById("firstProbe");
+    const current = (input.value || "").trim();
+
+    let suffix = "";
+    const match = current.match(/^(?:FP|PPM|EX|PM|API|IP)-?(.*)$/i);
+    if (match) {
+        suffix = match[1];
+    } else if (current) {
+        suffix = current.replace(/^[-\s]+/, "");
+    }
+
+    input.value = suffix ? `${prefix}-${suffix}` : `${prefix}-`;
+    refreshCountControls();
+    input.focus();
+    const end = input.value.length;
+    try { input.setSelectionRange(end, end); } catch(e) {}
+}
+
+function hasValidProbePrefix(value) {
+    return /^(FP|PPM|EX|PM|API|IP)(-|\d|$)/i.test(String(value || "").trim());
+}
+
+function refreshCountControls() {
+    const valid = hasValidProbePrefix(document.getElementById("firstProbe").value);
+    const countInput = document.getElementById("sampleCount");
+    const plusBtn = document.querySelector(".count-plus");
+
+    if (countInput) countInput.disabled = !valid;
+    if (plusBtn) plusBtn.disabled = !valid;
+
+    if (!valid) {
+        const rows = document.querySelectorAll("#samplesTable tbody tr").length;
+        if (countInput && rows === 0) countInput.value = "0";
+    }
+}
+
 function detectFormat(probe) {
     if (!probe) return "Формат образца";
     probe = probe.toUpperCase();
@@ -199,7 +808,6 @@ function detectFormat(probe) {
     return "Формат образца";
 }
 
-/* ---------------- изменение строки ---------------- */
 function updateAutoFormat(input) {
     const probe = input.value.trim();
     const row = input.closest("tr");
@@ -211,6 +819,7 @@ function updateAutoFormat(input) {
         formatSel.innerHTML = `<option selected>Ножницы (фикс.)</option>`;
         formatSel.disabled = true;
     } else {
+        const current = formatSel.value;
         formatSel.disabled = false;
         formatSel.innerHTML = `
             <option>Формат образца</option>
@@ -218,76 +827,124 @@ function updateAutoFormat(input) {
             <option>Капсула</option>
             <option>Порошок</option>
         `;
-        formatSel.value = detected;
+        formatSel.value = detected !== 'Формат образца' ? detected : (current || 'Формат образца');
     }
 }
 
-/* ------------------- добавление строк ------------------- */
+function parseCountExpression(rawValue, currentCount) {
+    const raw = String(rawValue || "").replace(/\s+/g, "");
+    if (!raw) return currentCount;
+
+    if (/^\d+$/.test(raw)) return Number(raw);
+
+    if (/^\d+(?:[+-]\d+)+$/.test(raw)) {
+        const tokens = raw.match(/[+-]?\d+/g) || [];
+        let total = 0;
+        tokens.forEach((token, index) => {
+            if (index === 0 && !token.startsWith("+") && !token.startsWith("-")) total += Number(token);
+            else total += Number(token);
+        });
+        return Math.max(0, total);
+    }
+
+    if (/^[+-]\d+$/.test(raw)) return Math.max(0, currentCount + Number(raw));
+
+    return currentCount;
+}
+
+function normalizeCountInput(value) {
+    document.getElementById("sampleCount").value = String(value);
+}
 
 function changeCount(d) {
-    let el = document.getElementById("sampleCount");
-    let v = Number(el.value) + d;
-    if (v < 0) v = 0;
-    el.value = v;
-    updateRows();
+    if (d > 0 && !hasValidProbePrefix(document.getElementById("firstProbe").value)) {
+        alert("Сначала укажи начало названия пробы: FP, PPM, EX, PM, API или IP.");
+        return;
+    }
+
+    const tbody = document.querySelector("#samplesTable tbody");
+    const current = tbody.children.length;
+    const next = Math.max(0, current + d);
+    normalizeCountInput(next);
+    updateRows(next);
 }
 
-function updateRows() {
+function updateRows(forcedNeed = null) {
     const tbody = document.querySelector("#samplesTable tbody");
-    const need = Number(document.getElementById("sampleCount").value);
-    let cur = tbody.children.length;
+    const cur = tbody.children.length;
+    const need = forcedNeed === null
+        ? parseCountExpression(document.getElementById("sampleCount").value, cur)
+        : forcedNeed;
 
-    while (cur < need) addRow(cur++);
-    while (cur > need) { tbody.removeChild(tbody.lastElementChild); cur--; }
+    if (need > cur && !hasValidProbePrefix(document.getElementById("firstProbe").value)) {
+        alert("Сначала укажи начало названия пробы: FP, PPM, EX, PM, API или IP.");
+        normalizeCountInput(cur);
+        return;
+    }
+
+    let countNow = cur;
+    while (countNow < need) {
+        addRow(countNow);
+        countNow++;
+    }
+    while (countNow > need) {
+        tbody.removeChild(tbody.lastElementChild);
+        countNow--;
+    }
 
     renumber();
+    normalizeCountInput(countNow);
 }
 
-/* имя генерации */
 function parseProbe(name) {
-    let m = name.match(/^([A-Za-z]+)-?(\d+)$/);
+    const raw = String(name || "").trim();
+    if (!raw) return null;
+
+    const m = raw.match(/^(.*?)(\d+)$/);
     if (!m) return null;
-    return { p: m[1], n: Number(m[2]) };
-}
-function generateProbeName(base, offset) {
-    let o = parseProbe(base);
-    if (!o) return base;
-    return o.p + "-" + (o.n + offset);
-}
-
-/* НАСЛЕДОВАНИЕ формата и категории */
-function getLastFormatAndCat() {
-    const rows = document.querySelectorAll("#samplesTable tbody tr");
-    if (rows.length === 0) return { format: "Формат образца", cat: "2.2" };
-
-    const last = rows[rows.length - 1];
 
     return {
-        format: last.querySelector(".format").value,
-        cat: last.querySelector(".cat").value
+        prefix: m[1],
+        digits: m[2],
+        number: Number(m[2])
     };
 }
 
-/* добавление строки */
+function generateProbeName(base, offset) {
+    const parsed = parseProbe(base);
+    if (!parsed) return String(base || "");
+
+    const nextNumber = parsed.number + offset;
+    const padded = String(nextNumber).padStart(parsed.digits.length, "0");
+    return parsed.prefix + padded;
+}
+
+function getLastRowState() {
+    const rows = document.querySelectorAll("#samplesTable tbody tr");
+    if (rows.length === 0) {
+        return { format: "Формат образца", cat: "2.2", d100: false, d1000: false };
+    }
+    const last = rows[rows.length - 1];
+    return {
+        format: last.querySelector(".format").value,
+        cat: last.querySelector(".cat").value,
+        d100: last.querySelector(".d100").checked,
+        d1000: last.querySelector(".d1000").checked
+    };
+}
+
 function addRow(index) {
     const tbody = document.querySelector("#samplesTable tbody");
-
     const row = document.createElement("tr");
 
-    /* первая проба автоинкремент */
-    let first = document.getElementById("firstProbe").value.trim();
-    let probeValue = first ? generateProbeName(first, index) : "";
-
-    /* наследование */
-    let prev = getLastFormatAndCat();
+    const first = document.getElementById("firstProbe").value.trim();
+    const probeValue = first ? generateProbeName(first, index) : "";
+    const prev = getLastRowState();
 
     row.innerHTML = `
         <td><button class="delete-btn" onclick="deleteRow(this)">✖</button></td>
         <td class="rownum"></td>
-
-        <td><input type="text" class="probe-name"
-            value="${probeValue}" oninput="updateAutoFormat(this)"></td>
-
+        <td><input type="text" class="probe-name" value="${probeValue}" oninput="updateAutoFormat(this)"></td>
         <td>
             <select class="format">
                 <option>Формат образца</option>
@@ -296,7 +953,6 @@ function addRow(index) {
                 <option>Порошок</option>
             </select>
         </td>
-
         <td>
             <select class="cat">
                 <option value="2.2">2.2</option>
@@ -306,10 +962,8 @@ function addRow(index) {
                 <option value="1.2Б+2.2">1.2Б+2.2</option>
             </select>
         </td>
-
         <td><input type="checkbox" class="d100"></td>
         <td><input type="checkbox" class="d1000"></td>
-
         <td class="fbr">0</td>
         <td class="tsa">0</td>
         <td class="sda">0</td>
@@ -318,16 +972,17 @@ function addRow(index) {
     `;
 
     tbody.appendChild(row);
+    const probeInput = row.querySelector(".probe-name");
+    updateAutoFormat(probeInput);
 
-    /* автоформат */
-    updateAutoFormat(row.querySelector(".probe-name"));
-
-    /* НАСЛЕДОВАНИЕ */
-    let formatSel = row.querySelector(".format");
-
-    if (!formatSel.disabled) formatSel.value = prev.format;
-
+    const formatSel = row.querySelector(".format");
+    const detected = detectFormat(probeInput.value.trim());
+    if (!formatSel.disabled && detected === "Формат образца") {
+        formatSel.value = prev.format;
+    }
     row.querySelector(".cat").value = prev.cat;
+    row.querySelector(".d100").checked = prev.d100;
+    row.querySelector(".d1000").checked = prev.d1000;
 
     renumber();
 }
@@ -335,8 +990,14 @@ function addRow(index) {
 function deleteRow(btn) {
     btn.closest("tr").remove();
     renumber();
-    document.getElementById("sampleCount").value =
-        document.querySelectorAll("#samplesTable tbody tr").length;
+    normalizeCountInput(document.querySelectorAll("#samplesTable tbody tr").length);
+}
+
+function clearAllSamples() {
+    const tbody = document.querySelector("#samplesTable tbody");
+    tbody.innerHTML = "";
+    normalizeCountInput(0);
+    calculateAll();
 }
 
 function renumber() {
@@ -344,59 +1005,52 @@ function renumber() {
         tr.querySelector(".rownum").textContent = i + 1;
     });
 }
-/* -------------------- РАСЧЁТ -------------------- */
+
 function calculateAll() {
     const rows = document.querySelectorAll("#samplesTable tbody tr");
 
     let totalFBR = 0, totalTSA = 0, totalSDA = 0, totalTSB = 0, totalMoss = 0;
-
     let grinders = 0, scissors = 0, spoons = 0;
     let bottles = 0, bottles100 = 0;
     let tubes = 0;
 
     rows.forEach(row => {
-
         const cat = row.querySelector(".cat").value;
         const d100 = row.querySelector(".d100").checked;
         const d1000 = row.querySelector(".d1000").checked;
         const format = row.querySelector(".format").value;
 
-        /* базовая логика сред */
         let fbr = 90 + (d100 ? 90 : 0) + (d1000 ? 90 : 0);
         let tsa = 25;
         let sda = 25;
-
         let tsb = 100;
         let moss = 0;
 
         if (cat === "4.2") { moss = 27; tsb = 190; }
         if (cat === "1.2Б" || cat === "1.2Б+2.2") moss = 100;
 
-        /* суммирование */
-        totalFBR += fbr; totalTSA += tsa; totalSDA += sda;
-        totalTSB += tsb; totalMoss += moss;
+        totalFBR += fbr;
+        totalTSA += tsa;
+        totalSDA += sda;
+        totalTSB += tsb;
+        totalMoss += moss;
 
-        /* вывод */
         row.querySelector(".fbr").textContent = fbr;
         row.querySelector(".tsa").textContent = tsa;
         row.querySelector(".sda").textContent = sda;
         row.querySelector(".tsb").textContent = tsb;
         row.querySelector(".mossel").textContent = moss;
 
-        /* инструменты */
         if (format === "Таблетка") grinders++;
         if (format === "Порошок") spoons++;
         if (format === "Ножницы (фикс.)") scissors++;
 
-        /* флаконы */
         if (cat === "1.2Б" || cat === "1.2Б+2.2") bottles100++;
         else bottles++;
 
-        /* пробирки */
         if (cat === "4.2") tubes += 3;
     });
 
-    /* вывод итогов */
     document.getElementById("sum_fbr").textContent = totalFBR;
     document.getElementById("sum_tsa").textContent = totalTSA;
     document.getElementById("sum_sda").textContent = totalSDA;
@@ -412,34 +1066,7 @@ function calculateAll() {
     document.getElementById("sum_racks").textContent = Math.ceil(tubes / 40);
 }
 
-/* -------------------- ЭКСПОРТ -------------------- */
-function exportExcel() {
-    calculateAll();
-
-    let csv =
-        "Среда,мл\n" +
-        "FBR," + sum_fbr.textContent + "\n" +
-        "TSA," + sum_tsa.textContent + "\n" +
-        "SDA," + sum_sda.textContent + "\n" +
-        "TSB," + sum_tsb.textContent + "\n" +
-        "Mossel," + sum_mossel.textContent + "\n\n" +
-
-        "Инструмент,кол-во\n" +
-        "Мельнички," + sum_grinders.textContent + "\n" +
-        "Ножницы," + sum_scissors.textContent + "\n" +
-        "Ложки," + sum_spoons.textContent + "\n" +
-        "Флаконы обычные," + sum_bottles.textContent + "\n" +
-        "Флаконы 100 мл," + sum_bottles100.textContent + "\n" +
-        "Пробирки," + sum_tubes.textContent + "\n" +
-        "Штативы," + sum_racks.textContent + "\n";
-
-    let blob = new Blob([csv], {type:"text/csv"});
-    let link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "mbch_media_and_tools.csv";
-    link.click();
-}
-
+setThemeIcon();
 </script>
 </body>
 </html>
