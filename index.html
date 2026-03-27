@@ -175,12 +175,12 @@ body.dark-mode .guide-fab:hover {
 .counter .counter-trash:hover,
 .theme-toggle:hover,
 .guide-close:hover {
-    background: rgba(0,0,0,0.10);
+    background: rgba(0,0,0,0.12);
 }
 body.dark-mode .counter .counter-trash:hover,
 body.dark-mode .theme-toggle:hover,
 body.dark-mode .guide-close:hover {
-    background: rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.16);
 }
 
 .counter-input {
@@ -218,6 +218,27 @@ body.dark-mode .guide-close:hover {
     transform: translateY(1px);
 }
 
+.dilution-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+.dilution-btn {
+    border: 1px solid var(--muted-border);
+    background: transparent;
+    color: inherit;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background .18s ease, transform .18s ease;
+}
+.dilution-btn:hover {
+    background: rgba(0,0,0,0.06);
+}
+body.dark-mode .dilution-btn:hover {
+    background: rgba(255,255,255,0.10);
+}
 
 .table-wrap {
     margin-top: 15px;
@@ -666,6 +687,10 @@ body.dark-mode .guide-expression .muted {
     <div class="hint">Можно писать 12, 2+10, +5 или -2</div>
 </div>
 
+<div class="dilution-actions">
+    <button class="dilution-btn" type="button" onclick="clearDilutionChecks()">Снять все галочки разведений</button>
+</div>
+
 <div class="table-wrap">
 <table id="samplesTable">
     <thead>
@@ -977,8 +1002,9 @@ function addRow(index) {
 
     const formatSel = row.querySelector(".format");
     const detected = detectFormat(probeInput.value.trim());
-    if (!formatSel.disabled && detected === "Формат образца") {
-        formatSel.value = prev.format;
+    if (!formatSel.disabled) {
+        if (prev.format && prev.format !== "Формат образца") formatSel.value = prev.format;
+        else if (detected !== "Формат образца") formatSel.value = detected;
     }
     row.querySelector(".cat").value = prev.cat;
     row.querySelector(".d100").checked = prev.d100;
@@ -997,6 +1023,11 @@ function clearAllSamples() {
     const tbody = document.querySelector("#samplesTable tbody");
     tbody.innerHTML = "";
     normalizeCountInput(0);
+    calculateAll();
+}
+
+function clearDilutionChecks() {
+    document.querySelectorAll(".d100, .d1000").forEach(cb => cb.checked = false);
     calculateAll();
 }
 
