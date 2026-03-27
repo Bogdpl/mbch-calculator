@@ -98,7 +98,7 @@ input[type=text] {
     border-radius: 16px;
     border: 1px solid var(--input-border);
     width: 100%;
-    font-size: 16px;
+    font-size: 14px;
     text-align: left;
     margin-top: 15px;
     background: transparent;
@@ -193,7 +193,7 @@ body.dark-mode .guide-close:hover {
 
 .hint {
     text-align: center;
-    font-size: 13px;
+    font-size: 12px;
     opacity: 0.7;
     margin-top: 12px;
 }
@@ -218,25 +218,42 @@ body.dark-mode .guide-close:hover {
     transform: translateY(1px);
 }
 
- .clear-dilution-btn {
-    width: 22px;
-    height: 22px;
-    min-width: 22px;
+.dilution-header-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+.clear-dilution-btn {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
     border-radius: 50%;
-    border: 1px solid var(--muted-border);
+    border: 0.5px solid var(--muted-border);
     background: transparent;
     color: inherit;
     cursor: pointer;
     font-size: 14px;
+    font-family: inherit;
+    font-weight: 400;
     line-height: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin-left: 6px;
-    transition: background .18s ease, transform .18s ease;
+    padding: 0;
+    margin: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    box-shadow: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background .18s ease, transform .18s ease, opacity .18s ease;
 }
 .clear-dilution-btn:hover {
     background: rgba(0,0,0,0.06);
+}
+.clear-dilution-btn:active {
+    transform: scale(.96);
 }
 body.dark-mode .clear-dilution-btn:hover {
     background: rgba(255,255,255,0.10);
@@ -353,7 +370,7 @@ button.calculate-btn {
 
 .total-line {
     padding: 10px 0;
-    font-size: 16px;
+    font-size: 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -581,7 +598,7 @@ body.dark-mode .guide-expression .muted {
     .header-bar h2 { font-size: 30px; }
     .block { padding: 20px; }
     .counter-input { width: 128px !important; }
-    input[type=text] { font-size: 16px; }
+    input[type=text] { font-size: 14px; }
 }
 </style>
 </head>
@@ -698,8 +715,8 @@ body.dark-mode .guide-expression .muted {
             <th>Проба</th>
             <th>Формат</th>
             <th>Категория</th>
-            <th>1:100 <button class="clear-dilution-btn" type="button" onclick="clearDilutionChecks('d100')">×</button></th>
-            <th>1:1000 <button class="clear-dilution-btn" type="button" onclick="clearDilutionChecks('d1000')">×</button></th>
+            <th><div class="dilution-header-wrap"><span>1:100</span><button class="clear-dilution-btn" type="button" onclick="clearDilutionChecks('d100'); return false;" aria-label="Снять галочки 1:100">✕</button></div></th>
+            <th><div class="dilution-header-wrap"><span>1:1000</span><button class="clear-dilution-btn" type="button" onclick="clearDilutionChecks('d1000'); return false;" aria-label="Снять галочки 1:1000">✕</button></div></th>
             <th>FBR</th>
             <th>TSA</th>
             <th>SDA</th>
@@ -723,6 +740,4 @@ body.dark-mode .guide-expression .muted {
 
     <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><path d="M9 3v8l-5 8a2 2 0 0 0 1.7 3h12.6A2 2 0 0 0 20 19l-5-8V3"></path><path d="M7 14h10"></path></svg></span>FBR</span><span><span id="sum_fbr">0</span> мл</span></div>
     <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="8" rx="7" ry="2.5"></ellipse><path d="M5 8v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V8"></path><ellipse cx="12" cy="14" rx="7" ry="2.5"></ellipse></svg></span>TSA</span><span><span id="sum_tsa">0</span> мл</span></div>
-    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="8" rx="7" ry="2.5"></ellipse><path d="M5 8v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V8"></path><ellipse cx="12" cy="14" rx="7" ry="2.5"></ellipse></svg></span>SDA</span><span><span id="sum_sda">0</span> мл</span></div>
-    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><path d="M9 3v8l-5 8a2 2 0 0 0 1.7 3h12.6A2 2 0 0 0 20 19l-5-8V3"></path><path d="M8 17h8"></path></svg></span>TSB</span><span><span id="sum_tsb">0</span> мл</span></div>
-    <div class="total-line"><span class="total-l
+    <div class="total-line"><span class="total-label"><span cl
