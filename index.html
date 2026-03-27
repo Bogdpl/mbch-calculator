@@ -593,6 +593,22 @@ body.dark-mode .guide-expression .muted {
     }
 }
 
+@media (min-width: 901px) {
+    #samplesTable th,
+    #samplesTable td {
+        white-space: nowrap;
+    }
+    .dilution-header-wrap {
+        gap: 4px;
+    }
+    .clear-dilution-btn {
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        font-size: 12px;
+    }
+}
+
 @media (max-width: 520px) {
     body { padding: 16px; }
     .header-bar h2 { font-size: 30px; }
@@ -737,7 +753,365 @@ body.dark-mode .guide-expression .muted {
         </span>
         <span>ИТОГО — Среды:</span>
     </h3>
+<div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"></circle><path d="M12 4l2 5-2 1-2-1z"></path><path d="M20 12l-5 2-1-2 1-2z"></path><path d="M12 20l-2-5 2-1 2 1z"></path><path d="M4 12l5-2 1 2-1 2z"></path></svg></span>Мельнички</span><span id="sum_grinders">0</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><circle cx="7" cy="8" r="2.3"></circle><circle cx="7" cy="16" r="2.3"></circle><path d="M9 9l8-5"></path><path d="M9 15l8 5"></path><path d="M9 10.5l4 1.5"></path><path d="M9 13.5l4-1.5"></path></svg></span>Ножницы</span><span id="sum_scissors">0</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><ellipse cx="9" cy="8" rx="3.2" ry="4.1"></ellipse><path d="M11.2 10.8L18.6 18.2"></path></svg></span>Ложки</span><span id="sum_spoons">0</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><path d="M9 3h6"></path><path d="M10 3v4"></path><path d="M14 3v4"></path><path d="M8 7h8v12a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z"></path></svg></span>Флаконы обычные</span><span id="sum_bottles">0</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><path d="M9 3h6"></path><path d="M10 3v4"></path><path d="M14 3v4"></path><path d="M8 7h8v12a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z"></path><path d="M10 12h4"></path></svg></span>Флаконы 100 мл</span><span id="sum_bottles100">0</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><path d="M9 3v8l-5 8a2 2 0 0 0 1.7 3h12.6A2 2 0 0 0 20 19l-5-8V3"></path></svg></span>Пробирки</span><span id="sum_tubes">0</span></div>
+    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path><path d="M7 7v10"></path><path d="M12 7v10"></path><path d="M17 7v10"></path></svg></span>Штативы</span><span id="sum_racks">0</span></div>
+</div>
 
-    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><path d="M9 3v8l-5 8a2 2 0 0 0 1.7 3h12.6A2 2 0 0 0 20 19l-5-8V3"></path><path d="M7 14h10"></path></svg></span>FBR</span><span><span id="sum_fbr">0</span> мл</span></div>
-    <div class="total-line"><span class="total-label"><span class="line-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="8" rx="7" ry="2.5"></ellipse><path d="M5 8v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V8"></path><ellipse cx="12" cy="14" rx="7" ry="2.5"></ellipse></svg></span>TSA</span><span><span id="sum_tsa">0</span> мл</span></div>
-    <div class="total-line"><span class="total-label"><span cl
+
+    </main>
+</div>
+<script>
+function setThemeIcon() {
+    const btn = document.getElementById('themeToggle');
+    const dark = document.body.classList.contains('dark-mode');
+    btn.innerHTML = dark
+        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.9 4.9l1.4 1.4"></path><path d="M17.7 17.7l1.4 1.4"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M4.9 19.1l1.4-1.4"></path><path d="M17.7 6.3l1.4-1.4"></path></svg>'
+        : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"></path></svg>';
+}
+
+function toggleTheme() {
+    document.body.classList.toggle("dark-mode");
+    setThemeIcon();
+refreshCountControls();
+}
+
+function closeGuide() {
+    const shell = document.querySelector('.app-shell');
+    if (shell) shell.classList.add('guide-collapsed');
+    try { localStorage.setItem('mbchGuideClosed', '1'); } catch(e) {}
+}
+
+function openGuide() {
+    const shell = document.querySelector('.app-shell');
+    if (shell) shell.classList.remove('guide-collapsed');
+    try { localStorage.setItem('mbchGuideClosed', '0'); } catch(e) {}
+}
+
+function handleCountKey(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        updateRows();
+        event.target.blur();
+    }
+}
+
+function applyPrefix(prefix) {
+    const input = document.getElementById("firstProbe");
+    const current = (input.value || "").trim();
+
+    let suffix = "";
+    const match = current.match(/^(?:FP|PPM|EX|PM|API|IP)-?(.*)$/i);
+    if (match) {
+        suffix = match[1];
+    } else if (current) {
+        suffix = current.replace(/^[-\s]+/, "");
+    }
+
+    input.value = suffix ? `${prefix}-${suffix}` : `${prefix}-`;
+    refreshCountControls();
+    input.focus();
+    const end = input.value.length;
+    try { input.setSelectionRange(end, end); } catch(e) {}
+}
+
+function hasValidProbePrefix(value) {
+    return /^(FP|PPM|EX|PM|API|IP)(-|\d|$)/i.test(String(value || "").trim());
+}
+
+function refreshCountControls() {
+    const valid = hasValidProbePrefix(document.getElementById("firstProbe").value);
+    const countInput = document.getElementById("sampleCount");
+    const plusBtn = document.querySelector(".count-plus");
+
+    if (countInput) countInput.disabled = !valid;
+    if (plusBtn) plusBtn.disabled = !valid;
+
+    if (!valid) {
+        const rows = document.querySelectorAll("#samplesTable tbody tr").length;
+        if (countInput && rows === 0) countInput.value = "0";
+    }
+}
+
+function detectFormat(probe) {
+    if (!probe) return "Формат образца";
+    probe = probe.toUpperCase();
+
+    if (probe.startsWith("PPM") || probe.startsWith("PM")) return "Ножницы (фикс.)";
+    if (probe.startsWith("FP")) return "Таблетка";
+    if (probe.startsWith("EX")) return "Формат образца";
+
+    return "Формат образца";
+}
+
+function updateAutoFormat(input) {
+    const probe = input.value.trim();
+    const row = input.closest("tr");
+    const formatSel = row.querySelector(".format");
+
+    const detected = detectFormat(probe);
+
+    if (detected === "Ножницы (фикс.)") {
+        formatSel.innerHTML = `<option selected>Ножницы (фикс.)</option>`;
+        formatSel.disabled = true;
+    } else {
+        const current = formatSel.value;
+        formatSel.disabled = false;
+        formatSel.innerHTML = `
+            <option>Формат образца</option>
+            <option>Таблетка</option>
+            <option>Капсула</option>
+            <option>Порошок</option>
+        `;
+        formatSel.value = detected !== 'Формат образца' ? detected : (current || 'Формат образца');
+    }
+}
+
+function parseCountExpression(rawValue, currentCount) {
+    const raw = String(rawValue || "").replace(/\s+/g, "");
+    if (!raw) return currentCount;
+
+    if (/^\d+$/.test(raw)) return Number(raw);
+
+    if (/^\d+(?:[+-]\d+)+$/.test(raw)) {
+        const tokens = raw.match(/[+-]?\d+/g) || [];
+        let total = 0;
+        tokens.forEach((token, index) => {
+            if (index === 0 && !token.startsWith("+") && !token.startsWith("-")) total += Number(token);
+            else total += Number(token);
+        });
+        return Math.max(0, total);
+    }
+
+    if (/^[+-]\d+$/.test(raw)) return Math.max(0, currentCount + Number(raw));
+
+    return currentCount;
+}
+
+function normalizeCountInput(value) {
+    document.getElementById("sampleCount").value = String(value);
+}
+
+function changeCount(d) {
+    if (d > 0 && !hasValidProbePrefix(document.getElementById("firstProbe").value)) {
+        alert("Сначала укажи начало названия пробы: FP, PPM, EX, PM, API или IP.");
+        return;
+    }
+
+    const tbody = document.querySelector("#samplesTable tbody");
+    const current = tbody.children.length;
+    const next = Math.max(0, current + d);
+    normalizeCountInput(next);
+    updateRows(next);
+}
+
+function updateRows(forcedNeed = null) {
+    const tbody = document.querySelector("#samplesTable tbody");
+    const cur = tbody.children.length;
+    const need = forcedNeed === null
+        ? parseCountExpression(document.getElementById("sampleCount").value, cur)
+        : forcedNeed;
+
+    if (need > cur && !hasValidProbePrefix(document.getElementById("firstProbe").value)) {
+        alert("Сначала укажи начало названия пробы: FP, PPM, EX, PM, API или IP.");
+        normalizeCountInput(cur);
+        return;
+    }
+
+    let countNow = cur;
+    while (countNow < need) {
+        addRow(countNow);
+        countNow++;
+    }
+    while (countNow > need) {
+        tbody.removeChild(tbody.lastElementChild);
+        countNow--;
+    }
+
+    renumber();
+    normalizeCountInput(countNow);
+}
+
+function parseProbe(name) {
+    const raw = String(name || "").trim();
+    if (!raw) return null;
+
+    const m = raw.match(/^(.*?)(\d+)$/);
+    if (!m) return null;
+
+    return {
+        prefix: m[1],
+        digits: m[2],
+        number: Number(m[2])
+    };
+}
+
+function generateProbeName(base, offset) {
+    const parsed = parseProbe(base);
+    if (!parsed) return String(base || "");
+
+    const nextNumber = parsed.number + offset;
+    const padded = String(nextNumber).padStart(parsed.digits.length, "0");
+    return parsed.prefix + padded;
+}
+
+function getLastRowState() {
+    const rows = document.querySelectorAll("#samplesTable tbody tr");
+    if (rows.length === 0) {
+        return { format: "Формат образца", cat: "2.2", d100: false, d1000: false };
+    }
+    const last = rows[rows.length - 1];
+    return {
+        format: last.querySelector(".format").value,
+        cat: last.querySelector(".cat").value,
+        d100: last.querySelector(".d100").checked,
+        d1000: last.querySelector(".d1000").checked
+    };
+}
+
+function addRow(index) {
+    const tbody = document.querySelector("#samplesTable tbody");
+    const row = document.createElement("tr");
+
+    const first = document.getElementById("firstProbe").value.trim();
+    const probeValue = first ? generateProbeName(first, index) : "";
+    const prev = getLastRowState();
+
+    row.innerHTML = `
+        <td><button class="delete-btn" onclick="deleteRow(this)">✖</button></td>
+        <td class="rownum"></td>
+        <td><input type="text" class="probe-name" value="${probeValue}" oninput="updateAutoFormat(this)"></td>
+        <td>
+            <select class="format">
+                <option>Формат образца</option>
+                <option>Таблетка</option>
+                <option>Капсула</option>
+                <option>Порошок</option>
+            </select>
+        </td>
+        <td>
+            <select class="cat">
+                <option value="2.2">2.2</option>
+                <option value="3A">3A</option>
+                <option value="4.2">4.2</option>
+                <option value="1.2Б">1.2Б</option>
+                <option value="1.2Б+2.2">1.2Б+2.2</option>
+            </select>
+        </td>
+        <td><input type="checkbox" class="d100"></td>
+        <td><input type="checkbox" class="d1000"></td>
+        <td class="fbr">0</td>
+        <td class="tsa">0</td>
+        <td class="sda">0</td>
+        <td class="tsb">0</td>
+        <td class="mossel">0</td>
+    `;
+
+    tbody.appendChild(row);
+    const probeInput = row.querySelector(".probe-name");
+    updateAutoFormat(probeInput);
+
+    const formatSel = row.querySelector(".format");
+    const detected = detectFormat(probeInput.value.trim());
+    if (!formatSel.disabled) {
+        if (prev.format && prev.format !== "Формат образца") formatSel.value = prev.format;
+        else if (detected !== "Формат образца") formatSel.value = detected;
+    }
+    row.querySelector(".cat").value = prev.cat;
+    row.querySelector(".d100").checked = prev.d100;
+    row.querySelector(".d1000").checked = prev.d1000;
+
+    renumber();
+}
+
+function deleteRow(btn) {
+    btn.closest("tr").remove();
+    renumber();
+    normalizeCountInput(document.querySelectorAll("#samplesTable tbody tr").length);
+}
+
+function clearAllSamples() {
+    const tbody = document.querySelector("#samplesTable tbody");
+    tbody.innerHTML = "";
+    normalizeCountInput(0);
+    calculateAll();
+}
+
+function clearDilutionChecks(targetClass) {
+    document.querySelectorAll(`.${targetClass}`).forEach(cb => cb.checked = false);
+}
+
+function renumber() {
+    document.querySelectorAll("#samplesTable tbody tr").forEach((tr, i) => {
+        tr.querySelector(".rownum").textContent = i + 1;
+    });
+}
+
+function calculateAll() {
+    const rows = document.querySelectorAll("#samplesTable tbody tr");
+
+    let totalFBR = 0, totalTSA = 0, totalSDA = 0, totalTSB = 0, totalMoss = 0;
+    let grinders = 0, scissors = 0, spoons = 0;
+    let bottles = 0, bottles100 = 0;
+    let tubes = 0;
+
+    rows.forEach(row => {
+        const cat = row.querySelector(".cat").value;
+        const d100 = row.querySelector(".d100").checked;
+        const d1000 = row.querySelector(".d1000").checked;
+        const format = row.querySelector(".format").value;
+
+        let fbr = 90 + (d100 ? 90 : 0) + (d1000 ? 90 : 0);
+        let tsa = 25;
+        let sda = 25;
+        let tsb = 100;
+        let moss = 0;
+
+        if (cat === "4.2") { moss = 27; tsb = 190; }
+        if (cat === "1.2Б" || cat === "1.2Б+2.2") moss = 100;
+
+        totalFBR += fbr;
+        totalTSA += tsa;
+        totalSDA += sda;
+        totalTSB += tsb;
+        totalMoss += moss;
+
+        row.querySelector(".fbr").textContent = fbr;
+        row.querySelector(".tsa").textContent = tsa;
+        row.querySelector(".sda").textContent = sda;
+        row.querySelector(".tsb").textContent = tsb;
+        row.querySelector(".mossel").textContent = moss;
+
+        if (format === "Таблетка") grinders++;
+        if (format === "Порошок") spoons++;
+        if (format === "Ножницы (фикс.)") scissors++;
+
+        if (cat === "1.2Б" || cat === "1.2Б+2.2") bottles100++;
+        else bottles++;
+
+        if (cat === "4.2") tubes += 3;
+    });
+
+    document.getElementById("sum_fbr").textContent = totalFBR;
+    document.getElementById("sum_tsa").textContent = totalTSA;
+    document.getElementById("sum_sda").textContent = totalSDA;
+    document.getElementById("sum_tsb").textContent = totalTSB;
+    document.getElementById("sum_mossel").textContent = totalMoss;
+
+    document.getElementById("sum_grinders").textContent = grinders;
+    document.getElementById("sum_scissors").textContent = scissors;
+    document.getElementById("sum_spoons").textContent = spoons;
+    document.getElementById("sum_bottles").textContent = bottles;
+    document.getElementById("sum_bottles100").textContent = bottles100;
+    document.getElementById("sum_tubes").textContent = tubes;
+    document.getElementById("sum_racks").textContent = Math.ceil(tubes / 40);
+}
+
+setThemeIcon();
+</script>
+</body>
+</html>
