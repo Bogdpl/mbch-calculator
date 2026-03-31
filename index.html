@@ -150,10 +150,73 @@ body.dark-mode .guide-fab:hover {
     background: rgba(255,255,255,0.10);
 }
 .calculate-btn {
-    transition: filter .18s ease, transform .18s ease;
+    position: relative;
+    overflow: hidden;
+    transition: background .18s ease, transform .18s ease, opacity .18s ease;
 }
 .calculate-btn:hover {
-    filter: brightness(.96);
+    background: #256de0;
+}
+.calculate-btn .calc-label,
+.calculate-btn .calc-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform .22s ease, opacity .22s ease;
+}
+.calculate-btn .calc-status {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    gap: 10px;
+}
+.calculate-btn.calc-loading .calc-label {
+    opacity: .25;
+}
+.calculate-btn.calc-loading .calc-status,
+.calculate-btn.calc-done .calc-status {
+    opacity: 1;
+    transform: translateY(0);
+}
+.calculate-btn.calc-done .calc-label {
+    opacity: 0;
+    transform: translateY(-8px);
+}
+.calculate-btn.calc-loading {
+    pointer-events: none;
+}
+.calc-spinner {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.35);
+    border-top-color: #fff;
+    animation: calcspin .8s linear infinite;
+}
+.calc-check {
+    width: 18px;
+    height: 18px;
+    display: none;
+}
+.calculate-btn.calc-done .calc-spinner {
+    display: none;
+}
+.calculate-btn.calc-done .calc-check {
+    display: block;
+}
+.calc-check svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+@keyframes calcspin {
+    to { transform: rotate(360deg); }
 }
 .prefix-tab,
 .theme-toggle,
@@ -733,7 +796,7 @@ body.dark-mode .guide-expression .muted {
 </div>
 
 <div class="table-wrap">
-<table id="samplesTable">
+    <table id="samplesTable">
     <thead>
         <tr>
             <th></th>
@@ -748,13 +811,20 @@ body.dark-mode .guide-expression .muted {
             <th>SDA</th>
             <th>TSB</th>
             <th>Mossel</th>
-            </tr>
+        </tr>
     </thead>
     <tbody></tbody>
 </table>
 </div>
 
-<button class="calculate-btn" onclick="calculateAll()">Рассчитать</button>
+<button class="calculate-btn" id="calculateBtn" onclick="runCalculateWithFeedback()">
+    <span class="calc-label">Рассчитать</span>
+    <span class="calc-status">
+        <span class="calc-spinner" aria-hidden="true"></span>
+        <span class="calc-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg></span>
+        <span class="calc-status-text">Готово</span>
+    </span>
+</button>
 
 <div class="total-box media-box">
     <h3 class="total-title">
@@ -1096,6 +1166,30 @@ function updateTotalsOutputs(totalFBR, totalTSA, totalSDA, totalTSB, totalMoss, 
     setText("sum_bottles100", bottles100);
     setText("sum_tubes", tubes);
     setText("sum_racks", Math.ceil(tubes / 40));
+}
+
+function runCalculateWithFeedback() {
+    const btn = document.getElementById("calculateBtn");
+    if (!btn) {
+        calculateAll();
+        return;
+    }
+
+    btn.classList.remove("calc-done");
+    btn.classList.add("calc-loading");
+
+    requestAnimationFrame(() => {
+        calculateAll();
+
+        setTimeout(() => {
+            btn.classList.remove("calc-loading");
+            btn.classList.add("calc-done");
+
+            setTimeout(() => {
+                btn.classList.remove("calc-done");
+            }, 1100);
+        }, 220);
+    });
 }
 
 function calculateAll() {
