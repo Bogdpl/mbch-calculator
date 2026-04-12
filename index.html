@@ -692,13 +692,12 @@ body.dark-mode .guide-expression .muted {
     input[type=text] { font-size: 14px; }
 }
 
-
-/* ----- Tabs & dilution calculator ----- */
+    /* ----- Tabs & dilution calculator ----- */
 .dilution-toggle-fix {
     flex: 0 0 auto;
 }
 
-   .top-tabs {
+.top-tabs {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
@@ -1397,7 +1396,7 @@ function refreshCountControls() {
     if (plusBtn) plusBtn.disabled = !valid;
 
     if (!valid) {
-const rows = document.querySelectorAll("#samplesTable tbody tr").length;
+        const rows = document.querySelectorAll("#samplesTable tbody tr").length;
         if (countInput && rows === 0) countInput.value = "0";
     }
 }
@@ -1743,34 +1742,7 @@ function updateDilutionControls() {
     const mode = getDiluentMode();
 
     if (maxBlock) {
-        maxBlock.classList.toggle('max-steps-hidden', mode === 'fbr');
-    }
-
-    if (chipWrap) {
-        const current = (targetInput?.value || '').trim().replace(':', '/');
-        chipWrap.innerHTML = getTargetChipValues().map(value => `
-            <button class="quick-chip ${current === value ? 'active-chip' : ''}" onclick="setTargetDilution('${value}')" type="button">${value}</button>
-        `).join('');
-    }
-
-    document.querySelectorAll('.dilution-inline-chips button[onclick^="setDiluent"]').forEach(btn => {
-        const active = (diluentInput?.value || '').trim() === btn.textContent.trim();
-        btn.classList.toggle('active-chip', active);
-    });
-}
-
-function setTargetDilution(value) {
-    const input = docum cost ent.getElementById('targetDilution');
-    if (input) input.value = value;
-    updateDilutionControls();
-}
-
-function setDiluent(value) {
-    const input = document.getElementById('diluentName');
-    if (input) input.value = value;
-    updateDilutionControls();
-}
-
+   
 function parseDilutionTarget(raw) {
     const s = String(raw || '').trim().replace(/\s+/g, '');
     if (!s) return null;
@@ -1998,7 +1970,7 @@ function buildExplanationLinesFromPlan(plan, mode) {
             lines.push(`<b>Шаг ${number}.</b> Из <b>${formatDilutionLabel(step.prev)}</b> получаем <b>${formatDilutionLabel(step.result)}</b>. Коэффициент перехода — <b>1:${step.ratio}</b>.`);
         }
     });
-   return lines;
+    return lines;
 }
 
 let dilutionRenderState = {
@@ -2221,5 +2193,3 @@ function runDilutionWithFeedback() {
 </script>
 </body>
 </html>
-total 
-    
