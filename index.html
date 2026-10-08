@@ -149,7 +149,7 @@ select.f.is-empty{color:var(--text-3)}
 .counter .icon-btn:hover:not(:disabled){background:var(--blue-soft);color:var(--blue);box-shadow:none}
 .counter .trash:hover:not(:disabled){background:var(--red-soft);color:var(--red)}
 
-.list{container:list/inline-size;margin-top:24px}
+.list{container:list/inline-size;margin-top:24px;--stick:32px}
 .list-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 12px}
 .list-head h2{font-size:20px;font-weight:700;letter-spacing:-.01em}
 .list-head h2 span{color:var(--text-3);font-weight:600;margin-left:6px}
@@ -208,7 +208,13 @@ select.f.is-empty{color:var(--text-3)}
   .row .bb-badge{min-height:40px;font-size:14.5px}
   .row .r-wash{grid-column:2 / -2;padding:2px 0 4px}
   .row.is-new{animation:none}
+  /* шапка таблицы прилипает к верху, тень появляется плавно */
+  .thead{position:sticky;top:var(--stick);z-index:5;background:var(--bg);padding:12px 6px 10px;margin-top:-12px;transition:box-shadow .25s ease}
+  .thead::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:calc(var(--stick) + 1px);background:var(--bg);opacity:0;transition:opacity .2s ease;pointer-events:none}
+  .thead.stuck::before{opacity:1}
+  .thead.stuck{box-shadow:0 1px 0 var(--line),0 12px 18px -16px rgba(0,0,0,.45)}
 }
+.thead-sentinel{height:1px;margin-bottom:-1px}
 
 .empty{padding:36px 16px;text-align:center;color:var(--text-2);border-radius:22px;border:1.5px dashed var(--line-2)}
 .empty b{display:block;color:var(--text);font-weight:600;margin-bottom:4px}
@@ -263,6 +269,18 @@ select.f.is-empty{color:var(--text-3)}
 .toast button{border:0;background:transparent;color:var(--blue);font-weight:600;padding:6px 8px;border-radius:8px}
 :root[data-theme="dark"] .toast button{color:#256DE0}
 @media (min-width:1040px){ .toast{bottom:28px} }
+/* Наверх */
+.to-top{
+  position:fixed;right:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:21;width:48px;height:48px;border:0;border-radius:50%;
+  display:grid;place-items:center;color:var(--text);background:var(--glass);-webkit-backdrop-filter:saturate(1.6) blur(18px);backdrop-filter:saturate(1.6) blur(18px);
+  box-shadow:0 0 0 1px var(--line),0 10px 26px -10px rgba(0,0,0,.3);
+  opacity:0;transform:translateY(14px) scale(.92);pointer-events:none;transition:opacity .22s ease,transform .22s ease,background .15s,color .15s;
+}
+.to-top.show{opacity:1;transform:none;pointer-events:auto}
+.to-top:hover{background:var(--blue);color:var(--on-blue)}
+.to-top:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.to-top .ico{width:22px;height:22px}
+@media (min-width:1040px){ .to-top{right:28px;bottom:28px} }
 
 /* ---------- Разведения ---------- */
 .dil{display:grid;gap:24px;grid-template-columns:minmax(0,1fr);align-items:start}
@@ -360,22 +378,195 @@ details.variants[open] summary .ico{transform:rotate(90deg)}
 .anim{max-width:440px;margin:0 auto;width:100%;border-radius:16px;background:var(--bg);box-shadow:0 0 0 1px var(--line);padding:8px}
 .anim svg{display:block;width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-variant-numeric:tabular-nums}
 
-/* ---------- 404 ---------- */
-.nf{position:relative;min-height:calc(100dvh - 96px);display:grid;place-content:center;justify-items:center;text-align:center;gap:14px;padding:12px 0 40px;overflow:hidden}
-.nf>*{position:relative;z-index:1}
-.nf .nf-code{position:absolute;left:0;right:0;top:50%;transform:translateY(-56%);z-index:0;font-size:clamp(170px,36vw,460px);font-weight:800;letter-spacing:-.05em;line-height:1;color:var(--text);opacity:.045;pointer-events:none;user-select:none}
-.nf-cat{width:min(440px,92vw)}
-.nf-cat svg{display:block;width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-.nf-title{font-size:clamp(32px,6.4vw,68px);font-weight:800;letter-spacing:-.03em;line-height:1.04;max-width:15ch;margin-top:4px}
-.nf-sub{color:var(--text-2);font-size:16px}
-.nf-bar{width:min(300px,70vw);height:4px;border-radius:2px;background:var(--surface);overflow:hidden;margin-top:6px}
-.nf-bar span{display:block;height:100%;background:var(--blue);transform-origin:left;transform:scaleX(0)}
-.nf-bar.run span{animation:nfBar 6s linear forwards}
-@keyframes nfBar{to{transform:scaleX(1)}}
-#panel-dil.flip{transform-origin:left center;animation:pageTurn .55s cubic-bezier(.55,0,.45,1) forwards}
-@keyframes pageTurn{to{transform:perspective(1800px) rotateY(-100deg);opacity:0}}
-#panel-mbch.flip-in{animation:pageIn .45s ease-out}
-@keyframes pageIn{from{opacity:0;transform:translateX(28px)}}
+/* ---------- Котик-лаборант ---------- */
+.cat-btn{padding:0;overflow:hidden}
+.cat-btn svg{width:40px;height:40px;display:block}
+.cat-btn .cat-head{transform-origin:20px 28px;transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
+.cat-btn:hover .cat-head{transform:rotate(-8deg)}
+.cat-btn .cat-eyes{transform-origin:20px 18px;animation:catBlink 5s infinite}
+@keyframes catBlink{0%,92%,100%{transform:none}95%{transform:scaleY(.15)}}
+dialog.cat-dlg{width:min(480px,calc(100% - 24px));max-width:none;padding:18px 16px 14px;border:0;border-radius:28px;background:var(--bg);color:var(--text);box-shadow:0 30px 80px -20px rgba(0,0,0,.45);overflow:visible}
+dialog.cat-dlg::backdrop{background:rgba(0,0,0,.35);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.cat-stage{display:block;border-radius:20px}
+.cat-stage svg{display:block;width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+.cat-x{position:absolute;left:14px;top:14px;z-index:1}
+
+/* ---------- Разведения ---------- */
+.beta-head{display:flex;align-items:center;justify-content:space-between;gap:4px 16px;flex-wrap:wrap}
+.beta-head .title{margin-bottom:18px}
+.lam-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.lam-row .chips{margin:0}
+.lam-own{width:108px;min-height:32px;padding:0 12px;border-radius:999px;font-size:14px}
+.fgrp{display:grid;gap:20px}
+.fgrp[hidden]{display:none}
+.card-h{font-size:17px;font-weight:700;letter-spacing:-.01em;margin:0 0 10px}
+.dlist{list-style:none;margin:0;padding:4px;border-radius:18px;background:var(--surface);display:grid;gap:2px}
+.drow,.krow{width:100%;display:grid;grid-template-columns:64px minmax(0,1fr) auto;align-items:center;gap:12px;padding:11px 12px;border:0;border-radius:14px;background:transparent;text-align:left}
+.drow:hover{background:var(--field)}
+.drow[aria-pressed="true"]{background:var(--field);box-shadow:inset 0 0 0 2px var(--blue)}
+.drow .d,.krow .d{font-weight:700;font-size:16px}
+.drow .r,.krow .r{color:var(--text-2);font-size:15px;min-width:0}
+.krow .r small{display:block;font-size:12.5px;color:var(--text-3);margin-top:1px}
+.dlist .tag{font-size:12.5px;font-weight:600;color:var(--blue);background:var(--blue-soft);padding:2px 8px;border-radius:999px;white-space:nowrap}
+.dlist .tag.warn{color:var(--red);background:var(--red-soft)}
+.dres{margin:12px 2px 0;font-size:14.5px;color:var(--text-2);line-height:1.5}
+.dres b{color:var(--text);font-weight:600}
+.verdict{margin:6px 2px 0;font-size:14.5px;font-weight:600}
+.verdict.ok{color:#21934A}.verdict.bad{color:var(--red)}
+.scard{display:grid;gap:12px;min-width:0}
+.scard-head{display:flex;justify-content:space-between;align-items:center;gap:8px 12px;flex-wrap:wrap}
+.scard-head .card-h{margin:0}
+.need{display:flex;align-items:center;gap:6px}
+.need>span{font-size:13px;color:var(--text-2);margin-right:2px}
+.need .chip{min-height:28px;padding:0 10px}
+.steps-row{display:flex;align-items:center;gap:12px}
+.steps-row .label{margin:0}
+.steps-pick label{position:relative;min-width:44px;padding:0 12px}
+.rec{position:absolute;top:5px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--blue)}
+.vchips{margin:0}
+.link.inline{display:inline;padding:0;font-size:inherit}
+.scard .route{font-size:clamp(20px,3.6vw,26px);margin-top:4px}
+.scard .route-meta{margin:-4px 0 4px}
+.scard .steps{margin-top:4px}
+
+/* ---------- Разведения, минимализм ---------- */
+.bwrap{display:grid;gap:16px;min-width:0}
+.dil-grid{display:grid;gap:28px;grid-template-columns:minmax(0,1fr);align-items:start}
+@media (min-width:1180px){ .dil-grid{grid-template-columns:minmax(0,1fr) 340px} .guide{position:sticky;top:16px} }
+.guide{display:grid;gap:12px;min-width:0}
+.guide-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 2px}
+.guide-head h2{font-size:20px;font-weight:700;letter-spacing:-.01em}
+.guide-head span{color:var(--text-2);font-size:14px}
+.gacc .anim{max-width:none;margin:0}
+.g-text{display:grid;gap:8px;font-size:14px;line-height:1.5;color:var(--text-2)}
+.g-text b{color:var(--text);font-weight:600}
+.bform{display:grid;gap:18px}
+.bform .fgrp{gap:16px}
+.bout{display:grid;gap:22px;padding-top:6px}
+.b-empty{color:var(--text-2);text-align:center;padding:28px 12px;border-radius:18px;border:1.5px dashed var(--line-2)}
+.ans-big{font-size:clamp(30px,6vw,40px);font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.ans-small{color:var(--text-2);font-size:14px;margin-top:6px}
+.ans-res{margin-top:12px;font-size:16px}
+.ans-res b{font-weight:700}
+.ans-res small{display:block;color:var(--text-2);font-size:13.5px;margin-top:2px}
+.bsec-h{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;margin:0 0 4px}
+.bsec-h .n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:13px;background:var(--blue-soft);color:var(--blue)}
+.bsec-p{color:var(--text-2);font-size:14.5px;margin:0 0 10px}
+.bsec-p b{color:var(--text);font-weight:600}
+.bsec.work{padding:18px;border-radius:20px;box-shadow:inset 0 0 0 2px var(--blue)}
+.rt{border-radius:18px;background:var(--surface);padding:4px;display:grid;gap:2px}
+.rt-row{width:100%;display:grid;grid-template-columns:minmax(96px,.9fr) minmax(0,1.1fr) minmax(0,.9fr);gap:10px;align-items:center;padding:10px 12px;border:0;border-radius:14px;background:transparent;text-align:left;font-size:15px}
+.rt-head{padding:6px 12px 2px;font-size:12.5px;font-weight:500;color:var(--text-2)}
+.rt-row b{font-weight:600}
+.rt-row small{display:block;font-size:12.5px;color:var(--text-2);margin-top:1px}
+.rt-d{font-weight:700;font-size:16px;position:relative}
+.rt-d small{font-weight:400;white-space:nowrap}
+button.rt-row:hover{background:var(--field)}
+button.rt-row.on{background:var(--field);box-shadow:inset 0 0 0 2px var(--blue)}
+.rt-row.dim{opacity:.6}
+.gel{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:999px;background:var(--blue);color:var(--on-blue);font-size:11.5px;font-style:normal;font-weight:600;vertical-align:2px}
+.b-ref{font-size:13.5px;line-height:1.5;color:var(--text-2);padding:12px 14px;border-radius:14px;background:var(--surface)}
+.b-ref b{color:var(--text)}
+
+/* ---------- Эндотоксины ---------- */
+.f-big{min-height:52px;font-size:20px;font-weight:600}
+.tubes{list-style:none;margin:0;padding:0;display:grid;gap:22px}
+.tb{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);gap:16px;align-items:center;padding:14px 16px;border-radius:18px;background:var(--surface)}
+.tb-svg{width:44px;height:104px;display:block}
+.tb-arr{position:absolute;left:26px;top:-23px;height:24px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text-2);white-space:nowrap}
+.tb-arr .ico{transform:rotate(90deg);color:var(--text-3)}
+.tb-arr .ico{width:20px;height:20px}
+.tb-info{display:grid;gap:3px;width:100%;min-width:0}
+.tb-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.tb-n{font-size:12.5px;color:var(--text-2);font-weight:500}
+.tb-res{font-size:22px;font-weight:700;letter-spacing:-.01em;white-space:nowrap}
+.tb-res small{font-size:12.5px;font-weight:500;color:var(--text-2);margin-left:4px}
+.tb-add{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:4px;text-align:left}
+.tb-add li{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:8px;align-items:center;font-size:14px;padding:8px 10px;border-radius:11px;background:var(--bg)}
+.tb-add b{font-weight:700;white-space:nowrap}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.w{background:var(--blue-soft);box-shadow:inset 0 0 0 1.5px var(--blue)}
+.dot.s{background:var(--blue)}
+.tb-tot{font-size:12px;color:var(--text-3);margin-top:2px}
+.tb-liq{fill:var(--blue)}
+.alts{display:grid;gap:8px;margin-top:4px}
+.alts-h{font-size:13px;font-weight:600;color:var(--text-2);margin:0 2px}
+.alt-list{display:grid;gap:6px}
+.alt-list input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.alt-list label{display:grid;grid-template-columns:18px minmax(0,1fr) auto;column-gap:10px;row-gap:2px;align-items:center;padding:10px 14px;border-radius:14px;background:var(--surface);cursor:pointer;transition:box-shadow .15s}
+.alt-list label::before{content:"";grid-row:1/3;width:16px;height:16px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--line-2);background:var(--field)}
+.alt-list label:hover{box-shadow:inset 0 0 0 1px var(--line-2)}
+.alt-list input:checked+label{box-shadow:inset 0 0 0 2px var(--blue)}
+.alt-list input:checked+label::before{box-shadow:inset 0 0 0 5px var(--blue)}
+.alt-list input:focus-visible+label{outline:2px solid var(--blue);outline-offset:2px}
+.alt-c{font-weight:600;font-size:15px;overflow-wrap:anywhere}
+.alt-e{font-size:13px;color:var(--text-2);white-space:nowrap}
+.alt-list small{grid-column:2/4;font-size:12.5px;color:var(--text-2)}
+.tb-glass{fill:none;stroke:var(--text-3);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tb-tick{stroke:var(--line-2);stroke-width:1.2}
+.chip small{margin-left:6px;font-size:12px;opacity:.75}
+.stp{display:flex;gap:6px;flex-wrap:wrap}
+.stp input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.stp label{flex:1;min-width:58px;display:grid;justify-items:center;gap:1px;padding:8px 6px;border-radius:14px;background:var(--surface);cursor:pointer;transition:background .15s,box-shadow .15s}
+.stp label b{font-size:18px;font-weight:700;line-height:1.2}
+.stp label b i{font-style:normal;color:#E39B00;font-size:14px;margin-left:3px;vertical-align:2px}
+.stp label small{font-size:12px;color:var(--text-2)}
+.stp label:hover{box-shadow:inset 0 0 0 1px var(--line-2)}
+.stp input:checked+label{background:var(--blue);color:var(--on-blue)}
+.stp input:checked+label small{color:var(--on-blue);opacity:.85}
+.stp input:checked+label b i{color:#FFD66B}
+.stp input:focus-visible+label{outline:2px solid var(--blue);outline-offset:2px}
+.stp-cap{font-size:12.5px;color:var(--text-2);margin:-12px 2px 0}
+.b-sum{font-size:15px;color:var(--text-2);margin:-8px 2px 0}
+.b-sum b{color:var(--text);font-weight:600}
+.b-msg{padding:14px 16px;border-radius:16px;background:var(--surface);color:var(--text-2)}
+.b-msg.bad{background:var(--red-soft);color:var(--red)}
+.bout{gap:18px}
+.fxs{display:grid;gap:14px}
+.fx{display:grid;gap:12px}
+.fx-h{font-size:15px;font-weight:600;color:var(--text-2)}
+.fx-body{display:grid;grid-template-columns:auto auto auto minmax(190px,1fr);align-items:center;gap:16px}
+.fx-why-btn{justify-self:start;width:100%;max-width:340px;display:grid;grid-template-columns:40px minmax(0,1fr) 16px;align-items:center;gap:12px;padding:12px 12px 12px 12px;border:0;border-radius:16px;background:var(--field);box-shadow:inset 0 0 0 1px var(--line);text-align:left;color:var(--text);transition:background .15s,box-shadow .15s}
+.fx-why-btn:hover{box-shadow:inset 0 0 0 1.5px var(--blue)}
+.fx-why-btn[aria-expanded="true"]{background:var(--blue-soft);box-shadow:none}
+.fx-why-ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--blue-soft);color:var(--blue);transition:background .15s,color .15s}
+.fx-why-btn[aria-expanded="true"] .fx-why-ic{background:var(--blue);color:var(--on-blue)}
+.fx-why-ic .ico{width:22px;height:22px}
+.fx-why-tx b{display:block;font-size:14.5px;font-weight:600;color:var(--blue)}
+.fx-why-tx small{display:block;font-size:12.5px;line-height:1.35;color:var(--text-2);margin-top:2px}
+.fx-why-chev{width:16px;height:16px;color:var(--text-3);transition:transform .2s}
+.fx-why-btn[aria-expanded="true"] .fx-why-chev{transform:rotate(90deg)}
+.fx-why{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:18px;align-items:center;padding-top:14px;border-top:1px solid var(--line);animation:whyIn .28s ease-out}
+.fx-why[hidden]{display:none}
+.fx-why .anim{margin:0;max-width:none}
+.fx-why-t{display:grid;gap:8px;font-size:14px;line-height:1.5;color:var(--text-2)}
+.fx-why-t b{color:var(--text);font-weight:600}
+@keyframes whyIn{from{opacity:0;transform:translateY(-6px)}}
+@media (max-width:760px){
+  .fx-body{grid-template-columns:auto auto minmax(0,1fr)}
+  .fx-why-btn{grid-column:1/-1;max-width:none}
+  .fx-res{min-width:0}
+  .fx-why{grid-template-columns:1fr}
+}
+.fx-frac{display:grid;justify-items:center;gap:8px}
+.fx-num,.fx-den{display:flex;align-items:flex-start;gap:8px}
+.fx-line{width:100%;height:2px;border-radius:1px;background:var(--text)}
+.fx-op{font-size:20px;color:var(--text-2);margin-top:9px}
+.fx-in{display:grid;justify-items:center;gap:4px}
+.fx-in .f{width:118px;text-align:center;font-size:18px;font-weight:600;padding:0 8px}
+.fx-in small{font-size:12px;color:var(--text-2);text-align:center}
+.fx-eq{font-size:30px;color:var(--text-3);font-weight:300}
+.fx-res{min-width:100px;font-size:clamp(28px,5vw,36px);font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.fx-res small{display:block;font-size:13px;font-weight:500;color:var(--text-2);letter-spacing:0;margin-top:4px}
+.fx-wait{color:var(--text-3);font-weight:400}
+@media (max-width:560px){
+  .fx-body{grid-template-columns:1fr;justify-items:center;gap:10px}
+  .fx-why-btn{justify-self:stretch}
+  .fx-eq{display:none}
+  .fx-res{text-align:center}
+  .fx-res::before{content:"= ";color:var(--text-3);font-weight:300}
+  .fx-in .f{width:112px}
+}
 
 /* ---------- Справка: шторка снизу на телефоне ---------- */
 dialog.sheet{
@@ -435,6 +626,8 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2.5"/><path d="M15.5 8.5V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7.5a2 2 0 0 0 2 2h2.5"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7"/></symbol>
   <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6.5 13.5 12 19l5.5-5.5"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9.2 18h5.6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.4 1.1 2.2h5c0-.8.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M6.5 10.5 12 5l5.5 5.5"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M14 7l5 5-5 5"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><path d="M12 16.5h.01" stroke-width="2.6"/></symbol>
@@ -464,6 +657,34 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
       <button role="tab" id="tab-mbch" aria-controls="panel-mbch" aria-selected="true" type="button">МБЧ</button>
       <button role="tab" id="tab-dil" aria-controls="panel-dil" aria-selected="false" tabindex="-1" type="button">Разведения</button>
     </div>
+    <button class="icon-btn cat-btn" id="catBtn" type="button" aria-label="Котик-лаборант" title="Котик-лаборант" aria-haspopup="dialog">
+      <svg viewBox="0 0 40 40" aria-hidden="true">
+        <defs>
+          <radialGradient id="avFur" cx="38%" cy="30%" r="78%"><stop offset="0" stop-color="#FFCB94"/><stop offset=".55" stop-color="#F2A65E"/><stop offset="1" stop-color="#D47F3C"/></radialGradient>
+          <linearGradient id="avCoat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D9E1EB"/></linearGradient>
+          <radialGradient id="avLens" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".5"/><stop offset=".55" stop-color="#FFFFFF" stop-opacity=".08"/><stop offset="1" stop-color="#FFFFFF" stop-opacity=".18"/></radialGradient>
+        </defs>
+        <path d="M4.5 41C4.5 32.6 11 28.4 20 28.4S35.5 32.6 35.5 41Z" fill="url(#avCoat)" stroke="#C6CFDA" stroke-width=".9"/>
+        <path d="M16.4 28.8L20 35L23.6 28.8Z" fill="#E59450"/>
+        <path d="M16.4 28.8L20 35L18 37.2L13.6 30.2ZM23.6 28.8L20 35L22 37.2L26.4 30.2Z" fill="#E3EAF2" stroke="#C6CFDA" stroke-width=".6"/>
+        <rect x="26.2" y="33.2" width="1" height="3.4" rx=".5" fill="#2D7DFF"/><rect x="27.6" y="33.8" width="1" height="2.8" rx=".5" fill="#E5734F"/>
+        <ellipse cx="20" cy="29.6" rx="9" ry="1.6" fill="#000" opacity=".12"/>
+        <g class="cat-head">
+          <path d="M8.2 18.6C7.9 13.6 8.9 9.4 10.4 5.9Q10.9 4.6 12.2 5.5L15.9 8.7C18.5 8 21.5 8 24.1 8.7L27.8 5.5Q29.1 4.6 29.6 5.9C31.1 9.4 32.1 13.6 31.8 18.6C31.5 24.8 26.4 28.8 20 28.8S8.5 24.8 8.2 18.6Z" fill="url(#avFur)"/>
+          <path d="M11.4 7.4L14.5 10C13.1 10.7 12.1 11.6 11.2 12.6ZM28.6 7.4L25.5 10C26.9 10.7 27.9 11.6 28.8 12.6Z" fill="#EE95A3" opacity=".85"/>
+          <path d="M18.3 9.6l.4 2.1M20 9.4v2.3M21.7 9.6l-.4 2.1" stroke="#C97434" stroke-width="1" stroke-linecap="round"/>
+          <ellipse cx="20" cy="23.2" rx="4.6" ry="3.1" fill="#FCE6CC"/>
+          <circle cx="11.6" cy="21.4" r="1.9" fill="#EE95A3" opacity=".5"/><circle cx="28.4" cy="21.4" r="1.9" fill="#EE95A3" opacity=".5"/>
+          <g class="cat-eyes"><rect x="14" y="16.2" width="2.8" height="3.6" rx="1.4" fill="#2B2F3A"/><rect x="23.2" y="16.2" width="2.8" height="3.6" rx="1.4" fill="#2B2F3A"/>
+            <circle cx="16" cy="16.9" r=".6" fill="#fff"/><circle cx="25.2" cy="16.9" r=".6" fill="#fff"/></g>
+          <circle cx="15.4" cy="18" r="4.3" fill="url(#avLens)" stroke="#3B4256" stroke-width="1.3"/><circle cx="24.6" cy="18" r="4.3" fill="url(#avLens)" stroke="#3B4256" stroke-width="1.3"/>
+          <path d="M19 17.6Q20 16.9 21 17.6" stroke="#3B4256" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+          <path d="M18.8 21.6Q20 21 21.2 21.6Q20 23.1 18.8 21.6Z" fill="#EE95A3"/>
+          <path d="M18 24.4Q19 25.4 20 24.4Q21 25.4 22 24.4" stroke="#2B2F3A" stroke-width=".9" fill="none" stroke-linecap="round"/>
+          <ellipse cx="15" cy="9.8" rx="3.6" ry="1.6" fill="#fff" opacity=".28" transform="rotate(-18 15 9.8)"/>
+        </g>
+      </svg>
+    </button>
     <button class="icon-btn" id="helpBtn" type="button" aria-label="Подсказки" title="Подсказки"><svg class="ico"><use href="#i-help"/></svg></button>
     <button class="icon-btn" id="themeBtn" type="button" aria-label="Тёмная тема" title="Тёмная тема"><svg class="ico"><use id="themeIcon" href="#i-moon"/></svg></button>
   </header>
@@ -505,11 +726,12 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
 
           <section class="list" aria-labelledby="listTitle">
             <div class="list-head" id="listHead"><h2 id="listTitle">Пробы<span id="listCount"></span></h2></div>
+            <div class="thead-sentinel" id="theadSentinel" aria-hidden="true"></div>
             <div class="thead" id="thead">
               <span class="n">#</span><span>Проба</span><span>Формат</span><span>Категория</span><span>1:100</span><span>1:1000</span><span>Бионагрузка</span><span></span>
             </div>
             <ol class="rows" id="rows"></ol>
-            <div class="empty" id="empty"><b>Проб пока нет</b>Нажмите префикс и введите количество — или вставьте список из Excel.</div>
+            <div class="empty" id="empty"><b>Проб пока нет</b>Нажмите префикс и введите количество или вставьте список из Excel.</div>
           </section>
         </div>
 
@@ -523,15 +745,94 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
       </div>
     </section>
 
-    <!-- ================= Разведения: пока 404 ================= -->
+    <!-- ================= Разведения: эндотоксины ================= -->
     <section id="panel-dil" role="tabpanel" aria-labelledby="tab-dil" hidden>
-      <div class="nf">
-        <div class="nf-code" aria-hidden="true">404</div>
-        <div class="nf-cat" id="catAnim" role="img" aria-label="Котик-лаборант капает пипеткой в колбу, замечает вас и перелистывает страницу на калькулятор МБЧ"></div>
-        <h1 class="nf-title">Пока ещё в&nbsp;переразработке, сюда не&nbsp;лезем…</h1>
-        <p class="nf-sub">Котик-лаборант сейчас вернёт вас к калькулятору МБЧ</p>
-        <div class="nf-bar" id="nfBar"><span></span></div>
-        <button class="link" id="nfBack" type="button">Вернуться сейчас</button>
+      <div class="beta" id="dilBeta">
+        <div class="beta-head">
+          <h1 class="title">Эндотоксины</h1>
+        </div>
+        <div class="dil-grid">
+        <div class="bwrap">
+          <div class="seg seg-wide" role="radiogroup" aria-label="Что считаем" id="bMode">
+            <input type="radio" name="bmode" id="bm-sample" value="sample"><label for="bm-sample">Образец</label>
+            <input type="radio" name="bmode" id="bm-kse" value="kse"><label for="bm-kse">КСЭ</label>
+            <input type="radio" name="bmode" id="bm-calc" value="calc"><label for="bm-calc">МДР и результат</label>
+          </div>
+
+          <div class="surface bform" id="bf-sample">
+            <div><label class="label" for="sTo">Нужное разведение</label>
+              <input class="f f-big" id="sTo" data-bind="sample.to" autocomplete="off" spellcheck="false" placeholder="Например: 1/2700">
+              <p class="hint" id="sHint">Можно писать 1:2700, 1/2700 или просто 2700</p></div>
+          </div>
+
+          <div class="surface bform" id="bf-kse" hidden>
+            <div><label class="label" for="kStock">КСЭ во флаконе</label><div class="pair"><input class="f" id="kStock" data-bind="kse.stock" inputmode="decimal" autocomplete="off" placeholder="Например: 10"><span class="unit">ЕЭ/мл</span></div></div>
+            <div><span class="label" id="klLbl">λ лизата, ЕЭ/мл</span><div class="lam-row"><div class="chips" id="kLam" role="group" aria-labelledby="klLbl"></div><input class="f lam-own" data-bind="lam" inputmode="decimal" autocomplete="off" placeholder="Другая" aria-label="λ, ЕЭ/мл"></div></div>
+            <div><span class="label" id="ktLbl">Нужно</span><div class="lam-row"><div class="chips kt" id="kTarget" role="group" aria-labelledby="ktLbl"></div><input class="f lam-own" data-bind="kse.custom" inputmode="decimal" autocomplete="off" placeholder="Своя, ЕЭ/мл" aria-label="Своя концентрация, ЕЭ/мл"></div></div>
+          </div>
+
+          <div class="fxs" id="bf-calc" hidden>
+            <section class="surface fx" aria-label="МДР">
+              <h2 class="fx-h">МДР</h2>
+              <div class="fx-body">
+                <div class="fx-frac">
+                  <div class="fx-num"><label class="fx-in"><input class="f" data-bind="calc.limit" inputmode="decimal" autocomplete="off" placeholder="" aria-label="предел"><small>предел, ЕЭ/мг</small></label><span class="fx-op">×</span><label class="fx-in"><input class="f" data-bind="calc.conc" inputmode="decimal" autocomplete="off" placeholder="" aria-label="концентрация"><small>концентрация, мг/мл</small></label></div>
+                  <div class="fx-line"></div>
+                  <div class="fx-den"><label class="fx-in"><input class="f" data-bind="lam" inputmode="decimal" autocomplete="off" placeholder="" aria-label="λ"><small>λ, ЕЭ/мл</small></label></div>
+                </div>
+                <span class="fx-eq">=</span><output class="fx-res" id="fxMdr"></output>
+                <button class="fx-why-btn" type="button" aria-expanded="false" aria-controls="why-mdr"><span class="fx-why-ic"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg></span><span class="fx-why-tx"><b>Почему так?</b><small>До какого разведения виден предел</small></span><svg class="ico fx-why-chev" aria-hidden="true"><use href="#i-chev"/></svg></button>
+              </div>
+              <div class="fx-why" id="why-mdr" hidden><div class="anim" data-scene="whyMdr"></div><div class="fx-why-t"><p><b>λ</b> похожа на порог вкуса: лизат «чувствует» эндотоксин, только если его не меньше λ.</p><p><b>Предел × концентрация</b> показывает, сколько эндотоксина будет в 1 мл раствора, если препарат ровно на границе нормы. <b>Делим на λ</b> и узнаём, во сколько раз раствор можно развести, чтобы лизат это ещё почувствовал. Разведёте сильнее, и превышение станет незаметным. Поэтому МДР округляют вниз.</p></div></div>
+            </section>
+            <section class="surface fx" aria-label="Результат">
+              <h2 class="fx-h">Результат</h2>
+              <div class="fx-body">
+                <div class="fx-frac">
+                  <div class="fx-num"><label class="fx-in"><input class="f" data-bind="lam" inputmode="decimal" autocomplete="off" placeholder="" aria-label="λ"><small>λ, ЕЭ/мл</small></label><span class="fx-op">×</span><label class="fx-in"><input class="f" data-bind="calc.dil" inputmode="decimal" autocomplete="off" placeholder="" aria-label="разведение 1:"><small>разведение 1:</small></label></div>
+                  <div class="fx-line"></div>
+                  <div class="fx-den"><label class="fx-in"><input class="f" data-bind="calc.conc" inputmode="decimal" autocomplete="off" placeholder="" aria-label="концентрация"><small>концентрация, мг/мл</small></label></div>
+                </div>
+                <span class="fx-eq">=</span><output class="fx-res" id="fxRes"></output>
+                <button class="fx-why-btn" type="button" aria-expanded="false" aria-controls="why-res"><span class="fx-why-ic"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg></span><span class="fx-why-tx"><b>Почему так?</b><small>Как пробирка с гелем даёт ЕЭ на&nbsp;мг</small></span><svg class="ico fx-why-chev" aria-hidden="true"><use href="#i-chev"/></svg></button>
+              </div>
+              <div class="fx-why" id="why-res" hidden><div class="anim" data-scene="whyRes"></div><div class="fx-why-t"><p>Ряд разведений работает как линейка: гель есть, пока эндотоксина хватает. В <b>последней пробирке с гелем</b> его примерно λ.</p><p><b>Умножаем на разведение</b>, чтобы вернуться к неразведённому раствору: как по стакану морса посчитать, сколько было в концентрате. <b>Делим на концентрацию</b> и получаем ЕЭ на 1 мг, их и сравниваем с пределом.</p></div></div>
+            </section>
+            <section class="surface fx" aria-label="Результат на изделие">
+              <h2 class="fx-h">Результат на изделие</h2>
+              <div class="fx-body">
+                <div class="fx-frac">
+                  <div class="fx-num"><label class="fx-in"><input class="f" data-bind="calc.V" inputmode="decimal" autocomplete="off" placeholder="" aria-label="V вытяжки"><small>V вытяжки, мл</small></label><span class="fx-op">×</span><label class="fx-in"><input class="f" data-bind="lam" inputmode="decimal" autocomplete="off" placeholder="" aria-label="λ"><small>λ, ЕЭ/мл</small></label></div>
+                  <div class="fx-line"></div>
+                  <div class="fx-den"><label class="fx-in"><input class="f" data-bind="calc.N" inputmode="decimal" autocomplete="off" placeholder="" aria-label="изделий"><small>изделий, шт</small></label></div>
+                </div>
+                <span class="fx-eq">=</span><output class="fx-res" id="fxDev"></output>
+                <button class="fx-why-btn" type="button" aria-expanded="false" aria-controls="why-dev"><span class="fx-why-ic"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg></span><span class="fx-why-tx"><b>Почему так?</b><small>Как поделить вытяжку на изделия</small></span><svg class="ico fx-why-chev" aria-hidden="true"><use href="#i-chev"/></svg></button>
+              </div>
+              <div class="fx-why" id="why-dev" hidden><div class="anim" data-scene="whyDev"></div><div class="fx-why-t"><p>Изделия «отмывают» в V мл жидкости, и эндотоксин со всех поверхностей переходит в вытяжку, как чай из пакетиков в воду.</p><p>Если вытяжка дала гель, в каждом её миллилитре не меньше λ. Значит, всего в ней <b>λ × V</b> ЕЭ. <b>Делим на N</b> и получаем долю одного изделия.</p></div></div>
+            </section>
+          </div>
+
+          <div class="bout" id="bOut" aria-live="polite"></div>
+        </div>
+        <aside class="guide" aria-labelledby="guideTitle">
+          <div class="guide-head"><h2 id="guideTitle">Справочник</h2><span>коротко о ЛАЛ-тесте</span></div>
+          <div class="acc gacc">
+            <details name="guide" open><summary><span class="acc-n">1</span><span class="acc-t">Что ищем: эндотоксин</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+              <div class="acc-body"><div class="anim" data-scene="hEndo"></div><div class="g-text"><p>Эндотоксин, он же ЛПС, состоит из обломков оболочки грамотрицательных бактерий. Бактерия погибает, оболочка рассыпается, и «осколки» остаются в растворе. Поэтому опасным может быть даже стерильный препарат: живых бактерий нет, а эндотоксин есть.</p><p>Организм отвечает на него температурой. Порог около 5 ЕЭ на кг веса в час, из него и выводят предел для препарата. Автоклав (121 °C) эндотоксин не разрушает, как кипячение не убирает соль из воды. Поэтому стекло прокаливают сухим жаром: 250 °C от 30 минут.</p></div></div></details>
+            <details name="guide"><summary><span class="acc-n">2</span><span class="acc-t">Почему мечехвосты</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+              <div class="acc-body"><div class="anim" data-scene="hCrab"></div><div class="g-text"><p>Мечехвосты почти не менялись около 450 млн лет: они старше динозавров. Живут в иле, где полно бактерий. Кровь у них голубая, потому что кислород переносит медь, а не железо.</p><p>Антител, как у нас, у них нет. Вместо этого клетки крови (амебоциты) при встрече с эндотоксином сворачиваются в сгусток и, как пломба, запирают бактерии. В 1950‑х это заметил Фредерик Бэнг, а в 1960‑х вместе с Джеком Левином превратил в тест. Крабов ловят, берут около трети крови и отпускают обратно в море.</p></div></div></details>
+            <details name="guide"><summary><span class="acc-n">3</span><span class="acc-t">Что такое лизат</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+              <div class="acc-body"><div class="anim" data-scene="hLysate"></div><div class="g-text"><p>ЛАЛ расшифровывается как Limulus amebocyte lysate, то есть лизат амебоцитов мечехвоста. Клетки разрушают, и остаётся их «начинка»: набор ферментов.</p><p>Ферменты срабатывают по цепочке, как домино. Эндотоксин толкает фактор C, тот фактор B, дальше фермент превращает коагулоген в коагулин. Коагулин и есть гель. У цепочки есть «чёрный ход», фактор G: его запускают β‑глюканы (целлюлоза, грибы), и гель может появиться без эндотоксина.</p></div></div></details>
+            <details name="guide"><summary><span class="acc-n">4</span><span class="acc-t">Гель-тромб и другие методы</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+              <div class="acc-body"><div class="anim" data-scene="hGel"></div><div class="g-text"><p>Пробирки стоят 60 ± 2 минуты при 37 ± 1 °C, и их нельзя трогать: гель хрупкий, как желе. Потом каждую плавно переворачивают на 180°. Гель удержался, значит «+». Стёк, значит «−».</p><p>Есть и количественные методы. Турбидиметрический следит за помутнением, хромогенный за жёлтой окраской (405 нм). А рекомбинантный фактор C делают вообще без крови мечехвостов.</p></div></div></details>
+            <details name="guide"><summary><span class="acc-n">5</span><span class="acc-t">Мешающие факторы</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+              <div class="acc-body"><div class="anim" data-scene="hInterf"></div><div class="g-text"><p>Сам препарат может мешать реакции. <b>Ингибирование</b> похоже на заложенный нос: эндотоксин есть, а лизат его не «чует», и результат занижен. Это опаснее всего. <b>Усиление</b>, наоборот, завышает результат, например из‑за β‑глюканов.</p><p>Для проверки в образец добавляют КСЭ до 2λ: гель обязан появиться. Не появился, значит есть помехи. Тогда образец разводят (не дальше МДР), поправляют pH или прогревают.</p></div></div></details>
+            <details name="guide"><summary><span class="acc-n">6</span><span class="acc-t">λ и чувствительность</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+              <div class="acc-body"><div class="anim" data-scene="hLambda"></div><div class="g-text"><p>λ показывает чувствительность лизата: самую маленькую концентрацию эндотоксина, при которой ещё образуется гель. Как наименьший вес, который замечают весы.</p><p>Каждую серию лизата проверяют рядом КСЭ 2λ, λ, λ/2, λ/4 в четырёх повторностях. Гель должен заканчиваться около λ, допустимо от λ/2 до 2λ. ЕЭ, единица эндотоксина, примерно равна 0,1 нг стандартного эндотоксина E. coli.</p></div></div></details>
+          </div>
+        </aside>
+        </div>
       </div>
     </section>
   </main>
@@ -542,7 +843,14 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
   <button class="btn" id="dockBtn" type="button" tabindex="-1"><svg class="ico"><use href="#i-down"/></svg>Итог</button>
 </div>
 
+<button class="to-top" id="toTop" type="button" aria-label="Наверх" title="Наверх" tabindex="-1" aria-hidden="true"><svg class="ico"><use href="#i-up"/></svg></button>
+
 <div class="toast hide" id="toast" role="status" aria-live="polite"><span id="toastText"></span><button id="toastUndo" type="button" hidden>Вернуть</button></div>
+
+<dialog class="cat-dlg" id="catDlg" aria-label="Котик-лаборант">
+  <div class="cat-stage" id="catStage" role="img" aria-label="Котик-лаборант: «О! Привет!», ставит опыт, колба взрывается, и его засасывает портал со словами «Мне, похоже, пора… Хорошего дня!»"></div>
+  <button class="icon-btn cat-x" id="catClose" type="button" aria-label="Закрыть"><svg class="ico"><use href="#i-x"/></svg></button>
+</dialog>
 
 <dialog class="sheet" id="help" aria-labelledby="helpTitle">
   <div class="sheet-head">
@@ -552,23 +860,33 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
   <div class="sheet-body">
     <div class="acc" id="acc-mbch">
       <details name="help" open><summary><span class="acc-n">1</span><span class="acc-t">Добавить пробы</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
-        <div class="acc-body"><p>Нажмите префикс (FP и др.), введите количество и Enter. Номер пробы не обязательно писать.</p><div class="anim" data-scene="add"></div></div></details>
+        <div class="acc-body"><p>Нажмите префикс (FP и др.), введите количество и Enter. Номер пробы не обязательно писать. В длинном списке шапка таблицы остаётся сверху, а после 20-й пробы появляется стрелка наверх.</p><div class="anim" data-scene="add"></div></div></details>
       <details name="help"><summary><span class="acc-n">2</span><span class="acc-t">Другой префикс</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
         <div class="acc-body"><p>Новый префикс начинается с 0. Прежние пробы остаются в списке.</p><div class="anim" data-scene="prefix"></div></div></details>
       <details name="help"><summary><span class="acc-n">3</span><span class="acc-t">Список из Excel</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
-        <div class="acc-body"><p>Скопируйте пробы и вставьте в поле «Первая проба». Даже MP-FP-1856/26 встанет как FP-1856.</p><div class="anim" data-scene="paste"></div></div></details>
+        <div class="acc-body"><p>Скопируйте пробы и вставьте в поле «Первая проба». Запись не важна: MP-FP-1124/26, mp-fp-1126 или FP-1127/26, всё встанет как FP-1124…</p><div class="anim" data-scene="paste"></div></div></details>
       <details name="help"><summary><span class="acc-n">4</span><span class="acc-t">Формат</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
-        <div class="acc-body"><p>Формат подсказывает, какой инструмент нужен: таблетка — мельничка, порошок — ложка. PPM и PM — всегда ножницы.</p><div class="anim" data-scene="format"></div></div></details>
+        <div class="acc-body"><p>Формат подсказывает инструмент: для таблетки мельничка, для порошка ложка. Для PPM и PM всегда ножницы.</p><div class="anim" data-scene="format"></div></div></details>
       <details name="help"><summary><span class="acc-n">5</span><span class="acc-t">Разведения и бионагрузка</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
-        <div class="acc-body"><p>Отметьте у пробы — новые пробы повторят отметки. У бионагрузки выберите число промывок.</p><div class="anim" data-scene="ticks"></div></div></details>
-      <details name="help"><summary><span class="acc-n">6</span><span class="acc-t">BB — бионагрузка</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
-        <div class="acc-body"><p>BB — отдельная проба только на бионагрузку: 2 TSA + 2 SDA. Галочка «Бионагрузка» у пробы — другое: 1 TSA + 1 SDA.</p><div class="anim" data-scene="bb"></div></div></details>
+        <div class="acc-body"><p>Отметьте у пробы, и новые пробы повторят отметки. У бионагрузки выберите число промывок.</p><div class="anim" data-scene="ticks"></div></div></details>
+      <details name="help"><summary><span class="acc-n">6</span><span class="acc-t">BB: бионагрузка</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <div class="acc-body"><p>BB это отдельная проба только на бионагрузку: 2 TSA + 2 SDA. Галочка «Бионагрузка» у обычной пробы считается иначе: 1 TSA + 1 SDA. У 1.2Б и 4.2: фильтр в TSA, фильтр в SDA и по фильтру в 2 банки 200 мл со 100 мл среды №8. Фильтры и воронки считаются упаковками.</p><div class="anim" data-scene="bb"></div></div></details>
       <details name="help" id="rulesDet"><summary><span class="acc-n">7</span><span class="acc-t">Как считается</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
         <div class="acc-body"><p>Итог пересчитывается сам после каждого изменения.</p><div class="anim" data-scene="calc"></div><ul class="rules-list" id="rulesList"></ul><div class="rules-wrap"><table class="rules" id="rulesTable"></table></div></div></details>
     </div>
-    <div class="acc" id="acc-dil" hidden>
-      <details name="help" open><summary><span class="acc-n">1</span><span class="acc-t">Раздел в разработке</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
-        <div class="acc-body"><p>Калькулятор разведений переделывается. Пока считайте в калькуляторе МБЧ.</p></div></details>
+    <div class="acc" id="acc-beta" hidden>
+      <details name="help" open><summary><span class="acc-n">1</span><span class="acc-t">Образец</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <div class="acc-body"><p>Впишите нужное разведение: 1:2700, 1/2700 или просто 2700. Схема покажет каждую пробирку: сколько воды ЛАЛ и сколько образца или раствора из предыдущей.</p><div class="anim" data-scene="eSample"></div></div></details>
+      <details name="help"><summary><span class="acc-n">2</span><span class="acc-t">Сколько пробирок и ★</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <div class="acc-body"><p>Нажмите число пробирок, и схема перестроится. ★ отмечает вариант с наименьшей погрешностью. Варианты, где в пробирку пришлось бы налить больше 3 мл, не показываются.</p><div class="anim" data-scene="eSteps"></div></div></details>
+      <details name="help"><summary><span class="acc-n">3</span><span class="acc-t">Другие варианты</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <div class="acc-body"><p>Под схемой есть другие варианты на то же число пробирок с почти той же погрешностью. Нажмите любой, и схема станет такой. Сначала идут целые разведения и круглые объёмы, «дробный шаг» появляется, только когда иначе не собрать.</p><div class="anim" data-scene="eAlts"></div></div></details>
+      <details name="help"><summary><span class="acc-n">4</span><span class="acc-t">КСЭ</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <div class="acc-body"><p>Впишите концентрацию КСЭ во флаконе, выберите λ и сколько нужно: 20λ, 10λ, 5λ, 2,5λ или своё значение в ЕЭ/мл. Схема та же: пробирки, вода и КСЭ.</p><div class="anim" data-scene="eKse"></div></div></details>
+      <details name="help"><summary><span class="acc-n">5</span><span class="acc-t">МДР и результат</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <div class="acc-body"><p>Числа вписываются прямо в формулы, и ответ появляется сразу. МДР округляется вниз до целого. λ и концентрация общие: вписали в одной формуле, и они подставились в другие. Кнопка «Почему так?» объясняет каждую формулу.</p><div class="anim" data-scene="eFormula"></div></div></details>
+      <details name="help"><summary><span class="acc-n">6</span><span class="acc-t">Как считается</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <div class="acc-body"><ul class="rules-list"><li><b>Схема.</b> «Нестандартная» часть разведения идёт в первую пробирку: 1:27 = 100 мкл образца + 2 600 мкл воды. Дальше по 100 мкл в 900 мкл воды.</li><li><b>Объёмы.</b> Переносим 100–1000 мкл, вода кратна 50 мкл. В пробирке не больше 3 мл, в последней не меньше 1 мл.</li><li><b>Погрешность.</b> Пипетка ±1 мкл + 1 %, каждое разведение ещё ±2 % (перемешивание, остаток в наконечнике). Всё складывается квадратично.</li><li><b>Формулы.</b> МДР = предел × концентрация ÷ λ. Результат = λ × разведение ÷ концентрация. На изделие = V вытяжки × λ ÷ число изделий.</li></ul></div></details>
     </div>
   </div>
 </dialog>
@@ -592,7 +910,13 @@ const RULES = {
 const BIO = {
   bb:     { tsa: 2, sda: 2, filters: 4, frits: 2, funnels: 2, reps: 2 },  // проба BB: 4 повторности
   inProd: { tsa: 1, sda: 1, filters: 2, frits: 2, funnels: 2, reps: 1 },  // бионагрузка в пробе: одна повторность
+  // 1.2Б и 4.2: фильтр в TSA, фильтр в SDA и по фильтру в две банки 200 мл со 100 мл среды №8 (TSB)
+  jar:    { tsa: 1, sda: 1, jars: 2, filters: 4, frits: 2, funnels: 2, reps: 2 },
+  jarCats: ['4.2', '1.2Б', '1.2Б+2.2'],
+  jarMediaMl: 100, jarMl: 200,
   control: { tsa: 3, sda: 3, filters: 2, naclMl: 50 },                    // один раз на все бионагрузки
+  filterPack: 10,              // фильтры — упаковками по 10
+  funnelPack: 6,               // воронки — упаковками по 6
   washPortionMl: 100,          // одна промывка = 100 мл NaCl 0,9%
   washMax: 5,                  // до 5 промывок (500 мл)
   bbWashMin: 1, bbWashDefault: 3,
@@ -698,8 +1022,10 @@ const state = {
   series: [],   // { id, first } — серия начинается с кода первой пробы
   cur: null,    // текущая серия: к ней относятся «Первая проба» и «Количество»
   samples: [],  // { id, sid, code, auto, format, formatAuto, cat, d100, d1000, bio, washes, bbWashes }
-  dil: { mode: 'mbch', form: 'solid', target: 100, cat: '2.2', method: 'pour', diluent: 'fbr', diluentAuto: true, step: '10',
-         lal: { limit: '', unit: 'eu_mg', conc: '', lambda: 0.06, maxSteps: 3, work: null, pick: null } },
+  dil: { mode: 'sample', lam: '0,03125',
+    sample: { from: '', to: '', vol: 1000, steps: null, alt: null },
+    kse: { stock: '', target: 20, custom: '', vol: 1000, steps: null, alt: null },
+    calc: { limit: '', conc: '', dil: '', V: '', N: '' } },
 };
 function sanitize(s) {
   if (!s || typeof s !== 'object') return null;
@@ -737,23 +1063,15 @@ function load() {
     }
     state.cur = typeof d.cur === 'string' && seriesById(d.cur) ? d.cur : (state.series.length ? state.series[state.series.length - 1].id : null);
     const dl = d.dil || {}, D = state.dil;
-    if (dl.mode === 'mbch' || dl.mode === 'lal') D.mode = dl.mode;
-    if (dl.form in FORMS) D.form = dl.form;
-    if (Number.isInteger(dl.target)) D.target = dl.target;
-    if (CATEGORIES.includes(dl.cat)) D.cat = dl.cat;
-    if (dl.cat === '3A') D.cat = '2.2';
-    if (dl.method in METHODS) D.method = dl.method;
-    if (dl.diluent in MB_DILUENTS) D.diluent = dl.diluent;
-    if (typeof dl.diluentAuto === 'boolean') D.diluentAuto = dl.diluentAuto;
-    if (dl.step === '10' || dl.step === '1') D.step = dl.step;
-    if (dl.lal && typeof dl.lal === 'object') {
-      const L = dl.lal;
-      if (typeof L.limit === 'string') D.lal.limit = L.limit;
-      if (typeof L.conc === 'string') D.lal.conc = L.conc;
-      if (['eu_mg', 'eu_ml', 'eu_unit'].includes(L.unit)) D.lal.unit = L.unit;
-      if (LAMBDAS.includes(L.lambda)) D.lal.lambda = L.lambda;
-      if ([1, 2, 3, 4, 5].includes(L.maxSteps)) D.lal.maxSteps = L.maxSteps;
-    }
+    if (['sample', 'kse', 'calc'].includes(dl.mode)) D.mode = dl.mode;
+    if (typeof dl.lam === 'string') D.lam = dl.lam;
+    const copy = (src, dst, keys) => { if (src && typeof src === 'object') keys.forEach((k) => { if (typeof src[k] === typeof dst[k]) dst[k] = src[k]; }); };
+    copy(dl.sample, D.sample, ['from', 'to', 'vol']);
+    copy(dl.kse, D.kse, ['stock', 'target', 'custom', 'vol']);
+    copy(dl.calc, D.calc, ['limit', 'conc', 'dil', 'V', 'N']);
+    if (!VOLS.includes(D.sample.vol)) D.sample.vol = 1000;
+    if (!VOLS.includes(D.kse.vol)) D.kse.vol = 1000;
+    if (!KSE_T.includes(D.kse.target)) D.kse.target = 20;
   } catch (e) { /* хранилище недоступно */ }
 }
 let saveT = null;
@@ -762,9 +1080,7 @@ function save() {
   saveT = setTimeout(() => {
     try {
       const { tab, theme, series, cur, samples } = state;
-      const { mode, form, target, cat, method, diluent, diluentAuto, step } = state.dil;
-      const { limit, unit, conc, lambda, maxSteps } = state.dil.lal;
-      localStorage.setItem(KEY, JSON.stringify({ tab, theme, series, cur, samples, dil: { mode, form, target, cat, method, diluent, diluentAuto, step, lal: { limit, unit, conc, lambda, maxSteps } } }));
+      localStorage.setItem(KEY, JSON.stringify({ tab, theme, series, cur, samples, dil: state.dil }));
     } catch (e) { /* без сохранения */ }
   }, 200);
 }
@@ -913,6 +1229,8 @@ function fritPacks(n) {
   }
   return best;
 }
+// Схема бионагрузки пробы: у 1.2Б и 4.2 — TSA, SDA и две банки со средой №8
+const bioScheme = (s) => (BIO.jarCats.includes(s.cat) ? BIO.jar : isBB(s) ? BIO.bb : BIO.inProd);
 function computeTotals(samples) {
   const media = { fbr: 0, tsa: 0, sda: 0, tsb: 0, mossel: 0 };
   const tools = { grinders: 0, scissors: 0, spoons: 0, bottles: 0, bottles100: 0, tubes: 0, racks: 0 };
@@ -932,23 +1250,24 @@ function computeTotals(samples) {
   const bb = samples.filter(isBB), inp = mb.filter((s) => s.bio);
   let bio = null;
   if (bb.length || inp.length) {
-    const B = BIO.bb, P = BIO.inProd, C = BIO.control;
-    const add = (k) => bb.length * B[k] + inp.length * P[k];
-    // NaCl: фриты × объём промывки × повторности
-    const naclBB = bb.reduce((a, s) => a + B.frits * s.bbWashes * BIO.washPortionMl * B.reps, 0);
-    const naclP = inp.reduce((a, s) => a + P.frits * s.washes * BIO.washPortionMl * P.reps, 0);
-    const frits = add('frits');
+    const C = BIO.control, all = [...bb, ...inp];
+    const sum = (k) => all.reduce((a, s) => a + (bioScheme(s)[k] || 0), 0);
+    // NaCl: фриты × промывки × 100 мл × повторности
+    const nacl = all.reduce((a, s) => { const K = bioScheme(s); return a + K.frits * (isBB(s) ? s.bbWashes : s.washes) * BIO.washPortionMl * K.reps; }, 0);
+    const frits = sum('frits'), filters = sum('filters') + C.filters, funnels = sum('funnels'), jars = sum('jars');
     bio = {
       bb: bb.length, inp: inp.length, mbCount: mb.length,
-      tsaPlates: add('tsa') + C.tsa,
-      sdaPlates: add('sda') + C.sda,
-      filters: add('filters') + C.filters,
+      tsaPlates: sum('tsa') + C.tsa,
+      sdaPlates: sum('sda') + C.sda,
+      filters, filterPacks: Math.ceil(filters / BIO.filterPack),
       frits, packs: fritPacks(frits),
-      funnels: add('funnels'),
-      nacl: naclBB + naclP + C.naclMl,
+      funnels, funnelPacks: Math.ceil(funnels / BIO.funnelPack),
+      jars, jarMedia: jars * BIO.jarMediaMl,
+      nacl: nacl + C.naclMl,
       hoses: BIO.hoses,
       tweezers: BIO.tweezers,
     };
+    media.tsb += bio.jarMedia;
   }
   media.nacl = bio ? bio.nacl : 0;
   return { media, tools, bio, noFormat, mbCount: mb.length };
@@ -964,9 +1283,10 @@ function bioRows(b) {
   return [
     { name: 'Чашки TSA', sub: 'готовые', v: b.tsaPlates, icon: 'i-dish' },
     { name: 'Чашки SDA', sub: 'готовые', v: b.sdaPlates, icon: 'i-dish' },
-    { name: 'Фильтры', v: b.filters, icon: 'i-filter' },
+    ...(b.jars ? [{ name: 'Банки 200 мл', sub: `по ${BIO.jarMediaMl} мл среды №8 (TSB), для 1.2Б и 4.2`, v: b.jars, icon: 'i-bottle' }] : []),
+    { name: 'Фильтры', v: b.filterPacks, unit: 'уп.', icon: 'i-filter' },
     { name: 'Фриты', sub: packsText(b.packs), v: b.frits, icon: 'i-frit' },
-    { name: 'Воронки', v: b.funnels, icon: 'i-funnel' },
+    { name: 'Воронки', v: b.funnelPacks, unit: 'уп.', icon: 'i-funnel' },
     { name: 'Шланги', sub: 'насос: вход и слив', v: b.hoses, icon: 'i-hose' },
     { name: 'Пинцет', v: b.tweezers, icon: 'i-tweezers' },
   ];
@@ -1013,7 +1333,7 @@ function updateCountHint() {
   const next = parseCountExpr(raw, n);
   if (next === null) { hint.textContent = 'Нужно число, например 13'; hint.classList.add('err'); el.setAttribute('aria-invalid', 'true'); return; }
   const room = MAX_SAMPLES - (state.samples.length - n);
-  hint.textContent = `Enter — станет ${probes(Math.min(next, room))}`;
+  hint.textContent = `Enter: станет ${probes(Math.min(next, room))}`;
 }
 function applyCountInput() {
   const el = $('count');
@@ -1093,6 +1413,7 @@ function renderList(newIds = []) {
   const has = state.samples.length > 0;
   $('rows').hidden = !has; $('thead').hidden = !has; $('empty').hidden = has;
   $('listCount').textContent = has ? num(state.samples.length) : '';
+  toTopCheck();
 }
 function syncRows() {
   document.querySelectorAll('#rows .row').forEach((li) => { const s = byId(li.dataset.id); if (s) syncRow(li, s); });
@@ -1112,10 +1433,11 @@ function renderTotals() {
   let html = '';
   if (!n) html = '<p class="t-empty">Здесь появится расчёт сред и инструментов.</p>';
   else {
-    if (MEDIA.some((m) => media[m.key])) html += `<section class="t-group"><h3>Среды</h3><ul class="t-list">${MEDIA.filter((m) => media[m.key]).map((m) => tRow(m.icon, m.name, media[m.key], 'мл', m.sub)).join('')}</ul></section>`;
+    const mSub = (m) => (m.key === 'tsb' && bio && bio.jarMedia ? `среда №8, вкл. ${num(bio.jarMedia)} мл на банки` : m.sub);
+    if (MEDIA.some((m) => media[m.key])) html += `<section class="t-group"><h3>Среды</h3><ul class="t-list">${MEDIA.filter((m) => media[m.key]).map((m) => tRow(m.icon, m.name, media[m.key], 'мл', mSub(m))).join('')}</ul></section>`;
     const tl = TOOLS.filter((t) => tools[t.key]);
     if (tl.length) html += `<section class="t-group"><h3>Инструменты и посуда</h3><ul class="t-list">${tl.map((t) => tRow(t.icon, t.name, tools[t.key], '', t.note && t.note())).join('')}</ul></section>`;
-    if (noFormat) html += `<p class="t-note warn"><svg class="ico"><use href="#i-alert"/></svg><span>${noFormat === mbCount ? (noFormat === 1 ? 'У пробы' : 'У всех проб') : `У ${probesGen(noFormat)}`} не выбран формат — инструменты для ${noFormat === 1 ? 'неё' : 'них'} не посчитаны.</span></p>`;
+    if (noFormat) html += `<p class="t-note warn"><svg class="ico"><use href="#i-alert"/></svg><span>${noFormat === mbCount ? (noFormat === 1 ? 'У пробы' : 'У всех проб') : `У ${probesGen(noFormat)}`} не выбран формат, поэтому инструменты для ${noFormat === 1 ? 'неё' : 'них'} не посчитаны.</span></p>`;
     if (bio) {
       const parts = [];
       if (bio.bb) parts.push(`BB: ${num(bio.bb)}`);
@@ -1164,288 +1486,239 @@ function updateDock() {
 }
 
 /* =====================================================================
-   РАЗВЕДЕНИЯ — по ГФ РФ
-   МБЧ: ОФС.1.2.4.0002 «Микробиологическая чистота»
-   Эндотоксины: МДР = предел эндотоксинов × концентрация / λ
+   ЭНДОТОКСИНЫ: разведение образца, разведение КСЭ, МДР и результат
+   МДР        = предел × концентрация ÷ λ
+   Результат  = λ × разведение ÷ концентрация
+   Результат (шт) = V вытяжки × λ ÷ количество изделий
    ===================================================================== */
-// Исходное разведение по форме образца (ОФС.1.2.4.0002, разделы 4.1–4.6)
-const FORMS = {
-  solid:    { label: 'Твёрдый', kinds: 'таблетки, капсулы, порошки', qty: '10 г',         start: 10,  diluentMl: 100, per: 'г' },
-  liquid:   { label: 'Жидкий', kinds: 'растворы, суспензии, сиропы', qty: '10 мл',        start: 10,  diluentMl: 90,  per: 'мл' },
-  soft:     { label: 'Мягкий', kinds: 'мази, кремы, суппозитории', qty: '10 г',         start: 10,  diluentMl: 100, per: 'г', note: 'Со стеклянными бусами, нагреть не выше 42,5 °C.' },
-  aerosol:  { label: 'Аэрозоль', kinds: '', qty: '3 г',          start: 10,  diluentMl: 30,  per: 'г', note: 'После испарения пропеллента.' },
-  patch:    { label: 'Пластыри', kinds: 'трансдермальные', qty: '10 пластырей', start: 50,  diluentMl: 500, per: 'пластырь', note: 'Встряхивать 30 мин при 42,5 °C. Это условное разведение 1:50.' },
-  herb:     { label: 'ЛРС: плоды, корни', kinds: 'плоды, корни, кора, почки', qty: '10 г',         start: 10,  diluentMl: 100, per: 'г', diluent: 'nsl', note: 'Встряхивать не менее 15 мин.' },
-  herbLeaf: { label: 'ЛРС: трава, листья', kinds: 'трава, листья, цветки', qty: '2 г',          start: 100, diluentMl: 200, per: 'г', diluent: 'nsl', note: 'Встряхивать не менее 15 мин. Смыв считают разведением 1:100.' },
-};
-const MB_DILUENTS = {
-  fbr:  { label: 'FBR', gen: 'FBR' },
-  neut: { label: 'Нейтр. жидкость', gen: 'нейтрализующей жидкости' },
-  nsl:  { label: 'NSL', gen: 'NSL' },
-};
-const METHODS = {
-  pour:     { label: 'Глубинный',       factor: 1,  maxB: 250, maxF: 50, unit: 'Чашка' },
-  surface:  { label: 'Поверхностный', factor: 10, maxB: 250, maxF: 50, unit: 'Чашка' },
-  membrane: { label: 'Мембрана', factor: 0,  maxB: 100, maxF: 50, unit: 'Фильтр' },
-};
-// Нормы ОЧАМ и ОЧДП как степень 10 (табл. 1 и 2 ОФС). Для 3A жидкие препараты строже.
-function normsFor(cat, form) {
-  if (cat === '3A') return form === 'liquid' ? [2, 1] : [3, 2];
-  return ({ '2.2': [3, 2], '4.2': [3, 2], '1.2Б': [2, 1], '1.2Б+2.2': [2, 1] })[cat] || [3, 2];
-}
-const SUP = { 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
-const pow10 = (e) => `10${String(e).replace(/\d/g, (c) => SUP[c])}`;
-// Округление до 2 значащих цифр, как в ОФС: 19150 → 1,9·10⁴
-function sci(n) {
-  const r = Number(n.toPrecision(2));
-  if (r < 1000) return num(r, 1);
-  const e = Math.floor(Math.log10(r));
-  return `${num(r / 10 ** e, 1)}·${pow10(e)}`;
-}
-// Ряд разведений от исходного: десятикратные и ×5 (1:10, 1:50, 1:100, 1:500 …)
-function mbTargets(start) {
-  const out = [], isPow = Number.isInteger(Math.log10(start));
-  for (let k = 0; k <= 3; k++) { const d = start * 10 ** k; out.push(d); if (isPow) out.push(d * 5); }
-  return out.filter((d) => d <= 10000).sort((a, b) => a - b);
-}
-function mbPlan(form, target, stepMl) {
-  const f = FORMS[form];
-  const plan = [{ start: true, to: f.start, diluentUl: f.diluentMl * 1000, qty: f.qty }];
-  let cur = f.start, R = Math.round(target / f.start), tens = 0;
-  while (R > 1 && R % 10 === 0) { R /= 10; tens++; }
-  const tr = stepMl * 1000;
-  for (let i = 0; i < tens; i++) { plan.push({ from: cur, to: cur * 10, ratio: 10, transferUl: tr, diluentUl: tr * 9 }); cur *= 10; }
-  if (R > 1) plan.push({ from: cur, to: cur * R, ratio: R, transferUl: tr, diluentUl: tr * (R - 1) });
-  return plan;
-}
-const detLimit = (method, d) => (method === 'membrane' ? 1 : d * METHODS[method].factor);
+const LAMBDAS = ['0,03125', '0,035'];
+const VOLS = [500, 1000, 2000, 5000];
+const KSE_T = [20, 10, 5, 2.5];
+const STEP_ERR = 0.02;          // каждый шаг: перемешивание, остаток в наконечнике
+const MAX_N = 6;
+const parseNum = (v) => { const n = Number(String(v == null ? '' : v).replace(/[\s ]/g, '').replace(',', '.')); return Number.isFinite(n) && n > 0 ? n : null; };
+const sig = (x, d = 4) => num(Number(x.toPrecision(d)), 6);
+const isInt = (x) => Math.abs(x - Math.round(x)) < 1e-9;
+const vol = (ul) => (ul < 1000 ? `${num(Math.round(ul))} мкл` : `${num(Math.round(ul) / 1000, 3)} мл`);
+const dilText = (d) => (Math.abs(d - 1) < 1e-9 ? 'б/р' : `1:${num(d, d < 10 ? 2 : 1)}`);
+const pipErr = (v) => 0.01 + 1 / v;    // пипетка: ±1 мкл + 1 %
 
-// --- общие помощники для схемы ---
-const MAX_RATIO = 1000;
-function transferUl(r) { if (r <= 3) return 500; if (r <= 5) return 200; if (r <= 30) return 100; if (r <= 100) return 50; return 20; }
-function factorCost(r) {
-  const fixed = { 10: 0, 2: 3, 5: 3, 4: 4, 3: 5, 20: 5, 8: 6, 9: 6, 25: 6, 50: 6, 100: 10.5 };
-  if (r in fixed) return fixed[r];
-  if (r <= 100) return 9 + r * 0.05;
-  return 30 + r / 20;
-}
-function primeFactors(n) {
-  const out = [];
-  for (let p = 2; p * p <= n; p += p === 2 ? 1 : 2) { let e = 0; while (n % p === 0) { n /= p; e++; } if (e) out.push([p, e]); }
-  if (n > 1) out.push([n, 1]);
-  return out;
-}
-function divisorsUpTo(n, limit) {
-  let divs = [1];
-  for (const [p, e] of primeFactors(n)) {
-    const next = [];
-    for (const d of divs) { let x = d; for (let i = 0; i <= e; i++) { if (x > limit) break; next.push(x); x *= p; } }
-    divs = next;
+// ---------- Схемы разведения ----------
+// Приоритет: целые множители и круглые объёмы (перенос 100–1000 мкл, вода кратна 50 мкл),
+// «нестандартный» множитель — в первую пробирку, дальше ×10 (100 + 900 мкл), как в лаборатории.
+const TUBE_MAX = 3000;                          // в пробирку не больше 3 мл
+const F_MAX = 30;                               // ×30 = 100 мкл + 2 900 мкл
+const T_SET = [100, 200, 250, 500, 1000];       // сколько переносить
+const STD_REAL = [10, 5, 2, 4, 20, 25];         // целые шаги к дробному разведению
+const ul = (v) => `${num(Math.round(v))} мкл`;
+const pct = (e) => `±${num(e * 100, e < 0.1 ? 1 : 0)}%`;
+function tubeVol(f, need) {
+  let best = null;
+  for (const t of T_SET) {
+    const ex = t * (f - 1);
+    const d = isInt(f) ? Math.round(ex) : Math.max(10, Math.round(ex / 10) * 10);
+    if (t + d < need || t + d > TUBE_MAX) continue;
+    const dev = Math.abs((t + d) / t / f - 1);
+    if (dev < 0.002) return { t, d, total: t + d };
+    if (!best || dev < best.dev) best = { t, d, total: t + d, dev };
   }
-  return divs.filter((d) => d >= 2 && d <= limit).sort((a, b) => b - a);
+  return best && best.dev <= 0.01 ? best : null;
 }
-function factorSets(target, maxSteps) {
+function planChain(fs, R) {
+  const n = fs.length, S = new Array(n);
+  for (let i = n - 1; i >= 0; i--) {             // объёмы с конца: последняя ≥ 1 мл, промежуточная — перенос + запас
+    const v = tubeVol(fs[i], i === n - 1 ? 1000 : Math.max(200, S[i + 1].t + 100));
+    if (!v) return null;
+    S[i] = { t: v.t, d: v.d, total: v.total };
+  }
+  let cum = 1, e2 = 0, nonInt = 0, non10 = 0, odd = 0, water = 0, seen10 = false, order = 0, not100 = 0;
+  S.forEach((s, i) => {
+    cum *= s.total / s.t; s.cum = cum;
+    e2 += (s.d / s.total) ** 2 * (pipErr(s.t) ** 2 + pipErr(s.d) ** 2) + STEP_ERR ** 2;
+    if (!isInt(fs[i])) nonInt++;
+    if (fs[i] === 10) seen10 = true; else { non10++; if (seen10) order = 1; }
+    if (s.d % 50) odd++;
+    if (s.t !== 100) not100++;
+    water += s.d;
+  });
+  const dev = Math.abs(cum / R - 1);
+  if (dev > 0.01) return null;
+  const err = Math.sqrt(e2);
+  return { steps: S, err, nonInt, sig: fs.map((f) => +f.toFixed(4)).sort((x, y) => x - y).join('x'),
+    score: err + 0.05 * nonInt + 0.003 * non10 + 0.002 * not100 + 0.002 * order + 0.002 * odd + 0.0003 * water / 1000 + dev };
+}
+function intParts(R, n) {                      // R = f1·f2·…·fn, 2 ≤ f ≤ F_MAX, по невозрастанию
   const out = [];
   const rec = (rem, maxF, acc) => {
-    if (rem === 1) { if (acc.length) out.push(acc.slice()); return; }
-    const left = maxSteps - acc.length;
-    if (left <= 0 || rem > MAX_RATIO ** left) return;
-    for (const d of divisorsUpTo(rem, Math.min(maxF, MAX_RATIO))) { acc.push(d); rec(rem / d, d, acc); acc.pop(); if (out.length > 20000) return; }
+    const left = n - acc.length;
+    if (left === 1) { if (rem >= 2 && rem <= maxF) out.push([...acc, rem]); return; }
+    for (let f = Math.min(maxF, F_MAX); f >= 2 && out.length < 400; f--) {
+      if (rem % f) continue;
+      const r2 = rem / f;
+      if (r2 > f ** (left - 1)) break;
+      if (r2 < 2 ** (left - 1)) continue;
+      acc.push(f); rec(r2, f, acc); acc.pop();
+    }
   };
-  rec(target, Infinity, []);
+  rec(R, F_MAX, []);
   return out;
 }
-function orderFactors(set) {
-  const tens = set.filter((x) => x === 10), rest = set.filter((x) => x !== 10).sort((a, b) => b - a);
-  return [...rest, ...tens];
+function orders(fs) {
+  const n10 = fs.filter((f) => f !== 10), t10 = fs.filter((f) => f === 10);
+  const desc = n10.slice().sort((a, b) => b - a), asc = n10.slice().sort((a, b) => a - b);
+  const set = [[...desc, ...t10], [...asc, ...t10], fs.slice().sort((a, b) => b - a), fs.slice().sort((a, b) => a - b)];
+  if (fs.length <= 4) {                         // короткие цепочки — все перестановки
+    const perm = (rest, acc) => { if (!rest.length) { set.push(acc); return; } [...new Set(rest)].forEach((f) => { const i = rest.indexOf(f); perm([...rest.slice(0, i), ...rest.slice(i + 1)], [...acc, f]); }); };
+    perm(fs, []);
+  }
+  const seen = new Set();
+  return set.filter((o) => { const k = o.join(','); if (seen.has(k)) return false; seen.add(k); return true; });
 }
-function freeRoutes(target, maxSteps) {
-  const scored = factorSets(target, maxSteps).map((set) => {
-    const chain = orderFactors(set);
-    let cur = 1;
-    const plan = chain.map((ratio) => { const from = cur; cur *= ratio; const tr = transferUl(ratio); return { from, to: cur, ratio, transferUl: tr, diluentUl: tr * (ratio - 1) }; });
-    return { chain, plan, cost: chain.length * 10 + chain.reduce((a, r) => a + factorCost(r), 0) };
-  }).sort((a, b) => a.cost - b.cost || a.chain.length - b.chain.length);
-  if (!scored.length) return [];
-  const picked = [scored[0]], seen = new Set([scored[0].chain.length]);
-  for (const r of scored) if (!seen.has(r.chain.length)) { picked.push(r); seen.add(r.chain.length); }
-  for (const r of scored) { if (picked.length >= 4) break; if (!picked.includes(r)) picked.push(r); }
-  return picked.slice(0, 4).sort((a, b) => a.cost - b.cost);
+function plansFor(R, n) {
+  const cand = [];
+  const Ri = Math.round(R), whole = Math.abs(R - Ri) < 1e-6;
+  if (whole) intParts(Ri, n).forEach((fs) => orders(fs).forEach((o) => cand.push(o)));
+  // дробный множитель в первой пробирке + целые шаги
+  const rec = (start, acc, prod) => {
+    if (acc.length === n - 1) {
+      const m = R / prod;
+      if (m >= 1.5 && m <= F_MAX && !isInt(m)) { const rest = acc.slice().sort((a, b) => (a === 10) - (b === 10) || b - a); cand.push([m, ...rest]); }
+      return;
+    }
+    for (let i = start; i < STD_REAL.length; i++) rec(i, [...acc, STD_REAL[i]], prod * STD_REAL[i]);
+  };
+  rec(0, [], 1);
+  const best = new Map();
+  cand.forEach((fs) => { const p = planChain(fs, whole ? Ri : R); if (p && (!best.has(p.sig) || p.score < best.get(p.sig).score)) best.set(p.sig, p); });
+  return [...best.values()].sort((a, b) => a.score - b.score).slice(0, 5);
 }
-const vol = (ul) => (ul < 1000 ? `${num(ul)} мкл` : `${num(ul / 1000, 2)} мл`);
-const dilText = (d) => `1:${num(d)}`;
-const routeKey = (r) => r.chain.join('x');
-const stepsWord = (n) => `${n} ${plural(n, ['шаг', 'шага', 'шагов'])}`;
-const routeHTML = (plan) => plan.map((s) => `<span>${dilText(s.to)}</span>`).join('<svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg>');
-const parseNum = (v) => { const n = Number(String(v || '').replace(/\s/g, '').replace(',', '.')); return Number.isFinite(n) && n > 0 ? n : null; };
+function parseDil(raw) {
+  const s = String(raw == null ? '' : raw).toLowerCase().replace(/[\s ]/g, '').replace(/,/g, '.');
+  if (!s) return null;
+  if (/^б\/?р$|^бр$/.test(s)) return 1;
+  if (/^(\d*\.?\d+)?[:/]$/.test(s) || s === '1') return null;          // ещё печатают
+  const m = s.match(/^(?:(\d*\.?\d+)?[:/])?(\d*\.?\d+)$/);
+  if (!m) return NaN;
+  const a = m[1] ? Number(m[1]) : 1, b = Number(m[2]);
+  return a > 0 && b > 0 ? b / a : NaN;
+}
+function tubeSvg(frac, tint) {
+  const top = 103 - Math.round(92 * frac);
+  return `<svg class="tb-svg" viewBox="0 0 44 112" aria-hidden="true">
+    <path class="tb-liq" fill-opacity="${tint}" d="M10 ${top}H34V92a12 12 0 0 1-24 0Z"/>
+    <path class="tb-liq" fill-opacity="${Math.min(1, tint + 0.25)}" d="M10 ${top}h24v2.2H10Z"/>
+    <path class="tb-tick" d="M29 34h5M31 50h3M29 66h5M31 82h3"/>
+    <path class="tb-glass" d="M6 7h32M9 7v85a13 13 0 0 0 26 0V7"/>
+  </svg>`;
+}
+const tubesWord = (n) => (n === 1 ? 'пробирку' : n < 5 ? 'пробирки' : 'пробирок');
+// Выбор числа пробирок (★ — наименьшая погрешность среди целых схем) + схема + другие варианты
+function tubesBlock(key, st, R, o) {
+  if (R < 0.999) return `<p class="b-msg bad">${o.lessMsg}</p>`;
+  if (R < 1.5) return `<p class="b-msg">${o.sameMsg}</p>`;
+  const byN = new Map();
+  for (let k = 1; k <= MAX_N; k++) { const ps = plansFor(R, k); if (ps.length) byN.set(k, ps); }
+  const ns = [...byN.keys()];
+  if (!ns.length) return `<p class="b-msg bad">Не получается собрать такое разведение за ${MAX_N} пробирок.</p>`;
+  const top = (k) => byN.get(k)[0];
+  const better = (a, b) => (top(a).nonInt > 0) - (top(b).nonInt > 0) || top(a).err - top(b).err;
+  const star = ns.reduce((a, k) => (better(k, a) < -0.001 ? k : a), ns[0]);
+  const n = ns.includes(st.steps) ? st.steps : star, list = byN.get(n);
+  const plan = list.find((p) => p.sig === st.alt) || list[0], S = plan.steps, last = S[S.length - 1];
+  const maxTot = Math.max(...S.map((s) => s.total));
+  const chain = (p) => p.steps.map((s) => o.short(s.cum)).join(' → ');
+  return `<div class="stp" role="radiogroup" aria-label="Сколько пробирок">
+      ${ns.map((k) => `<input type="radio" name="st-${key}" id="st-${key}-${k}" value="${k}" data-steps="${key}"${k === n ? ' checked' : ''}>
+        <label for="st-${key}-${k}"><b>${k}${k === star ? '<i aria-label="оптимально">★</i>' : ''}</b><small>${pct(top(k).err)}</small></label>`).join('')}
+    </div>
+    <p class="stp-cap">${ns.length > 1 ? 'Сколько пробирок. ★ наименьшая погрешность' : `Только ${n} ${tubesWord(n).replace('пробирку', 'пробирка')}: иначе не уложиться в 3 мл`}</p>
+    <ol class="tubes">
+      ${S.map((s, i) => `<li class="tb">
+        ${i ? `<span class="tb-arr" aria-hidden="true"><svg class="ico"><use href="#i-arrow"/></svg>${ul(s.t)}</span>` : ''}
+        ${tubeSvg(0.3 + 0.6 * (s.total / maxTot), Math.max(0.14, 0.6 * 0.68 ** i))}
+        <div class="tb-info">
+          <div class="tb-top"><span class="tb-n">Пробирка ${i + 1}</span><span class="tb-res">${o.result(s.cum)}</span></div>
+          <ul class="tb-add">
+            <li><i class="dot w"></i><span>Вода ЛАЛ</span><b>${ul(s.d)}</b></li>
+            <li><i class="dot s"></i><span>${i ? `Из пробирки ${i}` : o.src}</span><b>${ul(s.t)}</b></li>
+          </ul>
+          <span class="tb-tot">в пробирке ${vol(s.total)}</span>
+        </div></li>`).join('')}
+    </ol>
+    <p class="b-sum">Готово в пробирке ${S.length}: <b>${vol(last.total)}</b> ${o.final(last.cum)}. Погрешность ≈ ${pct(plan.err)}</p>
+    ${list.length > 1 ? `<div class="alts">
+      <p class="alts-h">Варианты на ${n} ${tubesWord(n)}</p>
+      <div class="alt-list" role="radiogroup" aria-label="Другие схемы">
+        ${list.map((p, j) => `<input type="radio" name="alt-${key}" id="alt-${key}-${j}" value="${p.sig}" data-alt="${key}"${p === plan ? ' checked' : ''}>
+          <label for="alt-${key}-${j}"><span class="alt-c">${chain(p)}</span><span class="alt-e">${pct(p.err)}</span>
+            <small>${p.steps.map((s) => `${num(s.t)} + ${num(s.d)}`).join(' · ')} мкл${p.nonInt ? ' · дробный шаг' : ''}</small></label>`).join('')}
+      </div></div>` : ''}`;
+}
 
-function tubeSVG(fill, strength) {
-  const top = 8, base = 74, level = Math.round(base + 8 - fill * (base + 8 - top - 8));
-  const liq = `M12.8 ${level}V${base}a7.2 7.2 0 0 0 14.4 0V${level}Z`;
-  return `<svg viewBox="0 0 40 92" aria-hidden="true"><path class="t-dil" d="${liq}"/><path class="t-liq" d="${liq}" style="opacity:${strength.toFixed(2)}"/><path class="t-glass" d="M9 ${top}h22M12 ${top}V${base}a8 8 0 0 0 16 0V${top}"/></svg>`;
-}
-function flaskSVG(strength) {
-  const liq = 'M10.2 58h19.6l5.5 20.5a3 3 0 0 1-2.9 3.5H7.6a3 3 0 0 1-2.9-3.5Z';
-  return `<svg viewBox="0 0 40 92" aria-hidden="true"><path class="t-dil" d="${liq}"/><path class="t-liq" style="opacity:${strength.toFixed(2)}" d="${liq}"/><path class="t-glass" d="M14 8h12M16 8v24L4.4 77.6A3.4 3.4 0 0 0 7.7 82h24.6a3.4 3.4 0 0 0 3.3-4.4L24 32V8"/></svg>`;
-}
-function benchHTML(plan, gen, target, bigVessels) {
-  const logMax = Math.log(Math.max(target, 10));
-  const strength = (d) => Math.max(0.08, 0.9 - (Math.log(d) / logMax) * 0.82);
-  const out = [];
-  plan.forEach((s, i) => {
-    if (s.start) { out.push(`<div class="vial">${flaskSVG(strength(s.to))}<b class="v-dil">${dilText(s.to)}</b><span class="v-sub">${s.qty} + ${vol(s.diluentUl)}</span></div>`); return; }
-    if (i === 0) out.push(`<div class="vial">${tubeSVG(0.7, 0.9)}<b class="v-dil">Исходный</b><span class="v-sub">раствор</span></div>`);
-    out.push(`<div class="hop" aria-hidden="true"><span>${vol(s.transferUl)}</span><svg viewBox="0 0 56 14"><path d="M4 7h46M44 2l6 5-6 5"/></svg></div>`);
-    out.push(`<div class="vial">${bigVessels ? flaskSVG(strength(s.to)) : tubeSVG(0.75, strength(s.to))}<b class="v-dil">${dilText(s.to)}</b><span class="v-sub">+${vol(s.diluentUl)} ${gen}</span></div>`);
+// ---------- Образец ----------
+function renderSampleB() {
+  const S = state.dil.sample, R = parseDil(S.to), inp = $('sTo'), hint = $('sHint');
+  const bad = Number.isNaN(R);
+  inp.setAttribute('aria-invalid', bad ? 'true' : 'false');
+  hint.classList.toggle('err', bad);
+  hint.textContent = bad ? 'Не понял запись. Например: 1/2700, 1:2700 или 2700' : (R && R >= 1.5 ? `Разведение ${dilText(R)}` : 'Можно писать 1:2700, 1/2700 или просто 2700');
+  if (!R || bad) return `<p class="b-empty">Введите нужное разведение, и я покажу, в какую пробирку сколько воды и образца.</p>`;
+  return tubesBlock('sample', S, R, {
+    src: 'Образец',
+    result: (c) => dilText(c),
+    short: (c) => dilText(c),
+    final: (c) => `раствора ${dilText(c)}${Math.abs(c / R - 1) > 0.005 ? ` (нужно ${dilText(R)})` : ''}`,
+    lessMsg: 'Разведение меньше 1 не бывает.',
+    sameMsg: 'Это без разведения: образец берётся как есть.',
   });
-  return out.join('');
 }
-function stepsHTML(plan, gen, note) {
-  return plan.map((s) => {
-    if (s.start) return `<li><span class="s-title">Получить ${dilText(s.to)}</span><span class="s-text">Внесите <b>${s.qty} образца</b> в <b>${vol(s.diluentUl)} ${gen}</b> и перемешайте.${note ? ` ${note}` : ''}</span></li>`;
-    const src = s.from === 1 ? 'исходного раствора' : `разведения ${dilText(s.from)}`;
-    const vessel = s.diluentUl >= 20000 ? 'Во флакон' : 'В пробирку';
-    return `<li><span class="s-title">Получить ${dilText(s.to)}<small>×${num(s.ratio)}</small></span><span class="s-text">${vessel} с <b>${vol(s.diluentUl)} ${gen}</b> внесите <b>${vol(s.transferUl)}</b> ${src} и перемешайте.</span></li>`;
-  }).join('');
+// ---------- КСЭ ----------
+const lam = () => parseNum(state.dil.lam) || 0.03125;
+function renderKseB() {
+  const K = state.dil.kse, stock = parseNum(K.stock);
+  const target = parseNum(K.custom) || K.target * lam();
+  if (!stock) return `<p class="b-empty">Введите концентрацию КСЭ во флаконе, и я покажу, сколько взять КСЭ и сколько воды.</p>`;
+  return tubesBlock('kse', K, stock / target, {
+    src: 'КСЭ',
+    result: (c) => `${sig(stock / c, 3)}<small>ЕЭ/мл</small>`,
+    short: (c) => sig(stock / c, 3),
+    final: (c) => `КСЭ ${sig(stock / c, 3)} ЕЭ/мл${parseNum(K.custom) ? '' : ` (${num(K.target, 1)}λ)`}`,
+    lessMsg: `КСЭ ${sig(stock)} ЕЭ/мл слабее нужных ${sig(target)} ЕЭ/мл.`,
+    sameMsg: 'КСЭ уже нужной концентрации, разводить не нужно.',
+  });
 }
-function syncBench(out) {
-  const bench = out.querySelector('.bench'); if (!bench) return;
-  const sync = () => { bench.classList.toggle('scroll', bench.scrollWidth > bench.clientWidth + 2); bench.classList.toggle('end', bench.scrollLeft + bench.clientWidth >= bench.scrollWidth - 4); };
-  bench.addEventListener('scroll', sync, { passive: true });
-  requestAnimationFrame(sync);
-}
-
-// ---------- МБЧ ----------
-function renderMb() {
-  const d = state.dil, f = FORMS[d.form], m = METHODS[d.method];
-  if (f.diluent && d.diluentAuto !== false) d.diluent = f.diluent;
-  const dl = MB_DILUENTS[d.diluent];
-  const targets = mbTargets(f.start);
-  if (!targets.includes(d.target)) d.target = targets.find((x) => x >= d.target) || targets[targets.length - 1];
-
-  $('dForm').value = d.form;
-  $('dFormHint').textContent = `${f.kinds ? `${f.kinds[0].toUpperCase()}${f.kinds.slice(1)}. ` : ''}${f.qty} + ${num(f.diluentMl)} мл → ${dilText(f.start)}`;
-  $('dTargets').innerHTML = targets.map((x) => `<button class="chip${x === d.target ? ' on' : ''}" type="button" data-target="${x}" aria-pressed="${x === d.target}">${dilText(x)}</button>`).join('');
-  $('dCat').value = d.cat; $('dMethod').value = d.method; $('dDiluentSel').value = d.diluent; $('dStep').value = d.step;
-
-  const plan = mbPlan(d.form, d.target, Number(d.step));
-  const total = plan.reduce((a, s) => a + s.diluentUl, 0);
-  const [eb, ef] = normsFor(d.cat, d.form);
-  const L = detLimit(d.method, d.target);
-  const per = f.per === 'пластырь' ? 'на пластырь' : `/${f.per}`;
-  const check = (exp, who) => {
-    const norm = 10 ** exp, max = 2 * norm, st = L <= norm ? 'ok' : L <= max ? 'warn' : 'bad';
-    const okD = targets.filter((x) => detLimit(d.method, x) <= norm).pop();
-    let advice = '';
-    if (st === 'ok') advice = 'Норму можно подтвердить';
-    else if (st === 'warn') advice = `На пределе: допускается до ${num(2)}·${pow10(exp)}`;
-    else advice = okD ? `Норму не подтвердить. Нужно разведение не больше ${dilText(okD)}` : 'Норму не подтвердить. Нужна мембранная фильтрация';
-    return `<li class="check ${st}"><span class="dot" aria-hidden="true">${st === 'ok' ? '✓' : st === 'warn' ? '!' : '×'}</span><span><b>${who}: меньше ${num(L)} КОЕ${per}</b> при норме ≤ ${pow10(exp)}<small>${advice}</small></span></li>`;
-  };
-  let sow;
-  if (d.method === 'membrane') {
-    const v = d.target * 1000;
-    sow = `Отфильтруйте <b>${vol(v)}</b> разведения ${dilText(d.target)} — это 1 ${f.per === 'пластырь' ? 'пластырь' : `${f.per} образца`}. Фильтры перенесите на TSA и SDA.${v > 100000 ? ' Объём большой — обычно фильтруют из 1:10.' : ''}`;
-  } else {
-    const q = d.method === 'pour' ? '1 мл' : '0,1 мл';
-    sow = `Из ${dilText(d.target)} — по <b>${q}</b> на <b>2 чашки TSA и 2 чашки SDA</b>${d.method === 'pour' ? ', залить 15–20 мл агара при 42,5 °C' : ' с подсушенным агаром, распределить шпателем'}.`;
-  }
-  $('dOut').innerHTML = `
-    <p class="route" aria-label="${plan.map((s) => dilText(s.to)).join(', ')}">${routeHTML(plan)}</p>
-    <p class="route-meta">${dl.label} всего <b>${vol(total)}</b></p>
-    <div class="bench" role="img" aria-label="Схема разведения">${benchHTML(plan, dl.gen, d.target, d.step === '10')}</div>
-    <ol class="steps">${stepsHTML(plan, dl.gen, f.note)}</ol>
-    <section class="d-block"><h3>Посев</h3><p>${sow}</p><p class="small">Учитывают ${d.method === 'membrane' ? 'фильтры' : 'чашки'}, где не больше ${m.maxB} колоний бактерий и ${m.maxF} грибов.</p></section>
-    <section class="d-block"><h3>Проверка нормы</h3><ul class="checks">${check(eb, 'Бактерии')}${check(ef, 'Грибы')}</ul></section>`;
-  syncBench($('dOut'));
-  renderCount2();
-}
-// Подсчёт КОЕ: N = c / n × d (× 10 для 0,1 мл)
-function countOne(a, b, kind) {
-  const d = state.dil, m = METHODS[d.method];
-  const raw = [a, b].map((v) => v.trim()).filter((v) => v !== '');
-  if (!raw.length) return null;
-  const vals = raw.map(Number);
-  if (vals.some((v) => !Number.isInteger(v) || v < 0)) return { msg: 'Число колоний — целое' };
-  const max = kind === 'b' ? m.maxB : m.maxF;
-  if (vals.some((v) => v > max)) return { msg: `Больше ${max} колоний — посчитайте из следующего разведения`, bad: true };
-  const avg = vals.reduce((x, y) => x + y, 0) / vals.length;
-  const [eb, ef] = normsFor(d.cat, d.form), exp = kind === 'b' ? eb : ef, lim = 2 * 10 ** exp;
-  const L = detLimit(d.method, d.target);
-  const N = d.method === 'membrane' ? avg : avg * d.target * m.factor;
-  if (avg === 0) return { value: `меньше ${num(L)}`, pass: L <= lim, lim, exp };
-  return { value: sci(N), pass: N <= lim, lim, exp };
-}
-function renderCount2() {
-  const d = state.dil, m = METHODS[d.method], f = FORMS[d.form];
-  $('cntHint').textContent = d.method === 'membrane' ? 'Колонии на фильтрах' : `Колонии на чашках из ${dilText(d.target)}`;
-  document.querySelectorAll('.cnt-unit').forEach((el, i) => { el.textContent = `${m.unit} ${i + 1}`; });
-  const per = f.per === 'пластырь' ? 'на пластырь' : `в 1 ${f.per}`;
-  const row = (who, r) => {
-    if (!r) return '';
-    if (r.msg) return `<div class="res${r.bad ? ' bad' : ''}"><span>${who}</span><span>${r.msg}</span></div>`;
-    return `<div class="res ${r.pass ? 'ok' : 'bad'}"><span>${who}<small>${r.pass ? 'Соответствует' : 'Не соответствует'}: допускается до 2·${pow10(r.exp)}</small></span><b>${r.value} КОЕ ${per}</b></div>`;
-  };
-  $('cntRes').innerHTML = row('Бактерии', countOne($('cTsa1').value, $('cTsa2').value, 'b')) + row('Грибы', countOne($('cSda1').value, $('cSda2').value, 'f'));
+// ---------- МДР и результат: формулы-дроби ----------
+function calcOut() {
+  const C = state.dil.calc, l = parseNum(state.dil.lam), lim = parseNum(C.limit), conc = parseNum(C.conc), D = parseNum(C.dil), V = parseNum(C.V), N = parseNum(C.N);
+  const set = (id, v, sub) => { $(id).innerHTML = v == null ? '<span class="fx-wait">?</span>' : `${v}${sub ? `<small>${sub}</small>` : ''}`; };
+  if (lim && conc && l) { const m = (lim * conc) / l; set('fxMdr', m >= 2 ? dilText(Math.floor(m + 1e-9)) : sig(m, 3), m >= 2 ? (Math.abs(m - Math.round(m)) < 1e-6 ? '' : `точно ${num(m, 1)}, округлено вниз`) : 'меньше 2, без разведения'); } else set('fxMdr', null);
+  if (l && D && conc) set('fxRes', sig((l * D) / conc), 'ЕЭ/мг'); else set('fxRes', null);
+  if (V && l && N) set('fxDev', sig((V * l) / N), 'ЕЭ/шт'); else set('fxDev', null);
 }
 
-// ---------- Эндотоксины ----------
-const LAMBDAS = [0.5, 0.25, 0.125, 0.06, 0.03, 0.015];
-function renderLal() {
-  const l = state.dil.lal;
-  $('lLimit').value === l.limit || document.activeElement === $('lLimit') || ($('lLimit').value = l.limit);
-  $('lConc').value === l.conc || document.activeElement === $('lConc') || ($('lConc').value = l.conc);
-  $('lLimitUnit').value = l.unit;
-  $('lConcWrap').hidden = l.unit === 'eu_ml';
-  $('lConcUnit').textContent = l.unit === 'eu_unit' ? 'ЕД/мл' : 'мг/мл';
-  $('lLambda').innerHTML = LAMBDAS.map((x) => `<button class="chip${x === l.lambda ? ' on' : ''}" type="button" data-lambda="${x}" aria-pressed="${x === l.lambda}">${num(x, 3)}</button>`).join('');
-  $('lSteps').querySelectorAll('input').forEach((r) => { r.checked = Number(r.value) === l.maxSteps; });
-
-  const out = $('dOut');
-  const lim = parseNum(l.limit), conc = l.unit === 'eu_ml' ? 1 : parseNum(l.conc);
-  if (!lim || !conc) { out.innerHTML = '<div class="d-empty"><b>Здесь появится МДР и схема</b>Введите предел эндотоксинов и концентрацию раствора.</div>'; return; }
-  const mdr = (lim * conc) / l.lambda;
-  const unitTxt = { eu_mg: 'ЕЭ/мг', eu_ml: 'ЕЭ/мл', eu_unit: 'ЕЭ/ЕД' }[l.unit];
-  const formula = l.unit === 'eu_ml'
-    ? `${num(lim, 4)} ${unitTxt} / ${num(l.lambda, 3)} ЕЭ/мл`
-    : `${num(lim, 4)} ${unitTxt} × ${num(conc, 4)} ${l.unit === 'eu_unit' ? 'ЕД/мл' : 'мг/мл'} / ${num(l.lambda, 3)} ЕЭ/мл`;
-  const series = [2, 1, 0.5, 0.25].map((k) => `<li><b>${num(l.lambda * k, 4)}</b><span>${k === 1 ? 'λ' : k === 2 ? '2λ' : k === 0.5 ? 'λ/2' : 'λ/4'}</span></li>`).join('');
-  let html = `<p class="mdr">МДР ${mdr >= 2 ? `1:${num(Math.floor(mdr + 1e-9))}` : num(mdr, 2)}</p>
-    <p class="formula">${formula} = ${num(mdr, 2)}</p>`;
-  if (mdr < 2) {
-    out.innerHTML = html + '<div class="d-error"><b>Разводить нельзя.</b> МДР меньше 2 — раствор испытывают без разведения.</div>' + `<section class="d-block"><h3>Стандартная серия, ЕЭ/мл</h3><ul class="series">${series}</ul></section>`;
-    return;
-  }
-  const N = Math.floor(mdr + 1e-9);
-  const cand = [...new Set([N, 2 ** Math.floor(Math.log2(N)), 10 ** Math.floor(Math.log10(N))])].filter((x) => x >= 2).sort((a, b) => b - a);
-  if (!cand.includes(l.work)) l.work = cand[0];
-  html += `<section class="d-block" style="margin-top:0"><h3>Разведение для испытания</h3><div class="chips" id="lWork">${cand.map((x) => `<button class="chip${x === l.work ? ' on' : ''}" type="button" data-work="${x}" aria-pressed="${x === l.work}">${dilText(x)}${x === N ? ' — МДР' : ''}</button>`).join('')}</div><p class="small" style="margin-top:8px">Испытание проводят в разведении не больше МДР.</p></section>`;
-  const routes = freeRoutes(l.work, l.maxSteps);
-  if (!routes.length) {
-    const any = freeRoutes(l.work, 5);
-    html += any.length
-      ? `<div class="d-error" style="margin-top:16px"><b>За ${stepsWord(l.maxSteps)} не собрать ${dilText(l.work)}.</b> Увеличьте число шагов или выберите другое разведение.</div>`
-      : `<div class="d-error" style="margin-top:16px"><b>${dilText(l.work)} не собрать из целых шагов.</b> Выберите другое разведение.</div>`;
-  } else {
-    if (!routes.some((r) => routeKey(r) === l.pick)) l.pick = routeKey(routes[0]);
-    const r = routes.find((x) => routeKey(x) === l.pick);
-    const total = r.plan.reduce((a, s) => a + s.diluentUl, 0);
-    html += `<p class="route" style="margin-top:20px">${routeHTML(r.plan)}</p>
-      <p class="route-meta">${stepsWord(r.plan.length)}, вода для ЛАЛ всего <b>${vol(total)}</b></p>
-      <div class="bench" role="img" aria-label="Схема разведения">${benchHTML(r.plan, 'воды', l.work, false)}</div>
-      <ol class="steps">${stepsHTML(r.plan, 'воды для ЛАЛ')}</ol>`;
-    if (routes.length > 1) html += `<details class="variants"><summary><svg class="ico"><use href="#i-chev"/></svg>Другие схемы</summary><ul class="v-list">${routes.map((x) => { const on = routeKey(x) === l.pick; return `<li><button class="variant" type="button" data-route="${routeKey(x)}" aria-pressed="${on}"><b>${x.plan.map((s) => dilText(s.to)).join(' → ')}</b><span class="tag">${on ? 'Выбрана' : 'Выбрать'}</span><small>${stepsWord(x.plan.length)}</small></button></li>`; }).join('')}</ul></details>`;
-  }
-  html += `<section class="d-block"><h3>Стандартная серия эндотоксина, ЕЭ/мл</h3><ul class="series">${series}</ul><p class="small" style="margin-top:8px">Для подтверждения чувствительности лизата: 2λ, λ, λ/2 и λ/4.</p></section>`;
-  out.innerHTML = html;
-  syncBench(out);
-}
-
-function renderDilution() {
-  const mb = state.dil.mode === 'mbch';
-  $('dMode').querySelectorAll('input').forEach((r) => { r.checked = r.value === state.dil.mode; });
-  $('dFormMb').hidden = !mb; $('dFormLal').hidden = mb; $('dCount').hidden = !mb;
-  if (mb) renderMb(); else renderLal();
+function renderBeta() {
+  const d = state.dil;
+  $('bMode').querySelectorAll('input').forEach((r) => { r.checked = r.value === d.mode; });
+  ['sample', 'kse', 'calc'].forEach((m) => { $(`bf-${m}`).hidden = d.mode !== m; });
+  const setVal = (el, v) => { if (document.activeElement !== el && el.value !== v) el.value = v; };
+  document.querySelectorAll('[data-bind]').forEach((el) => {
+    const [g, k] = el.dataset.bind.split('.');
+    let v = g === 'lam' ? d.lam : d[g][k];
+    if (g === 'lam' && el.classList.contains('lam-own') && LAMBDAS.some((x) => parseNum(x) === parseNum(v))) v = '';
+    setVal(el, v);
+  });
+  // объём
+  document.querySelectorAll('[data-vol]').forEach((seg) => {
+    const st = d[seg.dataset.vol];
+    seg.innerHTML = VOLS.map((v) => `<input type="radio" name="vol-${seg.dataset.vol}" id="vol-${seg.dataset.vol}-${v}" value="${v}"${v === st.vol ? ' checked' : ''}><label for="vol-${seg.dataset.vol}-${v}">${vol(v)}</label>`).join('');
+  });
+  // λ и цель для КСЭ
+  const lv = lam();
+  $('kLam').innerHTML = LAMBDAS.map((x) => { const on = parseNum(x) === parseNum(d.lam); return `<button class="chip${on ? ' on' : ''}" type="button" data-lam="${x}" aria-pressed="${on}">${x}</button>`; }).join('');
+  $('kTarget').innerHTML = KSE_T.map((m) => { const on = !parseNum(d.kse.custom) && m === d.kse.target; return `<button class="chip${on ? ' on' : ''}" type="button" data-ktarget="${m}" aria-pressed="${on}">${num(m, 1)}λ<small>${sig(m * lv, 3)}</small></button>`; }).join('');
+  if (d.mode === 'sample') $('bOut').innerHTML = renderSampleB();
+  else if (d.mode === 'kse') $('bOut').innerHTML = renderKseB();
+  else { $('bOut').innerHTML = ''; calcOut(); }
 }
 
 /* =====================================================================
@@ -1474,6 +1747,7 @@ function keyAt(keys, t) {
   return keys[keys.length - 1][1];
 }
 function buildNode(spec, parent, list) {
+  if (spec.t === 'defs') { const d = document.createElementNS(SVGNS, 'defs'); d.innerHTML = spec.html; parent.appendChild(d); return; }
   const el = document.createElementNS(SVGNS, spec.t);
   if (spec.t === 'rect') el.setAttribute('rx', spec.r || 0);
   if (spec.t === 'path') el.setAttribute('d', spec.d);
@@ -1508,12 +1782,12 @@ function paint(item, t, all) {
   if (k.fill) { const f = v('fill'); el.style.fill = ACOL[f] || f; }
 }
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
-function makePlayer(host, scene) {
+function makePlayer(host, scene, opts = {}) {
   const svg = document.createElementNS(SVGNS, 'svg');
   svg.setAttribute('viewBox', `0 0 ${scene.w} ${scene.h}`);
   svg.setAttribute('aria-hidden', 'true');
   const list = [];
-  const fade = scene.once ? [[0, 0], [250, 1, 'out']] : [[0, 0], [300, 1, 'out'], [scene.dur - 400, 1], [scene.dur, 0, 'in']];
+  const fade = scene.noFade || scene.seamless ? [[0, 1]] : scene.once ? [[0, 0], [250, 1, 'out']] : [[0, 0], [300, 1, 'out'], [scene.dur - 400, 1], [scene.dur, 0, 'in']];
   buildNode({ t: 'g', k: { o: fade }, c: scene.els }, svg, list);
   list.forEach((it) => paint(it, scene.still, true));
   host.appendChild(svg);
@@ -1522,7 +1796,7 @@ function makePlayer(host, scene) {
   const tick = (now) => {
     const e = now - t0, t = scene.once ? Math.min(e, scene.dur) : e % scene.dur;
     for (const it of live) paint(it, t);
-    raf = scene.once && e >= scene.dur ? 0 : requestAnimationFrame(tick);
+    if (scene.once && e >= scene.dur) { raf = 0; if (opts.onEnd) opts.onEnd(); } else raf = requestAnimationFrame(tick);
   };
   return {
     play() { if (raf || REDUCED.matches) return; t0 = performance.now(); raf = requestAnimationFrame(tick); },
@@ -1635,7 +1909,7 @@ const SCENES = {
   // 3. Вставка из Excel: из «MP-FP-1856/26» остаётся FP-1856
   paste: (() => {
     const T0 = 500, T1 = 1300, T2 = 2500, T3 = 3000;
-    const cells = ['MP-FP-1856/26', 'MP-FP-1857/26', 'MP-FP-1858/26', 'MP-FP-1859/26', 'MP-FP-1860/26'];
+    const cells = ['FP-1123', 'MP-FP-1124/26', 'mp-fp-1125/26', 'mp-fp-1126', 'FP-1127/26'];
     const els = [
       R(10, 10, 132, 122, 8, 'field', { stroke: 'line', sw: 0.8 }),
       R(10, 10, 132, 18, 8, 'surface'), TX(83, 23, 'A', { fs: 8, fill: 'text3', anchor: 'middle' }),
@@ -1653,13 +1927,13 @@ const SCENES = {
       R(152, 28, 138, 26, 8, 'field', { stroke: 'line', sw: 1 }),
       R(152, 28, 138, 26, 8, null, { stroke: 'blue', sw: 1.6, o: 0, k: { o: between(T2, T3 + 700, 150) } }),
       TX(161, 45, 'FP-1856 или список', { fs: 10, fill: 'text3', k: { o: hideAt(T3, 120) } }),
-      TX(161, 45, '', { fs: 12, fw: 600, k: { text: [[0, ''], [T3, 'FP-1856']] } }),
+      TX(161, 45, '', { fs: 12, fw: 600, k: { text: [[0, ''], [T3, 'FP-1123']] } }),
       { t: 'g', o: 0, k: { o: between(T2 + 200, T3 + 500, 160) }, c: [R(190, 60, 62, 18, 9, 'text'), TX(221, 72.5, 'Ctrl + V', { fs: 8.5, fw: 600, fill: 'bg', anchor: 'middle' })] },
-      TX(152, 76, 'Префикс и номер', { fs: 9, fill: 'blue', fw: 600, o: 0, k: { o: showAt(T3 + 500) } }),
-      TX(152, 90, 'найдены сами', { fs: 9, fill: 'blue', fw: 600, o: 0, k: { o: showAt(T3 + 500) } }),
+      TX(152, 76, 'Запись любая:', { fs: 9, fill: 'blue', fw: 600, o: 0, k: { o: showAt(T3 + 720) } }),
+      TX(152, 90, 'встанут как FP-1123…', { fs: 9, fill: 'blue', fw: 600, o: 0, k: { o: showAt(T3 + 720) } }),
       TX(14, 178, 'Пробы', { fs: 12, fw: 700 }), TX(59, 178, '', { fs: 12, fw: 700, fill: 'text3', k: { text: [[0, ''], [T3, '5']] } }),
     );
-    cells.forEach((c, i) => els.push(row(186 + i * 24, c.slice(3, 10), 'Таблетка', T3 + 120 + i * 90)));
+    cells.forEach((c, i) => els.push(row(186 + i * 24, `FP-${1123 + i}`, 'Таблетка', T3 + 120 + i * 90)));
     els.push(finger([[200, 160, 120], [450, 76, 40], [T0 + 50, 76, 40], [T1, 76, 120], [1900, 76, 120], [2300, 221, 41], [2800, 221, 41]], [T0, T2]));
     els.push(ripple(221, 41, T2));
     return { w: 300, h: 312, dur: 6400, still: 4600, els };
@@ -1684,8 +1958,8 @@ const SCENES = {
       line(98, 'Мельнички', [[0, '1'], [T1, '0']], [[0, 0]]),
       line(118, 'Ложки', [[0, '0'], [T1, '1'], [T3, '0']], [[T1, 0], [T1 + 150, 1], [T1 + 900, 0]]),
       line(138, 'Ножницы', [[0, '0'], [T3, '1']], [[T3, 0], [T3 + 150, 1], [T3 + 900, 0]]),
-      TX(14, 172, 'Таблетка — мельничка, порошок — ложка', { fs: 9.5, fill: 'text2' }),
-      TX(14, 189, 'PPM и PM — всегда ножницы', { fs: 9.5, fill: 'text2', o: 0.5, k: { o: [[0, 0.5], [T3, 0.5], [T3 + 200, 1]] } }),
+      TX(14, 172, 'Таблетка: мельничка, порошок: ложка', { fs: 9.5, fill: 'text2' }),
+      TX(14, 189, 'PPM и PM: всегда ножницы', { fs: 9.5, fill: 'text2', o: 0.5, k: { o: [[0, 0.5], [T3, 0.5], [T3 + 200, 1]] } }),
       ripple(158, 30, T1), ripple(61, 30, T2),
       finger([[300, 200, 120], [1100, 158, 30], [1600, 158, 30], [2600, 61, 30], [3500, 61, 30]], [T1, T2]),
     ] };
@@ -1726,7 +2000,7 @@ const SCENES = {
         R(10, 216, 280, 86, 12, 'surface'),
         TX(22, 234, 'Бионагрузка BB', { fs: 9, fill: 'text2' }),
         TX(22, 252, 'Чашки TSA / SDA', { fs: 10 }), TX(278, 252, '7 / 7', { fs: 10, fw: 600, anchor: 'end' }),
-        TX(22, 270, 'Фильтры', { fs: 10 }), TX(278, 270, '10', { fs: 10, fw: 600, anchor: 'end' }),
+        TX(22, 270, 'Фильтры', { fs: 10 }), TX(278, 270, '1 уп.', { fs: 10, fw: 600, anchor: 'end' }),
         TX(22, 288, 'NaCl 0,9%', { fs: 10 }), TX(278, 288, '2 450 мл', { fs: 10, fw: 600, anchor: 'end', k: { text: [[0, '2 450 мл'], [T4, '3 250 мл']] } }),
         R(16, 276, 268, 18, 5, 'soft', { o: 0, k: { o: [[T4, 0], [T4 + 120, 1], [T4 + 900, 0]] } })] },
       ripple(chipX('BB'), 75, T1), ripple(232, 46, T2), ripple(261, 46, T3), ripple(169.5, 150, T4),
@@ -1745,7 +2019,7 @@ const SCENES = {
       TX(273, 20, '1:100', { fs: 8, fill: 'text2', anchor: 'middle' }),
       row(28, 'FP-1856', 'Таблетка', T0, { more: [box(266, 4, [[0, 1]])] }),
       row(52, 'FP-1857', 'Таблетка', T0 + 100), row(76, 'FP-1858', 'Таблетка', T0 + 200),
-      TX(14, 116, '', { fs: 9.5, fill: 'blue', fw: 600, k: { text: [[0, ''], [T1, 'FBR: 100 мл на пробу + 90 мл за 1:100'], [T2, 'TSA и SDA: по 25 мл на пробу'], [T3, 'TSB: 100 мл, у 4.2 — 190 мл'], [T4, 'Таблетка — мельничка, на пробу флакон']] } }),
+      TX(14, 116, '', { fs: 9.5, fill: 'blue', fw: 600, k: { text: [[0, ''], [T1, 'FBR: 100 мл на пробу + 90 мл за 1:100'], [T2, 'TSA и SDA: по 25 мл на пробу'], [T3, 'TSB: 100 мл (у 4.2: 190 мл)'], [T4, 'Таблетка: мельничка, на пробу флакон']] } }),
       R(10, 126, 280, 140, 12, 'surface'),
       TX(22, 146, 'Итого', { fs: 12, fw: 700 }),
       line(166, 'FBR', count(390, T1, 900), T1, ' мл'),
@@ -1754,113 +2028,580 @@ const SCENES = {
       line(238, 'Мельнички', count(3, T4, 500), T4), line(256, 'Флаконы', count(3, T4, 500), T4),
     ] };
   })(),
-  dilution: (() => {
-    const T1 = 1500, T3 = 3300;
-    const chips = [['1:10', 14, 34], ['1:100', 52, 40], ['1:1000', 96, 46], ['1:10 000', 146, 58]];
-    const onK = { '1:10': [[0, 0]], '1:100': [[0, 1], [T1, 1], [T1 + 200, 0]], '1:1000': [[0, 0], [T1, 0], [T1 + 200, 1], [T3, 1], [T3 + 200, 0]], '1:10 000': [[0, 0], [T3, 0], [T3 + 200, 1]] };
-    const flask = (x, appear, strength) => ({ t: 'g', x, y: 96, o: appear ? 0 : 1, k: appear ? { o: showAt(appear, 300), y: [[appear, 102], [appear + 360, 96, 'out']] } : undefined, c: [
-      { t: 'path', d: 'M-8 26h16l5 9a2 2 0 0 1-1.8 3h-22.4a2 2 0 0 1-1.8-3z', fill: 'blue', o: strength },
-      { t: 'path', d: 'M-4 0h8M-3 0v12L-13 35a2 2 0 0 0 1.8 3h22.4a2 2 0 0 0 1.8-3L3 12V0', stroke: 'text2', sw: 1.4 }] });
-    const arrow = (x, appear) => ({ t: 'path', x, y: 118, d: 'M0 0h22M17-4l5 4-5 4', stroke: 'text3', sw: 1.4, o: appear ? 0 : 1, k: appear ? { o: showAt(appear) } : undefined });
-    const dot = (y, fills) => ({ t: 'circle', x: 28, y, r: 6, fill: fills[0][1], k: { fill: fills } });
-    return { w: 300, h: 246, dur: 6800, still: 2600, els: [
-      TX(14, 20, 'Разведение', { fs: 9, fill: 'text2' }),
-      ...chips.map(([l, x, w]) => chip(x, 26, w, l, onK[l].length > 1 ? onK[l] : null)),
-      TX(14, 74, '', { fs: 14, fw: 700, k: { text: [[0, '1:10 → 1:100'], [T1, '1:10 → 1:100 → 1:1000'], [T3, '1:10 → 1:100 → 1:1000 → 1:10 000']] } }),
-      flask(30, 0, 0.75), arrow(48, 0), flask(90, 0, 0.45), arrow(108, T1), flask(150, T1, 0.22), arrow(168, T3), flask(210, T3, 0.1),
-      R(10, 150, 280, 88, 12, 'surface'),
-      dot(172, [[0, 'green'], [T3, 'green'], [T3 + 1, 'red']]),
-      TX(42, 176, 'Бактерии, норма ≤ 10³', { fs: 10 }), TX(278, 176, '< 100', { fs: 10, fw: 600, anchor: 'end', k: { text: [[0, '< 100'], [T1, '< 1 000'], [T3, '< 10 000']] } }),
-      dot(198, [[0, 'green'], [T1, 'green'], [T1 + 1, 'red']]),
-      TX(42, 202, 'Грибы, норма ≤ 10²', { fs: 10 }), TX(278, 202, '< 100', { fs: 10, fw: 600, anchor: 'end', k: { text: [[0, '< 100'], [T1, '< 1 000'], [T3, '< 10 000']] } }),
-      TX(42, 226, '', { fs: 9.5, fill: 'red', k: { text: [[0, ''], [T1, 'Грибы: нужно не больше 1:100'], [T3, 'Бактерии — до 1:1000, грибы — до 1:100']] } }),
-      ripple(119, 35, T1), ripple(175, 35, T3),
-      finger([[500, 200, 130], [1200, 119, 35], [2700, 119, 35], [3100, 175, 35], [3800, 175, 35]], [T1, T3]),
+};
+// ---------- Эндотоксины: подсказки ----------
+const STAR = '#E39B00';
+// пробирка для сцен: (x, y) — горловина; уровень 0..1; fillAt — когда наливается
+function sTube(x, y, level, tint, fillAt) {
+  const H = 46, top = H - 6 - level * 36, still = fillAt == null;
+  return { t: 'g', x, y, c: [
+    { t: 'path', d: 'M-7.2 46a7.2 7.2 0 0 0 14.4 0Z', fill: 'blue', o: still ? tint : 0, k: still ? undefined : { o: [[fillAt, 0], [fillAt + 120, tint]] } },
+    R(-7.2, still ? top : H, 14.4, still ? H - top : 0, 0, 'blue', { o: tint, k: still ? undefined : { y: [[fillAt, H], [fillAt + 650, top, 'out']], h: [[fillAt, 0], [fillAt + 650, H - top, 'out']] } }),
+    { t: 'path', d: 'M-11 0h22M-8 0v46a8 8 0 0 0 16 0V0', stroke: 'text3', sw: 1.3 }] };
+}
+const sArrow = (x, y, more) => ({ t: 'path', x, y, d: 'M-5 0h10M1.5-3.5L5 0l-3.5 3.5', stroke: 'text3', sw: 1.3, ...more });
+function sField(x, y, w, keys, ph, focus) {
+  return [R(x, y, w, 28, 8, 'field', { stroke: 'line', sw: 1 }),
+    ...(focus ? [R(x, y, w, 28, 8, null, { stroke: 'blue', sw: 1.6, o: 0, k: { o: between(focus[0], focus[1], 150) } })] : []),
+    ...(ph ? [TX(x + 9, y + 18.5, ph, { fs: 10, fill: 'text3', k: { o: hideAt(keys[1][0], 100) } })] : []),
+    TX(x + 9, y + 19, keys[0][1], { fs: 12, fw: 600, k: { text: keys } })];
+}
+function sAdd(x, y, w, filled, label, value) {
+  return { t: 'g', c: [R(x, y, w, 22, 6, 'bg'),
+    { t: 'circle', x: x + 9, y: y + 11, r: 3.2, fill: filled ? 'blue' : 'soft', stroke: 'blue', sw: filled ? 0.01 : 1.2 },
+    TX(x + 17, y + 14.5, label, { fs: 7.5, fill: 'text2' }), TX(x + w - 6, y + 14.5, value, { fs: 8, fw: 700, anchor: 'end' })] };
+}
+// цепочка мини-пробирок: подпись разведения и объёмы под каждой
+function sChain(items, y, more) {
+  const n = items.length, w = 280 / n;
+  const c = [];
+  items.forEach(([lab, v, level, tint], i) => {
+    const cx = 10 + w * (i + 0.5);
+    c.push(sTube(cx, y, level, tint));
+    c.push(TX(cx, y + 72, lab[0][1], { fs: 11, fw: 700, anchor: 'middle', k: lab.length > 1 ? { text: lab } : undefined }));
+    c.push(TX(cx, y + 86, v[0][1], { fs: 8, fill: 'text2', anchor: 'middle', k: v.length > 1 ? { text: v } : undefined }));
+    if (i) c.push(sArrow(cx - w / 2, y + 26));
+  });
+  return { t: 'g', ...more, c };
+}
+Object.assign(SCENES, {
+  // 1. Образец: вписали 1/2700 → три пробирки по очереди
+  eSample: (() => {
+    const T = [1900, 2800, 3700], END = 4500;
+    const card = (i, x0, at, res, water, src) => ({ t: 'g', o: 0, k: { o: showAt(at, 300), y: [[at, 8], [at + 360, 0, 'out']] }, c: [
+      R(x0, 86, 88, 168, 12, 'surface'),
+      sTube(x0 + 44, 96, [0.9, 0.5, 0.5][i], [0.6, 0.4, 0.26][i], at + 200),
+      TX(x0 + 44, 170, `Пробирка ${i + 1}`, { fs: 8, fill: 'text2', anchor: 'middle' }),
+      TX(x0 + 44, 188, res, { fs: 13, fw: 700, anchor: 'middle' }),
+      sAdd(x0 + 5, 197, 78, false, 'Вода', water), sAdd(x0 + 5, 223, 78, true, src, '100')] });
+    return { w: 300, h: 290, dur: 7200, still: 5200, els: [
+      TX(12, 16, 'Нужное разведение', { fs: 9, fill: 'text2' }),
+      ...sField(10, 22, 280, [[0, ''], [450, '1'], [600, '1/'], [750, '1/2'], [900, '1/27'], [1050, '1/270'], [1200, '1/2700']], 'Например: 1/2700', [300, END]),
+      TX(12, 70, '', { fs: 9, fw: 600, fill: 'blue', k: { text: [[0, ''], [1450, 'Разведение 1:2 700']] } }),
+      card(0, 4, T[0], '1:27', '2 600', 'Образец'),
+      sArrow(99, 130, { o: 0, k: { o: showAt(T[1]) } }),
+      card(1, 106, T[1], '1:270', '900', 'Из №1'),
+      sArrow(201, 130, { o: 0, k: { o: showAt(T[2]) } }),
+      card(2, 208, T[2], '1:2 700', '900', 'Из №2'),
+      TX(290, 70, 'объёмы в мкл', { fs: 8, fill: 'text3', anchor: 'end', o: 0, k: { o: showAt(T[0]) } }),
+      TX(150, 278, 'Готово: 1 мл раствора 1:2 700', { fs: 10, fw: 600, anchor: 'middle', o: 0, k: { o: showAt(END) } }),
+      ripple(150, 36, 300),
+      finger([[100, 230, 80], [280, 150, 36], [800, 150, 36]], [300]),
     ] };
   })(),
-};
-// ---------- 404: котик-лаборант (6 с) ----------
-// 0–2,4 с капает в колбу · 2,6 с замечает вас · 3,2 с машет «Вам в МБЧ!» · 4,4 с тянется к углу и листает страницу
-const FUR = '#F2A65E', FUR_D = '#DB8640', CREAM = '#FCE6CC', PINK = '#EE95A3', COAT = '#FFFFFF', SLEEVE = '#E6ECF4', INK = '#2B2F3A', FRAME = '#3B4256';
-SCENES.cat = (() => {
-  const N = 2600, W = 3200, P = 4400;
-  const LEAN = 40;
-  const lean = (base) => [[0, base], [P, base], [P + 450, base + LEAN, 'io']];
-  const swish = []; for (let t = 0; t <= 6000; t += 600) swish.push([t, (t / 600) % 2 ? 10 : -6]);
-  const bob = [[0, 0]]; for (let t = 400; t < N; t += 400) bob.push([t, (t / 400) % 2 ? -3 : 2]);
-  const drop = (t) => ({ t: 'circle', x: 228, y: 144, r: 2.6, fill: 'blue', o: 0, k: { y: [[t, 144], [t + 420, 172, 'in']], o: [[t - 1, 0], [t, 1], [t + 380, 1], [t + 420, 0]] } });
-  const bubble = (x, t, r) => ({ t: 'circle', x, y: 193, r, fill: 'white', o: 0, k: { y: [[t, 193], [t + 900, 177, 'out']], o: [[t - 1, 0], [t, 0.9], [t + 900, 0]] } });
-  const blinkH = [[0, 9], [2200, 9], [2270, 1.5], [2340, 9]], blinkY = [[0, -10.5], [2200, -10.5], [2270, -6.75], [2340, -10.5]];
-  return { w: 360, h: 250, dur: 6000, still: 3700, once: true, els: [
-    // фон-пятно
-    { t: 'circle', x: 158, y: 126, r: 108, fill: 'soft' },
-    { t: 'circle', x: 62, y: 62, r: 5, fill: 'blue', o: 0.25 }, { t: 'circle', x: 268, y: 54, r: 3.5, fill: 'blue', o: 0.25 }, { t: 'circle', x: 300, y: 98, r: 6, fill: 'soft' },
-    // хвост
-    { t: 'g', x: 104, y: 194, k: { x: lean(104), rot: swish }, c: [
-      { t: 'path', d: 'M0 0C-26 0-38-24-30-48', stroke: FUR, sw: 11 },
-      { t: 'path', d: 'M-32.4-33.8C-32.6-39-31.8-44-30-48', stroke: FUR_D, sw: 11 }] },
-    // туловище в халате
-    { t: 'g', x: 140, y: 128, k: { x: lean(140) }, c: [
-      { t: 'path', d: 'M-44 72C-46 42-40 16-22 7C-14 3-7 1 0 1S14 3 22 7C40 16 46 42 44 72Z', fill: COAT },
-      { t: 'path', d: 'M-11 2L0 24L11 2Z', fill: FUR },
-      { t: 'path', d: 'M-11 2L0 24L-6 31L-19 8Z', fill: SLEEVE }, { t: 'path', d: 'M11 2L0 24L6 31L19 8Z', fill: SLEEVE },
-      { t: 'path', d: 'M0 26V72', stroke: SLEEVE, sw: 1.6 },
-      { t: 'circle', x: 0, y: 44, r: 1.8, fill: SLEEVE }, { t: 'circle', x: 0, y: 58, r: 1.8, fill: SLEEVE },
-      R(14, 40, 17, 16, 4, SLEEVE), R(18.5, 33, 3, 12, 1.5, 'blue'), R(24, 35, 3, 10, 1.5, '#E5734F'),
-    ] },
-    // стол, колба, штатив
-    R(20, 198, 320, 9, 4.5, 'line'),
-    { t: 'g', x: 228, y: 198, c: [
-      { t: 'path', d: 'M-14-17h28l10 13a2.5 2.5 0 0 1-2 4h-44a2.5 2.5 0 0 1-2-4z', fill: 'blue', o: 0.55 },
-      { t: 'path', d: 'M-6-53h12M-5-53v21L-24-4a2.5 2.5 0 0 0 2 4h44a2.5 2.5 0 0 0 2-4L5-32v-21', stroke: 'text2', sw: 2.2 },
-      { t: 'path', d: 'M-10-24L-17-12', stroke: 'white', sw: 2.2, o: 0.7 }] },
-    bubble(222, 300, 2.2), bubble(234, 1000, 1.6), bubble(228, 1700, 2), bubble(220, 2400, 1.6),
-    { t: 'g', x: 298, y: 198, c: [R(-17, -14, 34, 6, 3, 'line'), R(-12, -44, 8, 40, 4, null, { stroke: 'text2', sw: 1.8 }), R(4, -44, 8, 40, 4, null, { stroke: 'text2', sw: 1.8 }),
-      R(-10.5, -19, 5, 13, 2.5, '#E5734F', { o: 0.75 }), R(5.5, -23, 5, 17, 2.5, '#2FA84F', { o: 0.65 })] },
-    drop(500), drop(1200), drop(1900),
-    // левая лапа: лежит на столе → машет
-    { t: 'g', x: 114, y: 148, k: { x: lean(114), rot: [[0, 0], [W, 0], [W + 320, 165, 'out'], [W + 520, 145], [W + 720, 170], [W + 920, 145], [W + 1120, 165], [P, 160], [P + 400, 10, 'io']] }, c: [
-      { t: 'path', d: 'M0 0Q-8 24-2 46', stroke: SLEEVE, sw: 15 },
-      { t: 'circle', x: -2, y: 48, r: 8.5, fill: FUR }] },
-    // правая лапа с пипеткой → откладывает → тянется к углу
-    { t: 'g', x: 166, y: 146, k: { x: lean(166), rot: [...bob, [N, 0], [P, 0], [P + 450, 32, 'io']] }, c: [
-      { t: 'path', d: 'M0 0Q34 6 60-30', stroke: SLEEVE, sw: 15 },
-      { t: 'g', k: { o: [[0, 1], [W - 200, 1], [W, 0]], y: [[0, 0], [W - 200, 0], [W, 10]] }, c: [
-        R(58, -62, 7, 52, 3.5, '#C5CED8'), { t: 'path', d: 'M58.5-10.5L61.5-3L64.5-10.5Z', fill: '#AEB8C3' }, R(57, -73, 9, 14, 4.5, 'blue')] },
-      { t: 'circle', x: 61, y: -33, r: 8.5, fill: FUR }] },
-    // голова
-    { t: 'g', x: 140, y: 136, k: { x: lean(140), rot: [[0, 10], [N, 10], [N + 300, -6, 'out'], [N + 550, 0, 'io'], [P, 0], [P + 450, 10, 'io']], y: [[0, 136], [N, 136], [N + 160, 124, 'out'], [N + 420, 136, 'in']] }, c: [
-      { t: 'g', y: -32, c: [
-        { t: 'path', d: 'M-33-2C-34-18-31-32-27-46Q-26-50-22-47L-11-36C-4-38 4-38 11-36L22-47Q26-50 27-46C31-32 34-18 33-2C32 18 17 28 0 28S-32 18-33-2Z', fill: FUR },
-        { t: 'path', d: 'M-24-41L-15-34C-19-32-22-30-25-27Z', fill: PINK, o: 0.8 }, { t: 'path', d: 'M24-41L15-34C19-32 22-30 25-27Z', fill: PINK, o: 0.8 },
-        { t: 'path', d: 'M-6-33l1 6M0-34v7M6-33l-1 6', stroke: FUR_D, sw: 2.6 },
-        { t: 'path', d: 'M-12 12C-12 5-6 3 0 6C6 3 12 5 12 12C12 19 6 22 0 22C-6 22-12 19-12 12Z', fill: CREAM },
-        { t: 'circle', x: -22, y: 8, r: 4.5, fill: PINK, o: 0.45 }, { t: 'circle', x: 22, y: 8, r: 4.5, fill: PINK, o: 0.45 },
-        { t: 'g', k: { x: [[0, 2.5], [N, 2.5], [N + 200, 0, 'out'], [P, 0], [P + 300, 2.5]], y: [[0, 2], [N, 2], [N + 200, 0, 'out']] }, c: [
-          R(-16.5, -10.5, 7, 9, 3.5, INK, { k: { h: blinkH, y: blinkY } }), R(9.5, -10.5, 7, 9, 3.5, INK, { k: { h: blinkH, y: blinkY } }),
-          { t: 'circle', x: -11.5, y: -8.5, r: 1.4, fill: 'white', k: { o: [[0, 1], [2200, 1], [2210, 0], [2340, 0], [2350, 1]] } },
-          { t: 'circle', x: 14.5, y: -8.5, r: 1.4, fill: 'white', k: { o: [[0, 1], [2200, 1], [2210, 0], [2340, 0], [2350, 1]] } }] },
-        { t: 'circle', x: -13, y: -6, r: 10.5, fill: 'white', o: 0.28 }, { t: 'circle', x: 13, y: -6, r: 10.5, fill: 'white', o: 0.28 },
-        { t: 'circle', x: -13, y: -6, r: 10.5, stroke: FRAME, sw: 2.4 }, { t: 'circle', x: 13, y: -6, r: 10.5, stroke: FRAME, sw: 2.4 },
-        { t: 'path', d: 'M-2.5-7Q0-9 2.5-7M-23.5-7L-31-9M23.5-7L31-9', stroke: FRAME, sw: 2.2 },
-        { t: 'path', d: 'M-3.2 7.5Q0 6 3.2 7.5Q0 11.5-3.2 7.5Z', fill: PINK },
-        { t: 'path', d: 'M-5 13Q-2.5 15.5 0 13Q2.5 15.5 5 13', stroke: INK, sw: 1.6, k: { o: [[0, 1], [N, 1], [N + 80, 0], [W + 200, 0], [W + 280, 1]] } },
-        { t: 'circle', x: 0, y: 15, r: 2.8, fill: INK, o: 0, k: { o: [[0, 0], [N, 0], [N + 80, 1], [W + 200, 1], [W + 280, 0]] } },
-        { t: 'path', d: 'M-15 11L-29 9M-15 14L-28 16M15 11L29 9M15 14L28 16', stroke: 'text3', sw: 1.2 }] }] },
-    // «!»
-    { t: 'g', x: 140, y: 42, o: 0, k: { x: lean(140), o: [[0, 0], [N, 0], [N + 80, 1], [W + 150, 1], [W + 300, 0]], s: [[N, 0.4], [N + 320, 1, 'back']] }, c: [
-      R(-3.5, -26, 7, 18, 3.5, 'blue'), { t: 'circle', x: 0, y: -1, r: 3.8, fill: 'blue' }] },
-    // реплика
-    { t: 'g', x: 190, y: 20, o: 0, k: { o: [[0, 0], [W + 100, 0], [W + 220, 1]], s: [[W + 100, 0.7], [W + 420, 1, 'back']] }, c: [
-      R(0, 0, 136, 38, 16, 'bg', { stroke: 'line', sw: 1.5 }), { t: 'path', d: 'M20 37l-10 13 22-13', fill: 'bg', stroke: 'line', sw: 1.5 }, R(13, 34, 20, 5, 0, 'bg'),
-      TX(68, 24.5, 'Вам в МБЧ!', { fs: 14.5, fw: 700, anchor: 'middle' })] },
-    // загибается угол страницы
-    { t: 'g', x: 360, y: 250, o: 0, k: { o: [[0, 0], [P, 0], [P + 80, 1]], s: [[P, 0.01], [P + 500, 1.6, 'io'], [5000, 1.6], [5450, 2.4, 'in']] }, c: [
-      { t: 'path', d: 'M0-90L-90 0H0Z', fill: 'surface' },
-      { t: 'path', d: 'M-90 0L0-90L-60-60Z', fill: 'bg', stroke: 'line', sw: 1.2 },
-      { t: 'path', d: 'M-60-60L-90 0', stroke: 'line', sw: 1.2, o: 0.6 }] },
+  // 2. Число пробирок: нажали 4 — схема перестроилась
+  eSteps: (() => {
+    const T1 = 1900;
+    const btns = [['3', '±5%', true], ['4', '±5,6%'], ['5', '±6,1%'], ['6', '±6,5%']];
+    const els = [];
+    btns.forEach(([n, e, star], i) => {
+      const x = 10 + i * 71, on = i === 0 ? [[0, 1], [T1, 1], [T1 + 160, 0]] : i === 1 ? [[0, 0], [T1, 0], [T1 + 160, 1]] : null;
+      els.push(R(x, 10, 66, 36, 10, 'surface'));
+      if (on) els.push(R(x, 10, 66, 36, 10, 'blue', { o: on[0][1], k: { o: on } }));
+      const tx = x + 33 - (star ? 5 : 0);
+      els.push(TX(tx, 26, n, { fs: 12, fw: 700, anchor: 'middle' }), TX(x + 33, 39, e, { fs: 8, fill: 'text2', anchor: 'middle' }));
+      if (on) els.push(TX(tx, 26, n, { fs: 12, fw: 700, fill: 'white', anchor: 'middle', o: on[0][1], k: { o: on } }), TX(x + 33, 39, e, { fs: 8, fill: 'white', anchor: 'middle', o: on[0][1], k: { o: on } }));
+      if (star) els.push(TX(tx + 10, 26, '★', { fs: 9, fill: STAR, anchor: 'middle' }));
+    });
+    els.push(TX(12, 62, 'Сколько пробирок. ★ наименьшая погрешность', { fs: 8.5, fill: 'text2' }));
+    els.push(sChain([[[[0, '1:27']], [[0, '100 + 2 600']], 0.9, 0.6], [[[0, '1:270']], [[0, '100 + 900']], 0.45, 0.4], [[[0, '1:2 700']], [[0, '100 + 900']], 0.45, 0.26]], 80, { k: { o: hideAt(T1, 200) } }));
+    els.push(sChain([[[[0, '1:9']], [[0, '100 + 800']], 0.42, 0.6], [[[0, '1:27']], [[0, '100 + 200']], 0.2, 0.45], [[[0, '1:270']], [[0, '100 + 900']], 0.45, 0.32], [[[0, '1:2 700']], [[0, '100 + 900']], 0.45, 0.22]], 80, { o: 0, k: { o: showAt(T1 + 150, 300) } }));
+    els.push(TX(150, 196, 'Схема перестраивается сразу', { fs: 9, fill: 'blue', fw: 600, anchor: 'middle', o: 0, k: { o: showAt(T1 + 500) } }));
+    els.push(ripple(116, 28, T1), finger([[300, 220, 150], [1500, 116, 28], [2300, 116, 28]], [T1]));
+    return { w: 300, h: 208, dur: 5600, still: 3400, els };
+  })(),
+  // 3. Варианты на то же число пробирок
+  eAlts: (() => {
+    const T1 = 2200, sw = (a, b) => [[0, a], [T1 + 80, b]];
+    const rows = [['1:27 → 1:270 → 1:2 700', '100 + 2 600 · 100 + 900 · 100 + 900'], ['1:18 → 1:270 → 1:2 700', '100 + 1 700 · 100 + 1 400 · 100 + 900'], ['1:30 → 1:270 → 1:2 700', '100 + 2 900 · 100 + 800 · 100 + 900']];
+    const els = [sChain([[sw('1:27', '1:30'), sw('100 + 2 600', '100 + 2 900'), 0.9, 0.6], [[[0, '1:270']], sw('100 + 900', '100 + 800'), 0.45, 0.4], [[[0, '1:2 700']], [[0, '100 + 900']], 0.45, 0.26]], 8),
+      TX(12, 116, 'Варианты на 3 пробирки', { fs: 9, fw: 600, fill: 'text2' })];
+    rows.forEach(([c, v], i) => {
+      const y = 124 + i * 42, on = i === 0 ? [[0, 1], [T1, 1], [T1 + 150, 0]] : i === 2 ? [[0, 0], [T1, 0], [T1 + 150, 1]] : [[0, 0]];
+      els.push(R(10, y, 280, 36, 10, 'surface'), R(10, y, 280, 36, 10, null, { stroke: 'blue', sw: 1.6, o: on[0][1], k: on.length > 1 ? { o: on } : undefined }),
+        { t: 'circle', x: 26, y: y + 18, r: 6, fill: 'field', stroke: 'line', sw: 1.2 }, { t: 'circle', x: 26, y: y + 18, r: 3.4, fill: 'blue', o: on[0][1], k: on.length > 1 ? { o: on } : undefined },
+        TX(40, y + 15, c, { fs: 10, fw: 600 }), TX(40, y + 28, v, { fs: 7.5, fill: 'text2' }), TX(280, y + 15, '±5%', { fs: 8.5, fill: 'text2', anchor: 'end' }));
+    });
+    els.push(ripple(150, 208, T1), finger([[300, 230, 100], [1700, 150, 208], [2600, 150, 208]], [T1]));
+    return { w: 300, h: 256, dur: 5600, still: 3600, els };
+  })(),
+  // 4. КСЭ: флакон 10 ЕЭ/мл → 20λ, потом 10λ
+  eKse: (() => {
+    const T1 = 1300, T2 = 3300;
+    const sel = (on) => (on ? [[0, 1], [T2, 1], [T2 + 160, 0]] : [[0, 0], [T2, 0], [T2 + 160, 1]]);
+    const one = { t: 'g', o: 0, k: { o: [[T1, 0], [T1 + 300, 1, 'out'], [T2, 1], [T2 + 200, 0]] }, c: [
+      sTube(40, 124, 0.85, 0.55, T1 + 150),
+      TX(66, 132, 'Пробирка 1', { fs: 8, fill: 'text2' }), TX(66, 150, '0,625 ЕЭ/мл', { fs: 13, fw: 700 }),
+      sAdd(66, 158, 212, false, 'Вода ЛАЛ', '1 500 мкл'), sAdd(66, 184, 212, true, 'КСЭ', '100 мкл'),
+      TX(66, 220, 'в пробирке 1,6 мл', { fs: 7.5, fill: 'text3' })] };
+    const two = { t: 'g', o: 0, k: { o: showAt(T2 + 150, 300) }, c: [
+      ...[[0, '5 ЕЭ/мл', '100 мкл', 'КСЭ', 0.25, 0.55], [1, '0,313 ЕЭ/мл', '1 500 мкл', 'Из №1', 0.85, 0.35]].map(([j, res, w, src, lv, tn]) => {
+        const x0 = 14 + j * 140;
+        return { t: 'g', c: [sTube(x0 + 16, 124, lv, tn), TX(x0 + 36, 132, `Пробирка ${j + 1}`, { fs: 7.5, fill: 'text2' }), TX(x0 + 36, 148, res, { fs: 10.5, fw: 700 }),
+          sAdd(x0 - 4, 184, 128, false, 'Вода', w), sAdd(x0 - 4, 208, 128, true, src, '100 мкл')] };
+      }), sArrow(150, 150)] };
+    return { w: 300, h: 240, dur: 6600, still: 2600, els: [
+      TX(12, 14, 'КСЭ во флаконе', { fs: 9, fill: 'text2' }),
+      ...sField(10, 20, 200, [[0, ''], [450, '1'], [600, '10']], 'Например: 10', [300, 1000]),
+      R(216, 20, 74, 28, 8, 'field', { stroke: 'line', sw: 1 }), TX(253, 38.5, 'ЕЭ/мл', { fs: 10, fill: 'text2', anchor: 'middle' }),
+      TX(12, 69, 'λ', { fs: 10, fill: 'text2' }), chip(26, 57, 52, '0,03125', [[0, 1]]), chip(82, 57, 40, '0,035'),
+      TX(130, 69, 'Нужно', { fs: 9, fill: 'text2' }), chip(166, 57, 30, '20λ', sel(true)), chip(200, 57, 30, '10λ', sel(false)), chip(234, 57, 24, '5λ'), chip(262, 57, 30, '2,5λ'),
+      R(10, 86, 280, 148, 12, 'surface'),
+      TX(150, 166, 'Впишите КСЭ, и появится схема', { fs: 9, fill: 'text3', anchor: 'middle', k: { o: hideAt(T1, 150) } }),
+      { t: 'g', y: -10, c: [one, two] },
+      ripple(110, 34, 300), ripple(215, 66, T2),
+      finger([[100, 220, 120], [280, 110, 34], [700, 110, 34], [2900, 215, 66], [3700, 215, 66]], [300, T2]),
+    ] };
+  })(),
+  // 5. Формула МДР: числа прямо в числителе и знаменателе
+  eFormula: (() => {
+    const A = 400, B = 1300, C = 2200, RES = 2900;
+    return { w: 300, h: 168, dur: 6400, still: 4200, els: [
+      R(4, 4, 292, 160, 14, 'surface'),
+      TX(16, 24, 'МДР', { fs: 10, fw: 700, fill: 'text2' }),
+      ...sField(16, 34, 74, [[0, ''], [A + 100, '1'], [A + 200, '12'], [A + 300, '120'], [A + 400, '1200']], 'предел', [A - 100, B - 100]),
+      TX(100, 52, '×', { fs: 11, fill: 'text3', anchor: 'middle' }),
+      ...sField(110, 34, 74, [[0, ''], [B + 100, '0'], [B + 200, '0,'], [B + 300, '0,5']], 'конц.', [B - 100, C - 100]),
+      { t: 'path', d: 'M16 76h168', stroke: 'text', sw: 1.4 },
+      ...sField(63, 86, 74, [[0, ''], [C + 100, '0,03125']], 'λ', [C - 100, RES]),
+      TX(198, 82, '=', { fs: 15, fill: 'text3', anchor: 'middle' }),
+      TX(212, 84, '?', { fs: 16, fw: 700, fill: 'text3', k: { o: hideAt(RES, 100) } }),
+      TX(212, 84, '1:19 200', { fs: 16, fw: 700, o: 0, k: { o: showAt(RES, 250) } }),
+      TX(16, 136, 'λ и концентрация подставятся', { fs: 9, fill: 'blue', fw: 600, o: 0, k: { o: showAt(RES + 600) } }),
+      TX(16, 150, 'в «Результат» и «на изделие»', { fs: 9, fill: 'blue', fw: 600, o: 0, k: { o: showAt(RES + 600) } }),
+      ripple(53, 48, A - 100), ripple(147, 48, B - 100), ripple(100, 100, C - 100),
+      finger([[100, 230, 140], [A - 300, 53, 48], [A + 200, 53, 48], [B - 300, 147, 48], [B + 200, 147, 48], [C - 300, 100, 100], [C + 300, 100, 100]], [A - 100, B - 100, C - 100]),
+    ] };
+  })(),
+});
+// ---------- Котик-лаборант (в стиле иконки): «О! Привет!» → опыт → бах → засасывает вихрь ----------
+const FUR = '#F2A65E', FUR_D = '#D98A47', FUR_L = '#C8743A', CREAM = '#FCE6CC', PINK = '#EE95A3', SLEEVE = '#E3EAF2', SEAM = '#C6CFDA', INK = '#2B2F3A', FRAME = '#3B4256';
+const SOOT = '#3A3F4A', REAGENT = '#F07FAE', PURPLE = '#9B6BFF', SPARK = '#FFC94D', FLAME = '#FF8A3D', SMOKE = '#BAC2CC', GLASS_S = '#8E9AA8';
+const CAT_X = 150, CAT_Y = 150, FLASK_X = 232, TABLE_Y = 206, PORTAL_Y = 124;
+const ks = (o) => { const k = {}; for (const p in o) if (o[p]) k[p] = o[p]; return Object.keys(k).length ? { k } : {}; };
+const first = (keys, def) => (keys ? keys[0][1] : def);
+const shift = (keys, d) => keys && keys.map(([t, v, e]) => [t, v + d, e]);
+// запаздывание (follow-through): тот же ход, позже и чуть сильнее
+const lag = (keys, dt, k = 1.4, base = 0) => keys && keys.map(([t, v, e], i) => [i ? t + dt : t, base + (v - keys[0][1]) * k + keys[0][1] * 0.5, e]);
+const ell = (cx, cy, rx, ry) => `M${cx - rx} ${cy}a${rx} ${ry} 0 1 0 ${rx * 2} 0a${rx} ${ry} 0 1 0 ${-rx * 2} 0Z`;
+// кубическая кривая: точка, касательная и кусок [t..1] — чтобы кончик хвоста и полоски лежали точно на хвосте
+const cub = (P, t) => { const u = 1 - t; return [0, 1].map((i) => u * u * u * P[0][i] + 3 * u * u * t * P[1][i] + 3 * u * t * t * P[2][i] + t * t * t * P[3][i]); };
+const cubD = (P, t) => { const u = 1 - t; return [0, 1].map((i) => 3 * u * u * (P[1][i] - P[0][i]) + 6 * u * t * (P[2][i] - P[1][i]) + 3 * t * t * (P[3][i] - P[2][i])); };
+function cubTail(P, t) {
+  const lerp = (a, b) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+  const a = lerp(P[0], P[1]), b = lerp(P[1], P[2]), c = lerp(P[2], P[3]), d = lerp(a, b), e = lerp(b, c), f = lerp(d, e);
+  return `M${f[0].toFixed(2)} ${f[1].toFixed(2)}C${e[0].toFixed(2)} ${e[1].toFixed(2)} ${c[0].toFixed(2)} ${c[1].toFixed(2)} ${P[3][0]} ${P[3][1]}`;
+}
+const cubPath = (P) => `M${P[0][0]} ${P[0][1]}C${P[1][0]} ${P[1][1]} ${P[2][0]} ${P[2][1]} ${P[3][0]} ${P[3][1]}`;
+function stripe(P, t, half) {
+  const [x, y] = cub(P, t), [dx, dy] = cubD(P, t), l = Math.hypot(dx, dy), nx = -dy / l, ny = dx / l;
+  return `M${(x + nx * half).toFixed(2)} ${(y + ny * half).toFixed(2)}L${(x - nx * half).toFixed(2)} ${(y - ny * half).toFixed(2)}`;
+}
+const CAT_DEFS = { t: 'defs', html: `
+  <radialGradient id="cg-fur" cx="38%" cy="30%" r="78%"><stop offset="0" stop-color="#FFCB94"/><stop offset=".55" stop-color="#F2A65E"/><stop offset="1" stop-color="#D47F3C"/></radialGradient>
+  <radialGradient id="cg-paw" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#FFC48A"/><stop offset="1" stop-color="#DE8C48"/></radialGradient>
+  <linearGradient id="cg-tail" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#E9954F"/><stop offset="1" stop-color="#FFBE80"/></linearGradient>
+  <linearGradient id="cg-coat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#DCE3EC"/></linearGradient>
+  <linearGradient id="cg-sleeve" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#DDE4ED"/></linearGradient>
+  <radialGradient id="cg-lens" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/><stop offset=".55" stop-color="#FFFFFF" stop-opacity=".08"/><stop offset="1" stop-color="#FFFFFF" stop-opacity=".2"/></radialGradient>
+  <linearGradient id="cg-glass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".75"/><stop offset=".45" stop-color="#EAF1FA" stop-opacity=".35"/><stop offset="1" stop-color="#D5DFEB" stop-opacity=".6"/></linearGradient>
+  <linearGradient id="cg-liqB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8DB8FF"/><stop offset="1" stop-color="#3D82F5"/></linearGradient>
+  <linearGradient id="cg-liqP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C7ABFF"/><stop offset="1" stop-color="#8656F2"/></linearGradient>
+  <linearGradient id="cg-liqR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB8D2"/><stop offset="1" stop-color="#E9609A"/></linearGradient>
+  <linearGradient id="cg-bench" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3F6FA"/><stop offset="1" stop-color="#DCE3EB"/></linearGradient>
+  <linearGradient id="cg-benchF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CDD5DF"/><stop offset="1" stop-color="#B7C2CF"/></linearGradient>
+  <radialGradient id="cg-bg" cx="50%" cy="42%" r="60%"><stop offset="0" style="stop-color:var(--blue);stop-opacity:.05"/><stop offset=".75" style="stop-color:var(--blue);stop-opacity:.12"/><stop offset="1" style="stop-color:var(--blue);stop-opacity:.16"/></radialGradient>
+  <radialGradient id="cg-vortex" cx="50%" cy="50%" r="50%"><stop offset="0" style="stop-color:var(--blue);stop-opacity:.5"/><stop offset=".45" style="stop-color:var(--blue);stop-opacity:.22"/><stop offset="1" style="stop-color:var(--blue);stop-opacity:0"/></radialGradient>` };
+function blinkKeys(list) {
+  const h = [[0, 3.6]], y = [[0, -1.8]], o = [[0, 1]];
+  list.forEach((b) => {
+    const [t, hold = 0] = Array.isArray(b) ? b : [b];
+    h.push([t, 3.6], [t + 70, 0.55], [t + 70 + hold, 0.55], [t + 150 + hold, 3.6]);
+    y.push([t, -1.8], [t + 70, -0.28], [t + 70 + hold, -0.28], [t + 150 + hold, -1.8]);
+    o.push([t, 1], [t + 10, 0], [t + 150 + hold, 0], [t + 160 + hold, 1]);
+  });
+  return { blinkH: h, blinkY: y, blinkO: o };
+}
+// стеклянная пробирка: (0,0) — середина донышка
+function glassTube(h, liq, fill = 'url(#cg-liqR)', w = 10) {
+  const r = w / 2, li = r - 1.6;
+  return [
+    { t: 'path', d: `M${-r} ${-h}V${-r}a${r} ${r} 0 0 0 ${w} 0V${-h}Z`, fill: 'url(#cg-glass)', stroke: GLASS_S, sw: 1.5 },
+    { t: 'path', d: `M${-li} ${-liq}V${-r}a${li} ${li} 0 0 0 ${li * 2} 0V${-liq}Z`, fill },
+    { t: 'path', d: `M${-li} ${-liq}Q0 ${-liq + 1.6} ${li} ${-liq}`, stroke: '#fff', sw: 1, o: 0.6 },
+    { t: 'path', d: `M${-r + 2.2} ${-h + 4}V${-r - 2}`, stroke: '#fff', sw: 1.4, o: 0.7 },
+    R(-r - 1.6, -h - 2.2, w + 3.2, 3.6, 1.8, '#AEB8C4')];
+}
+// Котик целиком; начало координат — грудь
+function catRig(o = {}) {
+  const eye = (cx) => ({ t: 'g', x: cx, y: 18, s: 1, ...ks({ x: shift(o.lookX, cx), y: shift(o.lookY, 18), s: o.eyeS }), c: [
+    R(-1.4, -1.8, 2.8, 3.6, 1.4, INK, ks({ h: o.blinkH, y: o.blinkY })),
+    { t: 'circle', x: 0.6, y: -1.1, r: 0.6, fill: 'white', ...ks({ o: o.blinkO }) }] });
+  // рукав-конус с манжетой и лапка-«варежка» с пальчиками
+  const arm = (x, rot, keys, extra = []) => ({ t: 'g', x, y: 4, rot, ...ks({ rot: keys }), c: [
+    { t: 'path', d: 'M-8.6-1C-9.2 12-8.6 26-7.4 37H7.4C8.6 26 9.2 12 8.6-1C8.2-8.5-8.2-8.5-8.6-1Z', fill: 'url(#cg-sleeve)', stroke: SEAM, sw: 1.4 },
+    ...extra,
+    { t: 'path', d: 'M-7.2 43C-8.4 49-5.4 54.6 0 54.6S8.4 49 7.2 43C6 38.6-6 38.6-7.2 43Z', fill: 'url(#cg-paw)', stroke: FUR_L, sw: 0.9 },
+    { t: 'path', d: 'M-2.6 50.6v3M2.6 50.6v3', stroke: FUR_L, sw: 1.1, o: 0.8 },
+    R(-8.4, 34.5, 16.8, 6.5, 3.2, SLEEVE, { stroke: SEAM, sw: 1.2 })] });
+  const tube = { t: 'g', y: 46, rot: first(o.tubeRot, 12), o: first(o.tubeO, 0), ...ks({ rot: o.tubeRot, o: o.tubeO }), c: [{ t: 'g', y: 6, c: glassTube(30, 12, 'url(#cg-liqR)', 8.5) }] };
+  // ножки: прячутся за столом, видны, когда котика уносит
+  const leg = (x, keys) => ({ t: 'g', x, y: 50, rot: 0, ...ks({ rot: keys }), c: [
+    { t: 'path', d: 'M0 0V15', stroke: FUR_L, sw: 12.4 }, { t: 'path', d: 'M0 0V15', stroke: FUR, sw: 10.4 },
+    { t: 'path', d: ell(0, 18.5, 8.2, 5.2), fill: 'url(#cg-paw)', stroke: FUR_L, sw: 0.9 },
+    { t: 'path', d: 'M-2.6 20.5v2.6M2.6 20.5v2.6', stroke: FUR_L, sw: 1.1, o: 0.8 }] });
+  // хвост из двух звеньев: кончик запаздывает (follow-through)
+  const TA = [[0, 0], [-18, 2], [-32, -8], [-34, -26]], TB = [[0, 0], [1, -9], [3, -16], [8, -22]];
+  const tail = { t: 'g', x: -30, y: 50, rot: first(o.tail, 6), ...ks({ rot: o.tail }), c: [
+    { t: 'path', d: cubPath(TA), stroke: FUR_L, sw: 11.6 },
+    { t: 'g', x: -34, y: -26, rot: first(o.tailTip, 0), ...ks({ rot: o.tailTip }), c: [
+      { t: 'path', d: cubPath(TB), stroke: FUR_L, sw: 9.6 }, { t: 'path', d: cubPath(TB), stroke: 'url(#cg-tail)', sw: 7.8 },
+      { t: 'path', d: cubTail(TB, 0.5), stroke: FUR_D, sw: 7.8 },
+      { t: 'path', d: stripe(TB, 0.22, 2.6), stroke: FUR_D, sw: 2 }] },
+    { t: 'path', d: cubPath(TA), stroke: 'url(#cg-tail)', sw: 9.8 },
+    { t: 'path', d: stripe(TA, 0.62, 3.4), stroke: FUR_D, sw: 2.2 }, { t: 'path', d: stripe(TA, 0.86, 3.4), stroke: FUR_D, sw: 2.2 }] };
+  return { t: 'g', x: CAT_X, y: CAT_Y, s: 1, rot: 0, ...ks({ x: o.rootX, y: o.rootY, s: o.rootS, rot: o.rootRot }), c: [
+    tail, leg(-15, o.legL), leg(15, o.legR),
+    R(-12, -21, 24, 16, 6, FUR),
+    { t: 'path', d: 'M-46 58C-48 30-41 6-23-5C-15-9-8-11 0-11S15-9 23-5C41 6 48 30 46 58C40 62.5 22 64 0 64S-40 62.5-46 58Z', fill: 'url(#cg-coat)', stroke: SEAM, sw: 1.6 },
+    { t: 'path', d: 'M30-1C42 11 46 31 46 58C41 61.5 31 63.2 23 63.7C30 41 32.5 19 30-1Z', fill: '#1E2A3A', o: 0.05 },
+    { t: 'path', d: 'M-10-10L0 7L10-10Z', fill: '#E59450' },
+    { t: 'path', d: 'M-10-10L0 7L-6 14L-21-3Z', fill: SLEEVE, stroke: SEAM, sw: 1.2 }, { t: 'path', d: 'M10-10L0 7L6 14L21-3Z', fill: SLEEVE, stroke: SEAM, sw: 1.2 },
+    { t: 'path', d: 'M0 15V62', stroke: SEAM, sw: 1.2, o: 0.7 },
+    { t: 'circle', x: 0, y: 30, r: 1.8, fill: SEAM }, { t: 'circle', x: 0, y: 44, r: 1.8, fill: SEAM },
+    R(19, 22, 3, 12, 1.5, '#2D7DFF'), R(24.5, 24, 3, 10, 1.5, '#E5734F'), R(15, 30, 17, 16, 4, SLEEVE, { stroke: SEAM, sw: 1 }),
+    { t: 'path', d: ell(0, -11, 21, 3.6), fill: '#000', o: 0.1 },
+    arm(-30, first(o.armL, 12), o.armL),
+    arm(30, first(o.armR, -12), o.armR, [tube]),
+    { t: 'g', x: 0, y: -14, rot: first(o.headRot, 0), ...ks({ rot: o.headRot, y: o.headY }), c: [{ t: 'g', y: -26, c: [{ t: 'g', x: -55, y: -51.15, s: 2.75, c: [
+      { t: 'g', x: 20, y: 8.2, s: first(o.tuftS, 0), ...ks({ s: o.tuftS }), c: [{ t: 'path', d: 'M-5.6 2.6L-4.1-2.9L-1.9 0.5L0-3.8L1.9 0.5L4.1-2.9L5.6 2.6Z', fill: FUR }] },
+      { t: 'path', d: 'M8.2 18.6C7.9 13.6 8.9 9.4 10.4 5.9Q10.9 4.6 12.2 5.5L15.9 8.7C18.5 8 21.5 8 24.1 8.7L27.8 5.5Q29.1 4.6 29.6 5.9C31.1 9.4 32.1 13.6 31.8 18.6C31.5 24.8 26.4 28.8 20 28.8S8.5 24.8 8.2 18.6Z', fill: 'url(#cg-fur)', stroke: FUR_L, sw: 0.35 },
+      { t: 'path', d: 'M11.4 7.4L14.5 10C13.1 10.7 12.1 11.6 11.2 12.6ZM28.6 7.4L25.5 10C26.9 10.7 27.9 11.6 28.8 12.6Z', fill: PINK, o: 0.85 },
+      { t: 'path', d: 'M18.3 9.6l.4 2.1M20 9.4v2.3M21.7 9.6l-.4 2.1', stroke: '#C97434', sw: 1 },
+      { t: 'path', d: ell(20, 23.2, 4.6, 3.1), fill: CREAM },
+      { t: 'circle', x: 11.6, y: 21.4, r: 1.9, fill: PINK, o: 0.5 }, { t: 'circle', x: 28.4, y: 21.4, r: 1.9, fill: PINK, o: 0.5 },
+      { t: 'g', o: first(o.sootO, 0), ...ks({ o: o.sootO }), c: [
+        { t: 'circle', x: 11.8, y: 19.4, r: 2, fill: SOOT, o: 0.32 }, { t: 'circle', x: 27.4, y: 10.6, r: 1.6, fill: SOOT, o: 0.3 },
+        { t: 'circle', x: 23.6, y: 25, r: 1.2, fill: SOOT, o: 0.3 }, { t: 'circle', x: 16.8, y: 8.6, r: 1.1, fill: SOOT, o: 0.26 }] },
+      eye(15.4), eye(24.6),
+      { t: 'g', x: 20, y: 18, rot: first(o.glassRot, 0), ...ks({ rot: o.glassRot }), c: [{ t: 'g', x: -20, y: -18, c: [
+        { t: 'circle', x: 15.4, y: 18, r: 4.3, fill: 'url(#cg-lens)', stroke: FRAME, sw: 1.3 }, { t: 'circle', x: 24.6, y: 18, r: 4.3, fill: 'url(#cg-lens)', stroke: FRAME, sw: 1.3 },
+        { t: 'path', d: 'M19 17.6Q20 16.9 21 17.6M11.1 17.4L8.7 16.8M28.9 17.4L31.3 16.8', stroke: FRAME, sw: 1.1 }] }] },
+      { t: 'path', d: 'M18.8 21.6Q20 21 21.2 21.6Q20 23.1 18.8 21.6Z', fill: PINK },
+      { t: 'path', d: 'M18 24.4Q19 25.4 20 24.4Q21 25.4 22 24.4', stroke: INK, sw: 0.9, o: first(o.smileO, 1), ...ks({ o: o.smileO }) },
+      { t: 'g', o: first(o.happyO, 0), ...ks({ o: o.happyO }), c: [
+        { t: 'path', d: 'M17.6 24Q20 28.6 22.4 24Z', fill: INK }, { t: 'path', d: 'M18.7 26.2Q20 25.3 21.3 26.2Q20 27.3 18.7 26.2Z', fill: PINK }] },
+      { t: 'circle', x: 20, y: 25.3, r: 1.05, fill: INK, o: first(o.ohO, 0), ...ks({ o: o.ohO }) },
+      { t: 'g', x: 15, y: 9.8, rot: -18, o: 0.3, c: [{ t: 'path', d: ell(0, 0, 3.6, 1.6), fill: '#fff' }] }] }] }] },
+    { t: 'g', x: 0, y: -98, o: 0, s: 1, ...ks({ o: o.markO, s: o.markS }), c: [R(-3.5, -24, 7, 17, 3.5, 'blue'), { t: 'circle', x: 0, y: 0, r: 3.8, fill: 'blue' }] },
+  ] };
+}
+function speech(x, y, w, text, oKeys, more = {}) {
+  const h = 42;
+  return { t: 'g', x, y, o: oKeys[0][1], s: 1, k: { o: oKeys, ...more }, c: [{ t: 'g', x: -12, y: -h - 13, c: [
+    R(0, 0, w, h, 18, 'bg', { stroke: 'line', sw: 1.5 }),
+    { t: 'path', d: `M22 ${h - 1}L12 ${h + 13}L36 ${h - 1}`, fill: 'bg', stroke: 'line', sw: 1.5 }, R(16, h - 4, 22, 5, 0, 'bg'),
+    TX(w / 2, 26.5, text[0][1], { fs: 15, fw: 700, anchor: 'middle', ...(text.length > 1 ? { k: { text } } : {}) })] }] };
+}
+const flaskBubble = (x, t, r, d = 900) => ({ t: 'circle', x, y: TABLE_Y - 5, r, fill: 'white', o: 0, k: { y: [[t, TABLE_Y - 5], [t + d, TABLE_Y - 17, 'out']], o: [[t - 1, 0], [t, 0.9], [t + d, 0]] } });
+// фон: мягкое пятно, полка с посудой, искорки
+function labBack(extra = []) {
+  const shelfFlask = { t: 'g', x: 44, y: 52, c: [
+    { t: 'path', d: 'M-3.5-28h7v8.5a11 11 0 1 1-7 0Z', fill: 'url(#cg-glass)', stroke: GLASS_S, sw: 1.4 },
+    { t: 'path', d: 'M-9.2-9.5a9.6 9.6 0 0 0 18.4 0Z', fill: 'url(#cg-liqB)', o: 0.85 },
+    R(-5, -30.5, 10, 3.4, 1.7, '#AEB8C4'), { t: 'path', d: 'M-6-14a7 7 0 0 0-1 5', stroke: '#fff', sw: 1.4, o: 0.7 }] };
+  const shelfJar = { t: 'g', x: 76, y: 52, c: [
+    R(-8, -20, 16, 20, 4, 'url(#cg-glass)', { stroke: GLASS_S, sw: 1.4 }), R(-6.4, -10, 12.8, 8.4, 3, 'url(#cg-liqR)', { o: 0.85 }),
+    R(-9, -23, 18, 4.5, 2, '#C9D2DD'), { t: 'path', d: 'M-4.5-16v9', stroke: '#fff', sw: 1.3, o: 0.7 }] };
+  return [CAT_DEFS,
+    { t: 'circle', x: 160, y: 122, r: 112, fill: 'url(#cg-bg)' },
+    R(24, 52, 70, 5, 2.5, 'url(#cg-bench)', { stroke: SEAM, sw: 1 }), { t: 'path', d: 'M32 57v6M86 57v6', stroke: SEAM, sw: 2 },
+    shelfFlask, shelfJar,
+    { t: 'circle', x: 300, y: 104, r: 3, fill: 'blue', o: 0.25 }, { t: 'circle', x: 318, y: 120, r: 5, fill: 'blue', o: 0.12 }, { t: 'circle', x: 286, y: 132, r: 2, fill: 'blue', o: 0.3 },
+    ...extra];
+}
+function labFront(o = {}) {
+  return [
+    // стол: столешница и передняя панель (прячет ножки)
+    { t: 'path', d: ell(180, 241, 160, 4), fill: '#000', o: 0.06 },
+    R(22, 212, 316, 26, 6, 'url(#cg-benchF)'),
+    R(14, TABLE_Y - 2, 332, 11, 5.5, 'url(#cg-bench)', { stroke: SEAM, sw: 1 }),
+    // колба Эрленмейера
+    { t: 'g', x: FLASK_X, y: TABLE_Y - 2, rot: 0, ...ks({ x: o.flaskX, y: o.flaskY, rot: o.flaskRot }), c: [
+      { t: 'path', d: ell(0, 0.5, 23, 2.2), fill: '#000', o: 0.08 },
+      { t: 'path', d: 'M-5-56v22L-24-4a2.5 2.5 0 0 0 2 4h44a2.5 2.5 0 0 0 2-4L5-34v-22Z', fill: 'url(#cg-glass)' },
+      { t: 'path', d: 'M-13.6-18h27.2l9.4 13a2.5 2.5 0 0 1-2 4h-42a2.5 2.5 0 0 1-2-4z', fill: 'url(#cg-liqB)', o: first(o.blueO, 0.9), ...ks({ o: o.blueO }) },
+      { t: 'path', d: 'M-13.6-18h27.2l9.4 13a2.5 2.5 0 0 1-2 4h-42a2.5 2.5 0 0 1-2-4z', fill: 'url(#cg-liqP)', o: first(o.purpleO, 0), ...ks({ o: o.purpleO }) },
+      { t: 'path', d: 'M-13.6-18Q0-15.6 13.6-18', stroke: '#fff', sw: 1.2, o: 0.55 },
+      { t: 'path', d: 'M-5-56v22L-24-4a2.5 2.5 0 0 0 2 4h44a2.5 2.5 0 0 0 2-4L5-34v-22', stroke: GLASS_S, sw: 1.8 },
+      R(-7.5, -59, 15, 4, 2, '#AEB8C4'),
+      { t: 'path', d: 'M-9-26L-16-15M-2.4-52v14', stroke: '#fff', sw: 1.8, o: 0.7 }] },
+    ...(o.bubbles || []).map(([t, r = 2, x]) => flaskBubble(x != null ? x : FLASK_X - 6 + ((t / 7) % 12), t, r)),
+    // штатив с пробирками
+    { t: 'g', x: 304, y: TABLE_Y - 2, c: [
+      R(-22, -5, 44, 5, 2.5, '#C9D2DD', { stroke: SEAM, sw: 0.8 }),
+      { t: 'path', d: 'M-19-5V-30M19-5V-30', stroke: '#B3BECB', sw: 2.6 },
+      { t: 'g', x: -9, y: -3, c: glassTube(40, 15, 'url(#cg-liqR)', 10) },
+      { t: 'g', x: 9, y: -3, c: glassTube(40, 20, 'url(#cg-liqB)', 10) },
+      R(-21, -24, 42, 5, 2.5, '#C9D2DD', { stroke: SEAM, sw: 0.8 })] },
+  ];
+}
+
+// Одна сцена, всё само (≈11,6 с)
+SCENES.catShow = (() => {
+  const SEE = 700, POUR = 3200, B = 5400, P = 6900, PULL = 7300, BYE = 8500, FLY = 9300, GONE = 10200, END = 11600;
+  const jit = (base, a) => { const k = [[0, base], [4800, base]]; [a, -a, a * 1.2, -a * 1.2, a * 1.4, -a * 1.4, a].forEach((v, i) => k.push([4880 + i * 80, base + v])); k.push([B, base]); return k; };
+  // дым: вспух → висит → его втягивает портал
+  const puff = (x, y, r, t0, dy) => ({ t: 'circle', x, y, r: 1, fill: SMOKE, o: 0, k: {
+    r: [[t0, 4], [t0 + 500, r, 'out'], [P, r * 1.12], [P + 900, 0, 'in']],
+    x: [[t0, x], [P, x], [P + 900, CAT_X, 'in']], y: [[t0, y], [P, y + dy, 'out'], [P + 900, PORTAL_Y, 'in']],
+    o: [[t0 - 1, 0], [t0, 0.95], [P, 0.8], [P + 900, 0.6]] } });
+  const star = (x, y, size, t0, fill) => ({ t: 'g', x, y, s: 0, o: 0, k: { s: [[t0, 0], [t0 + 300, size, 'out'], [t0 + 750, 0, 'in']], o: [[t0 - 1, 0], [t0, 1]], rot: [[t0, 0], [t0 + 750, 90]] }, c: [
+    { t: 'path', d: 'M0-7L1.8-1.8L7 0L1.8 1.8L0 7L-1.8 1.8L-7 0L-1.8-1.8Z', fill }] });
+  const burst = (fill) => ({ t: 'path', d: 'M0-40L9-14L36-22L17-2L38 14L11 13L4 40L-6 15L-32 26L-16 3L-38-10L-11-12Z', fill });
+  const frantic = []; for (let t = 4300; t < B - 50; t += 110) frantic.push([t, 1.6 + ((t / 110) % 3) * 0.6, FLASK_X - 10 + ((t / 37) % 20)]);
+  const TAIL = [[0, 1], [1400, 8], [2800, 1], [4200, 8], [B, 6], [B + 100, 30, 'out'], [B + 900, 6, 'io'], [PULL, 10], [PULL + 400, 40], [PULL + 800, 18], [PULL + 1200, 44], [PULL + 1600, 20], [FLY, 40]];
+  const wob = [[PULL, 0], [PULL + 300, -6], [PULL + 600, 4], [PULL + 900, -7], [PULL + 1200, 5], [PULL + 1500, -8], [PULL + 1800, 3], [FLY, -4]];
+  return { w: 360, h: 250, dur: END, still: 1700, once: true, els: [
+    ...labBack([
+      { t: 'g', x: CAT_X, y: PORTAL_Y, s: 0, k: { s: [[0, 0], [P, 0], [P + 450, 1, 'back'], [GONE + 200, 1], [GONE + 600, 0, 'in']] }, c: [
+        { t: 'circle', r: 80, fill: 'url(#cg-vortex)' },
+        { t: 'g', k: { rot: [[0, 0], [END, 1500, 'lin']] }, c: [0, 120, 240].map((a) => ({ t: 'g', rot: a, c: [
+          { t: 'path', d: 'M0-5C9-7 15 2 13 11C10 25-6 31-20 25C-36 17-40-5-30-21C-21-35-2-42 18-39', stroke: 'blue', sw: 3.2, o: 0.5 }] })) },
+        { t: 'g', k: { rot: [[0, 0], [END, -1000, 'lin']] }, c: [0, 180].map((a) => ({ t: 'g', rot: a, c: [
+          { t: 'path', d: 'M0-4C7-6 11 1 10 8C8 18-4 22-14 18', stroke: 'blue', sw: 2.2, o: 0.4 }] })) },
+        { t: 'circle', r: 11, fill: 'blue', o: 0.3, k: { r: [[0, 11], [P + 600, 14], [P + 1200, 11], [P + 1800, 14], [P + 2400, 11], [P + 3000, 14], [END, 11]] } },
+        { t: 'circle', r: 4, fill: '#fff', o: 0.85 }] },
+      // искорки, которые затягивает вихрь
+      ...Array.from({ length: 20 }, (_, i) => { const t0 = P + 200 + i * 140, a = i * 47; return { t: 'g', x: CAT_X, y: PORTAL_Y, rot: a, k: { rot: [[0, a], [END, a + 900, 'lin']] }, c: [
+        { t: 'circle', x: 92, y: 0, r: 1.6 + (i % 3) * 0.6, fill: i % 2 ? 'blue' : SPARK, o: 0, k: { x: [[0, 92], [t0, 92], [t0 + 1100, 6, 'in']], o: [[0, 0], [t0, 0], [t0 + 200, 0.9], [t0 + 1000, 0.9], [t0 + 1100, 0]] } }] }; }),
+    ]),
+    catRig({
+      rootX: [[0, CAT_X], [B, CAT_X], [B + 100, 143, 'out'], [B + 500, CAT_X, 'io']],
+      rootY: [[0, 150], [SEE, 150], [SEE + 150, 146, 'out'], [SEE + 400, 150, 'in'], [B, 150], [B + 100, 147, 'out'], [B + 400, 150], [PULL, 150], [FLY, 145], [GONE, PORTAL_Y, 'in']],
+      rootS: [[0, 1], [PULL, 1], [FLY, 0.9], [GONE, 0, 'in']], rootRot: [...wob, [GONE, -720, 'in']],
+      tail: TAIL, tailTip: lag(TAIL, 160, 1.3),
+      legL: [[0, 0], [PULL, 0], [PULL + 300, 14], [PULL + 600, -8], [PULL + 900, 16], [PULL + 1200, -10], [PULL + 1500, 12], [FLY, -6]],
+      legR: [[0, 0], [PULL, 0], [PULL + 300, -10], [PULL + 600, 12], [PULL + 900, -14], [PULL + 1200, 9], [PULL + 1500, -12], [FLY, 8]],
+      headY: [[0, -14], [SEE, -14], [SEE + 150, -21, 'out'], [SEE + 400, -14, 'in']],
+      headRot: [[0, 8], [SEE, 8], [SEE + 250, 0, 'out'], [3000, 0], [3300, 7, 'io'], [5200, 7], [B, 0], [B + 100, -10, 'out'], [B + 600, 0, 'io'], [PULL, 0], [PULL + 500, 6], [PULL + 1000, -4], [FLY, 0]],
+      lookX: [[0, 0.9], [SEE, 0.9], [SEE + 200, 0], [3000, 0], [3300, 1, 'io'], [5200, 1], [B, 0]], lookY: [[0, 0.7], [SEE, 0.7], [SEE + 200, 0], [3000, 0], [3300, 0.6, 'io'], [5200, 0.6], [B, 0]],
+      eyeS: [[0, 1], [SEE, 1], [SEE + 120, 1.35, 'out'], [1500, 1.35], [1750, 1, 'io'], [4900, 1], [5050, 1.2], [B, 1.2], [B + 50, 1], [PULL, 1], [PULL + 150, 1.25], [BYE, 1.25], [BYE + 200, 1]],
+      armL: [[0, 12], [1100, 12], [1400, 158, 'out'], [1650, 136], [1900, 160], [2150, 136], [2400, 156], [2900, 12, 'io'], [BYE, 12], [BYE + 250, 158, 'out'], [BYE + 450, 136], [BYE + 650, 160], [BYE + 850, 140]],
+      armR: [[0, -12], [POUR, -12], [POUR + 600, -110, 'io'], [POUR + 900, -125, 'io'], [POUR + 1600, -125], [POUR + 2000, -12, 'io'], [PULL, -12], [PULL + 300, -70, 'out'], [PULL + 700, -35], [PULL + 1100, -80], [PULL + 1500, -40], [FLY, -60]],
+      tubeRot: [[0, 12], [POUR, 12], [POUR + 600, 110, 'io'], [POUR + 900, 268, 'io'], [POUR + 1600, 268], [POUR + 2000, 12, 'io']],
+      tubeO: [[0, 0], [POUR, 0], [POUR + 150, 1], [POUR + 1700, 1], [POUR + 1850, 0]],
+      ohO: [[0, 0], [SEE, 0], [SEE + 60, 1], [1000, 1], [1060, 0], [4950, 0], [5050, 1], [6200, 1], [6300, 0], [PULL, 0], [PULL + 100, 1], [BYE, 1], [BYE + 80, 0]],
+      happyO: [[0, 0], [1000, 0], [1060, 1], [2800, 1], [2880, 0], [BYE, 0], [BYE + 80, 1]],
+      smileO: [[0, 1], [SEE, 1], [SEE + 60, 0], [2800, 0], [2880, 1], [4950, 1], [5050, 0], [6200, 0], [6300, 1], [PULL, 1], [PULL + 100, 0]],
+      sootO: [[0, 0], [B + 49, 0], [B + 50, 1]], tuftS: [[0, 0], [B + 50, 0], [B + 350, 1, 'back']], glassRot: [[0, 0], [B, 0], [B + 200, 9, 'out']],
+      markO: [[0, 0], [SEE, 0], [SEE + 60, 1], [1500, 1], [1650, 0]], markS: [[0, 0.4], [SEE, 0.4], [SEE + 300, 1, 'back']],
+      ...blinkKeys([400, [B + 50, 500], 6500]) }),
+    ...labFront({
+      flaskX: jit(FLASK_X, 2.2), flaskRot: [...jit(0, 4), [B + 1, 0]], flaskY: [[0, TABLE_Y], [B, TABLE_Y], [B + 120, TABLE_Y - 9, 'out'], [B + 320, TABLE_Y, 'in']],
+      blueO: [[0, 0.9], [4300, 0.9], [4800, 0]], purpleO: [[0, 0], [4200, 0], [4800, 0.95], [B, 0.95], [B + 20, 0]],
+      bubbles: [[200], [1000, 1.6], [1800], [2600, 1.6], [3400], ...frantic] }),
+    { t: 'path', d: `M227.5 141Q230.5 156 ${FLASK_X - 1} 188`, stroke: REAGENT, sw: 2.6, o: 0, k: { o: [[0, 0], [POUR + 850, 0], [POUR + 950, 1], [POUR + 1500, 1], [POUR + 1600, 0]] } },
+    // взрыв
+    { t: 'circle', x: FLASK_X, y: 178, r: 5, fill: '#FFF1C4', o: 0, k: { r: [[B, 5], [B + 260, 100, 'out']], o: [[B - 1, 0], [B, 1], [B + 320, 0]] } },
+    { t: 'g', x: FLASK_X, y: 176, s: 0, o: 0, k: { s: [[B, 0.2], [B + 200, 1.3, 'out']], o: [[B - 1, 0], [B, 1], [B + 160, 1], [B + 420, 0]] }, c: [burst(SPARK)] },
+    { t: 'g', x: FLASK_X, y: 176, s: 0, o: 0, k: { s: [[B, 0.1], [B + 180, 0.75, 'out']], o: [[B - 1, 0], [B, 1], [B + 140, 1], [B + 380, 0]], rot: [[B, 20], [B + 380, 40]] }, c: [burst(FLAME)] },
+    puff(FLASK_X, 176, 30, B + 40, -18), puff(FLASK_X - 26, 156, 24, B + 80, -22), puff(FLASK_X + 24, 150, 22, B + 120, -26),
+    puff(196, 124, 26, B + 160, -20), puff(FLASK_X + 4, 122, 20, B + 200, -24), puff(168, 92, 22, B + 260, -18), puff(FLASK_X + 40, 178, 18, B + 100, -14),
+    // реплики
+    speech(196, 80, 132, [[0, 'О! Привет!']], [[0, 0], [SEE + 150, 0], [SEE + 270, 1], [2900, 1], [3050, 0]], { s: [[SEE + 150, 0.6], [SEE + 500, 1, 'back']] }),
+    speech(192, 80, 158, [[0, 'Мне, похоже, пора…'], [BYE, 'Хорошего дня-я-я!']], [[0, 0], [PULL + 200, 0], [PULL + 320, 1], [GONE, 1], [GONE + 300, 0]],
+      { s: [[PULL + 200, 0.6], [PULL + 550, 1, 'back'], [BYE - 80, 1], [BYE + 120, 1.08, 'out'], [BYE + 300, 1], [FLY + 300, 1], [GONE + 300, 0, 'in']],
+        x: [[0, 192], [FLY + 300, 192], [GONE + 300, CAT_X, 'in']], y: [[0, 80], [FLY + 300, 80], [GONE + 300, PORTAL_Y, 'in']] }),
+    star(110, 92, 1.4, GONE + 450, SPARK), star(196, 84, 1.1, GONE + 520, 'blue'), star(98, 150, 1, GONE + 580, 'blue'),
+    star(206, 156, 1.3, GONE + 500, SPARK), star(150, 56, 1.2, GONE + 600, SPARK), star(152, 186, 0.9, GONE + 640, 'blue'),
   ] };
 })();
+// ---------- Справочник и «почему так»: сцены ----------
+const BLOOD = '#3F7DE8', SHELL = '#A88B62', SHELL_D = '#8A6F49', GERM = '#E5734F';
+// пробирка гель-тромба: переворот на 180°; гель держится, жидкость стекает к крышке
+function gelTube(x, y, gel, tFlip, tint = 0.6, appear) {
+  const liq = gel ? { o: Math.min(0.95, tint + 0.25) } : { o: tint * 0.8, k: { y: [[0, 7], [tFlip + 200, 7], [tFlip + 600, -24, 'in']] } };
+  return { t: 'g', x, y, ...(appear ? { o: 0 } : {}), k: { rot: [[0, 0], [tFlip, 0], [tFlip + 450, 180, 'io']], ...(appear ? { o: showAt(appear, 300) } : {}) }, c: [
+    R(-6, 7, 12, 18, 6, 'blue', liq),
+    { t: 'path', d: 'M-7-24v42a7 7 0 0 0 14 0v-42', stroke: 'text2', sw: 1.6 },
+    R(-9, -28, 18, 5, 2.5, 'line')] };
+}
+const verdict = (x, y, ok, t) => ({ t: 'g', x, y, o: 0, s: 0.6, k: { o: showAt(t, 200), s: [[t, 0.6], [t + 300, 1, 'back']] }, c: [
+  R(-11, -9, 22, 18, 9, ok ? 'blue' : 'line'), TX(0, 4.5, ok ? '+' : '−', { fs: 13, fw: 700, fill: ok ? 'white' : 'text2', anchor: 'middle' })] });
+function node(x, y, w, label, t, color = 'blue') {
+  const on = [[0, 0], [t, 0], [t + 220, 1, 'out']];
+  return { t: 'g', c: [R(x, y, w, 24, 12, 'field', { stroke: 'line', sw: 1 }), R(x, y, w, 24, 12, color, { o: 0, k: { o: on } }),
+    TX(x + w / 2, y + 16, label, { fs: 10, fw: 600, fill: 'text2', anchor: 'middle' }), TX(x + w / 2, y + 16, label, { fs: 10, fw: 600, fill: 'white', anchor: 'middle', o: 0, k: { o: on } })] };
+}
+const arrowAt = (d, t, color = 'text3') => ({ t: 'path', d, stroke: color, sw: 1.5, o: 0, k: { o: showAt(t) } });
+const lps = (x, y, rot) => ({ t: 'g', x, y, rot, c: [{ t: 'path', d: 'M0 0v-6M0-6l-2.6-3.2M0-6l2.6-3.2', stroke: 'blue', sw: 1.3 }] });
+const dashes = (x1, x2, y, color = 'text3') => { let d = ''; for (let x = x1; x < x2; x += 10) d += `M${x} ${y}h6`; return { t: 'path', d, stroke: color, sw: 1.6 }; };
+
+Object.assign(SCENES, {
+  // Эндотоксин: стенка бактерии → гибель → ЛПС свободен → лихорадка
+  hEndo: (() => {
+    const POP = 1800, HOT = 3000;
+    const wall = [[-30, -20, 0], [-12, -20, 0], [6, -20, 0], [24, -20, 0], [-22, 20, 180], [-4, 20, 180], [14, 20, 180], [32, 20, 180], [-44, 0, -90], [44, 0, 90]];
+    const fly = [[-62, -38], [-26, -48], [16, -50], [54, -36], [-60, 24], [-20, 34], [24, 32], [58, 20], [-76, -6], [70, -4]];
+    return { w: 300, h: 168, dur: 6600, still: 4600, els: [
+      { t: 'g', x: 92, y: 70, k: { s: [[0, 1], [POP - 300, 1], [POP, 1.12, 'out'], [POP + 200, 0.4, 'in']], o: [[0, 1], [POP, 1], [POP + 200, 0]] }, c: [
+        R(-44, -20, 88, 40, 20, 'soft', { stroke: 'blue', sw: 1.6 }), { t: 'path', d: 'M-22 2C-14-8-6 10 2 0S16-8 22 4', stroke: 'blue', sw: 1.4, o: 0.45 },
+        ...wall.map(([x, y, r]) => lps(x, y, r))] },
+      ...wall.map(([x, y, r], i) => ({ t: 'g', x: 92 + x, y: 70 + y, rot: r, o: 0, k: { x: [[POP, 92 + x], [POP + 900, 92 + fly[i][0], 'out']], y: [[POP, 70 + y], [POP + 900, 70 + fly[i][1], 'out'], [6600, 70 + fly[i][1] - 4]], rot: [[POP, r], [6600, r + 160]], o: [[POP - 1, 0], [POP, 1]] }, c: [
+        { t: 'path', d: 'M0 0v-6M0-6l-2.6-3.2M0-6l2.6-3.2', stroke: 'blue', sw: 1.3 }] })),
+      arrowAt('M186 70h18M199 65l5 5-5 5', HOT - 300),
+      { t: 'g', x: 238, y: 66, o: 0, k: { o: showAt(HOT - 300) }, c: [
+        R(-7, -48, 14, 74, 7, 'field', { stroke: 'text2', sw: 1.5 }), { t: 'circle', x: 0, y: 30, r: 11, fill: 'red' },
+        R(-3, 14, 6, 10, 3, 'red', { k: { y: [[0, 14], [HOT, 14], [HOT + 1200, -34, 'out']], h: [[0, 10], [HOT, 10], [HOT + 1200, 58, 'out']] } }),
+        { t: 'path', d: 'M7-36h5M7-24h5M7-12h5M7 0h5', stroke: 'text3', sw: 1.2 }] },
+      TX(238, 122, '38,5 °C', { fs: 12, fw: 700, fill: 'red', anchor: 'middle', o: 0, k: { o: showAt(HOT + 1100) } }),
+      TX(92, 130, '', { fs: 10.5, fw: 600, anchor: 'middle', k: { text: [[0, 'Грамотрицательная бактерия'], [POP, 'Погибла, ЛПС на свободе']] } }),
+      TX(150, 158, '121 °C не помогает · 250 °C от 30 мин помогает', { fs: 9.5, fill: 'text2', anchor: 'middle', o: 0, k: { o: showAt(4500) } }),
+    ] };
+  })(),
+  // Мечехвост: голубая кровь, амебоциты свёртываются вокруг бактерий
+  hCrab: (() => {
+    const GERMS = 2600, CLOT = 3700;
+    const cells = [[-22, -14], [22, -12], [-26, 12], [24, 14], [0, -24]];
+    return { w: 300, h: 168, dur: 6800, still: 4800, els: [
+      { t: 'g', x: 92, y: 58, k: { x: [[0, 80], [3400, 104], [6800, 80]], rot: [[0, -4], [3400, 4], [6800, -4]] }, c: [
+        { t: 'g', x: 0, y: 26, k: { rot: [[0, -8], [1700, 8], [3400, -8], [5100, 8], [6800, -8]] }, c: [{ t: 'path', d: 'M0 0L0 34', stroke: SHELL_D, sw: 3.5 }] },
+        { t: 'path', d: 'M-22 2C-20 16-12 26 0 29C12 26 20 16 22 2C10 0-10 0-22 2Z', fill: SHELL_D },
+        { t: 'path', d: 'M-20 8l-5 2M-17 16l-5 3M20 8l5 2M17 16l5 3', stroke: SHELL_D, sw: 2 },
+        { t: 'path', d: 'M-46 6C-46-22-25-40 0-40S46-22 46 6C34 1 18-1 0-1S-34 1-46 6Z', fill: SHELL },
+        { t: 'path', d: 'M0-38V-2M-24-30C-18-20-16-10-16 0M24-30C18-20 16-10 16 0', stroke: SHELL_D, sw: 1.6, o: 0.7 },
+        { t: 'circle', x: -16, y: -20, r: 2.2, fill: '#5E4C33' }, { t: 'circle', x: 16, y: -20, r: 2.2, fill: '#5E4C33' },
+        { t: 'path', d: 'M-30-28C-24-34-14-37-6-37', stroke: '#fff', sw: 2, o: 0.35 }] },
+      TX(92, 140, 'Мечехвост, ~450 млн лет', { fs: 9.5, fw: 600, fill: 'text2', anchor: 'middle' }),
+      { t: 'g', x: 226, y: 40, k: { s: [[0, 1], [700, 1.08], [1400, 1], [2100, 1.08], [2800, 1]] }, c: [
+        { t: 'path', d: 'M0-20C7-9 12-2 12 6A12 12 0 0 1-12 6C-12-2-7-9 0-20Z', fill: BLOOD }, { t: 'path', d: 'M-5 2C-5-2-3-5-1-8', stroke: '#fff', sw: 2, o: 0.5 }] },
+      TX(226, 68, 'голубая кровь', { fs: 9.5, fw: 600, fill: 'text2', anchor: 'middle' }),
+      ...[[-6, -3, 30], [6, 4, -20], [-1, 8, 60]].map(([dx, dy, r], i) => ({ t: 'g', x: 226 + dx, y: 112 + dy, rot: r, o: 0, k: { o: showAt(GERMS + i * 120) }, c: [R(-5, -2, 10, 4, 2, GERM)] })),
+      ...cells.map(([dx, dy], i) => ({ t: 'circle', x: 226 + dx * 1.6, y: 112 + dy * 1.05, r: 6, fill: 'soft', stroke: 'blue', sw: 1.3,
+        k: { x: [[0, 226 + dx * 1.6], [GERMS + 300, 226 + dx * 1.6], [CLOT, 226 + dx * 0.35, 'io']], y: [[0, 112 + dy * 1.05], [GERMS + 300, 112 + dy * 1.05], [CLOT, 112 + dy * 0.3, 'io']], o: [[0, 1], [CLOT, 1], [CLOT + 200, 0]] } })),
+      { t: 'circle', x: 226, y: 112, r: 0, fill: 'blue', o: 0.6, k: { r: [[CLOT - 100, 0], [CLOT + 300, 17, 'back']] } },
+      TX(226, 146, '', { fs: 9.5, fw: 600, fill: 'blue', anchor: 'middle', k: { text: [[0, 'амебоциты'], [GERMS, 'бактерии!'], [CLOT, 'сгусток']] } }),
+      TX(150, 164, 'Крабов отпускают обратно, взяв около ⅓ крови', { fs: 9, fill: 'text2', anchor: 'middle', o: 0, k: { o: showAt(CLOT + 600) } }),
+    ] };
+  })(),
+  // Лизат: каскад фактор C → B → фермент → коагулоген → гель; β-глюканы через фактор G
+  hLysate: (() => {
+    const T = [400, 1000, 1600, 2200, 2800], G = 4300;
+    return { w: 300, h: 168, dur: 7000, still: 5200, els: [
+      node(10, 16, 42, 'ЛПС', T[0]), arrowAt('M55 28h9M60 24l4 4-4 4', T[1] - 150),
+      node(67, 16, 62, 'фактор C', T[1]), arrowAt('M132 28h9M137 24l4 4-4 4', T[2] - 150),
+      node(144, 16, 62, 'фактор B', T[2]), arrowAt('M209 28h9M214 24l4 4-4 4', T[3] - 150),
+      node(221, 16, 69, 'фермент', T[3]),
+      arrowAt('M255 43V60H217M221 56l-4 4 4 4', T[4] - 150),
+      node(130, 48, 84, 'коагулоген', T[4]),
+      arrowAt('M172 74V92', T[4] + 400), TX(180, 88, 'коагулин', { fs: 9, fill: 'text2', o: 0, k: { o: showAt(T[4] + 400) } }),
+      { t: 'g', x: 172, y: 122, c: [
+        R(-6, 3, 12, 22, 6, 'blue', { o: 0, k: { o: [[0, 0], [T[4] + 600, 0], [T[4] + 1000, 0.85]], y: [[T[4] + 600, 25], [T[4] + 1000, 3, 'out']], h: [[T[4] + 600, 0], [T[4] + 1000, 22, 'out']] } }),
+        { t: 'path', d: 'M-7-24v42a7 7 0 0 0 14 0v-42', stroke: 'text2', sw: 1.6 }] },
+      TX(202, 140, 'гель', { fs: 11, fw: 700, fill: 'blue', o: 0, k: { o: showAt(T[4] + 1000) } }),
+      node(10, 92, 68, 'β-глюкан', G, 'red'), arrowAt('M80 104h8M84 100l4 4-4 4', G + 400, 'red'),
+      node(90, 92, 62, 'фактор G', G + 500, 'red'), arrowAt('M142 90L158 74M151 74h7v7', G + 900, 'red'),
+      TX(44, 136, 'ложный «+»', { fs: 10, fw: 700, fill: 'red', anchor: 'middle', o: 0, k: { o: showAt(G + 1100) } }),
+      TX(150, 162, 'лизат = содержимое амебоцитов мечехвоста', { fs: 9.5, fill: 'text2', anchor: 'middle' }),
+    ] };
+  })(),
+  // Гель-тромб: 37 °C, 60 мин, переворот на 180°; другие методы
+  hGel: (() => {
+    const UP = 2500, FLIP = 3000;
+    const lift = (x, gel, t) => ({ t: 'g', o: 1, k: { y: [[0, 0], [UP, 0], [UP + 400, -28, 'out']] }, c: [gelTube(x, 94, gel, FLIP, 0.6)] });
+    return { w: 300, h: 168, dur: 7200, still: 5200, els: [
+      { t: 'g', k: { o: [[0, 1], [UP + 200, 1], [UP + 600, 0]] }, c: [R(18, 82, 124, 52, 12, 'soft', { stroke: 'blue', sw: 1.4 }), dashes(26, 136, 92, 'blue')] },
+      lift(56, true), lift(104, false),
+      R(18, 82, 124, 52, 12, 'soft', { o: 0.55, k: { o: [[0, 0.55], [UP + 200, 0.55], [UP + 600, 0]] } }),
+      TX(80, 150, '37 °C · 60 минут · без толчков', { fs: 9.5, fill: 'text2', anchor: 'middle' }),
+      { t: 'g', x: 80, y: 30, c: [{ t: 'circle', r: 15, fill: 'field', stroke: 'text2', sw: 1.5 },
+        { t: 'g', k: { rot: [[0, 0], [300, 0], [UP - 200, 360, 'io']] }, c: [{ t: 'path', d: 'M0 0V-10', stroke: 'blue', sw: 2 }] }, { t: 'circle', r: 2, fill: 'blue' }] },
+      verdict(56, 112, true, FLIP + 600), verdict(104, 112, false, FLIP + 800),
+      TX(56, 132, 'держится', { fs: 8.5, fill: 'text2', anchor: 'middle', o: 0, k: { o: showAt(FLIP + 700) } }),
+      TX(104, 132, 'стёк', { fs: 8.5, fill: 'text2', anchor: 'middle', o: 0, k: { o: showAt(FLIP + 900) } }),
+      TX(222, 26, 'Ещё методы', { fs: 10, fw: 700, fill: 'text2', anchor: 'middle', o: 0, k: { o: showAt(4300) } }),
+      ...[['Турбидиметрия', 'мутность'], ['Хромогенный', 'жёлтый, 405 нм'], ['rFC', 'без крови крабов']].map(([a, b], i) => ({ t: 'g', o: 0, k: { o: showAt(4500 + i * 450), x: [[4500 + i * 450, 8], [4800 + i * 450, 0, 'out']] }, c: [
+        R(162, 38 + i * 38, 122, 32, 10, 'surface'),
+        { t: 'circle', x: 176, y: 54 + i * 38, r: 5, fill: i === 1 ? SPARK : i === 0 ? 'text3' : 'blue', o: i === 0 ? 0.5 : 0.9 },
+        TX(188, 51 + i * 38, a, { fs: 10, fw: 600 }), TX(188, 63 + i * 38, b, { fs: 8.5, fill: 'text2' })] })),
+    ] };
+  })(),
+  // Мешающие факторы: проверка добавкой 2λ, ингибирование снимают разведением
+  hInterf: (() => {
+    const F = 1200, FIX = 3000, F2 = 3800;
+    return { w: 300, h: 168, dur: 7400, still: 5400, els: [
+      gelTube(48, 62, true, F, 0.55), gelTube(140, 62, false, F, 0.55), gelTube(252, 62, true, F2, 0.55, FIX + 300),
+      TX(48, 112, 'вода + 2λ', { fs: 9.5, fill: 'text2', anchor: 'middle' }), TX(140, 112, 'образец + 2λ', { fs: 9.5, fill: 'text2', anchor: 'middle' }),
+      TX(252, 112, '1:10 + 2λ', { fs: 9.5, fill: 'text2', anchor: 'middle', o: 0, k: { o: showAt(FIX + 300) } }),
+      verdict(48, 132, true, F + 600), verdict(140, 132, false, F + 800), verdict(252, 132, true, F2 + 600),
+      TX(140, 158, 'ингибирование', { fs: 10, fw: 700, fill: 'red', anchor: 'middle', o: 0, k: { o: showAt(F + 1100) } }),
+      arrowAt('M166 62h40M201 57l5 5-5 5', FIX), TX(186, 50, 'развести', { fs: 9, fill: 'text2', anchor: 'middle', o: 0, k: { o: showAt(FIX) } }),
+      TX(186, 80, '≤ МДР', { fs: 9, fw: 700, fill: 'blue', anchor: 'middle', o: 0, k: { o: showAt(FIX + 100) } }),
+      TX(252, 158, 'помехи сняты', { fs: 10, fw: 700, fill: 'blue', anchor: 'middle', o: 0, k: { o: showAt(F2 + 900) } }),
+    ] };
+  })(),
+  // λ: ряд 2λ…λ/4, гель до λ включительно
+  hLambda: (() => {
+    const F = 1300;
+    const set = [['2λ', 0.8, true], ['λ', 0.6, true], ['λ/2', 0.42, false], ['λ/4', 0.28, false]];
+    return { w: 300, h: 178, dur: 6800, still: 4600, els: [
+      ...set.map(([l, tint, gel], i) => gelTube(48 + i * 68, 62, gel, F, tint)),
+      ...set.map(([l], i) => TX(48 + i * 68, 112, l, { fs: 12, fw: 700, anchor: 'middle' })),
+      ...set.map(([, , gel], i) => verdict(48 + i * 68, 132, gel, F + 600 + i * 120)),
+      { t: 'g', o: 0, k: { o: showAt(F + 1400) }, c: [R(90, 24, 40, 122, 14, null, { stroke: 'blue', sw: 1.8 }), TX(110, 17, 'конечная точка', { fs: 9, fw: 700, fill: 'blue', anchor: 'middle' })] },
+      { t: 'g', o: 0, k: { o: showAt(F + 2300) }, c: [R(70, 152, 160, 20, 10, 'soft'), TX(150, 166, '1 ЕЭ ≈ 0,1 нг эндотоксина', { fs: 10, fw: 600, fill: 'blue', anchor: 'middle' })] },
+    ] };
+  })(),
+  // Почему так: МДР — до какого разведения предел ещё виден
+  whyMdr: (() => {
+    const base = 140, hs = [104, 52, 26, 13], L = 20, MARK = 2900, MISS = 3500;
+    return { w: 300, h: 178, dur: 6800, still: 4600, els: [
+      dashes(22, 262, base - L, 'blue'), TX(272, base - L + 4, 'λ', { fs: 13, fw: 700, fill: 'blue' }),
+      ...hs.map((h, i) => R(40 + i * 60, base - h, 36, h, 6, 'blue', { o: 0.75, k: { y: [[0, base], [400 + i * 550, base], [800 + i * 550, base - h, 'out']], h: [[0, 0], [400 + i * 550, 0], [800 + i * 550, h, 'out']] } })),
+      ...hs.map((h, i) => TX(58 + i * 60, base + 16, ['×1', '×2', '×4', '×8'][i], { fs: 10.5, fw: 600, fill: 'text2', anchor: 'middle' })),
+      TX(58, 28, 'предел × конц.', { fs: 9, fill: 'text2', anchor: 'middle', o: 0, k: { o: showAt(700) } }),
+      { t: 'g', o: 0, k: { o: showAt(MARK) }, c: [R(156, base - 26 - 8, 44, 34, 9, null, { stroke: 'blue', sw: 2 }), R(160, base - 62, 36, 18, 9, 'blue'), TX(178, base - 49, 'МДР', { fs: 10, fw: 700, fill: 'white', anchor: 'middle' })] },
+      R(220, base - 13, 36, 13, 6, 'red', { o: 0, k: { o: showAt(MISS) } }),
+      TX(238, base - 24, '✕', { fs: 14, fw: 700, fill: 'red', anchor: 'middle', o: 0, k: { o: showAt(MISS) } }),
+      TX(150, 168, 'дальше превышение уже не увидим', { fs: 9.5, fill: 'red', anchor: 'middle', o: 0, k: { o: showAt(MISS + 300) } }),
+    ] };
+  })(),
+  // Почему так: результат — последняя пробирка с гелем содержит ≈ λ
+  whyRes: (() => {
+    const F = 1000, HL = 1900;
+    const set = [['1:10', true], ['1:20', true], ['1:40', true], ['1:80', false]];
+    return { w: 300, h: 180, dur: 7000, still: 5000, els: [
+      ...set.map(([, gel], i) => gelTube(45 + i * 70, 64, gel, F, 0.62 - i * 0.1)),
+      ...set.map(([l], i) => TX(45 + i * 70, 114, l, { fs: 11, fw: 600, fill: 'text2', anchor: 'middle' })),
+      ...set.map(([, gel], i) => verdict(45 + i * 70, 132, gel, F + 600 + i * 100)),
+      { t: 'g', o: 0, k: { o: showAt(HL) }, c: [R(161, 24, 48, 120, 14, null, { stroke: 'blue', sw: 1.8 }), TX(185, 17, 'последний гель ≈ λ', { fs: 9, fw: 700, fill: 'blue', anchor: 'middle' })] },
+      TX(150, 158, 'λ × 40 = ЕЭ/мл раствора', { fs: 11, fw: 700, anchor: 'middle', o: 0, k: { o: showAt(HL + 900) } }),
+      TX(150, 174, '÷ концентрация = ЕЭ/мг', { fs: 11, fw: 700, fill: 'blue', anchor: 'middle', o: 0, k: { o: showAt(HL + 1800) } }),
+    ] };
+  })(),
+  // Почему так: на изделие — эндотоксин всех изделий в V мл вытяжки, делим на N
+  whyDev: (() => {
+    const OUT = 600, TOT = 2600, SPLIT = 3800;
+    const dev = [-30, -10, 10, 30];
+    const spots = [[44, 76], [118, 80], [62, 128], [104, 132], [40, 108], [124, 112], [82, 70], [56, 92], [110, 98], [74, 136], [92, 120], [122, 136]];
+    const dots = spots.map(([tx, ty], i) => { const d = dev[i % 4], sy = 84 + ((i * 7) % 24); return { t: 'circle', x: 82 + d, y: sy, r: 2.2, fill: GERM, k: { x: [[0, 82 + d], [OUT + i * 60, 82 + d], [OUT + 900 + i * 60, tx, 'out']], y: [[0, sy], [OUT + i * 60, sy], [OUT + 900 + i * 60, ty, 'out']] } }; });
+    return { w: 300, h: 172, dur: 7000, still: 5200, els: [
+      R(32, 64, 100, 76, 10, 'blue', { o: 0.16 }),
+      { t: 'path', d: 'M30 30v100a12 12 0 0 0 12 12h80a12 12 0 0 0 12-12V30', stroke: 'text2', sw: 2 },
+      dashes(36, 128, 64, 'blue'),
+      ...dev.map((d) => R(78 + d, 76, 8, 36, 4, 'field', { stroke: 'text2', sw: 1.3 })),
+      ...dots,
+      TX(82, 22, 'N изделий в V мл', { fs: 10, fw: 600, fill: 'text2', anchor: 'middle' }),
+      TX(150, 162, 'весь эндотоксин переходит в вытяжку', { fs: 9.5, fill: 'text2', anchor: 'middle', o: 0, k: { o: showAt(OUT + 800) } }),
+      TX(222, 50, 'гель → в ней ≥ λ', { fs: 10, fw: 600, anchor: 'middle', o: 0, k: { o: showAt(TOT) } }),
+      TX(222, 68, 'всего λ × V ЕЭ', { fs: 11, fw: 700, fill: 'blue', anchor: 'middle', o: 0, k: { o: showAt(TOT + 500) } }),
+      arrowAt('M222 76V92M218 88l4 4 4-4', SPLIT - 200),
+      ...[0, 1, 2, 3].map((i) => ({ t: 'g', o: 0, k: { o: showAt(SPLIT + i * 150) }, c: [{ t: 'circle', x: 186 + i * 24, y: 108, r: 9, fill: 'soft', stroke: 'blue', sw: 1.4 }, TX(186 + i * 24, 112, '1', { fs: 9, fw: 700, fill: 'blue', anchor: 'middle' })] })),
+      TX(222, 136, '÷ N = на одно изделие', { fs: 10, fw: 700, anchor: 'middle', o: 0, k: { o: showAt(SPLIT + 700) } }),
+    ] };
+  })(),
+});
 const players = new Map();
 function playScene(host) {
   let p = players.get(host);
@@ -1881,10 +2622,12 @@ function renderRules() {
   const B = BIO.bb, P = BIO.inProd, C = BIO.control;
   $('rulesList').innerHTML = [
     `<b>Проба:</b> FBR ${RULES.fbrBaseMl} мл, +${RULES.fbrStepMl} мл за 1:100 и 1:1000. TSA и SDA по ${RULES.tsaMl} мл.`,
-    `<b>Инструмент:</b> таблетка — мельничка, порошок — ложка, PPM и PM — ножницы.`,
+    `<b>Инструмент:</b> для таблетки мельничка, для порошка ложка, для PPM и PM ножницы.`,
     `<b>Бионагрузка у пробы:</b> ${P.tsa} TSA + ${P.sda} SDA, ${P.filters} фильтра, ${P.frits} фриты, ${P.funnels} воронки.`,
     `<b>BB:</b> ${B.tsa} TSA + ${B.sda} SDA, ${B.filters} фильтра, ${B.frits} фриты, ${B.funnels} воронки.`,
-    `<b>NaCl 0,9%:</b> ${B.frits} фриты × промывки × ${BIO.washPortionMl} мл, у BB ещё × ${B.reps}.`,
+    `<b>1.2Б и 4.2</b> (и BB, и бионагрузка у пробы): фильтр в TSA, фильтр в SDA и по фильтру в 2 банки ${BIO.jarMl} мл со ${BIO.jarMediaMl} мл среды №8 (TSB) после промывки. Итого 4 фильтра, среда №8 добавляется к TSB.`,
+    `<b>Упаковки:</b> фильтры по ${BIO.filterPack} шт, воронки по ${BIO.funnelPack} шт, в итоге число упаковок.`,
+    `<b>NaCl 0,9%:</b> ${B.frits} фриты × промывки × ${BIO.washPortionMl} мл, у BB, 1.2Б и 4.2 ещё × ${B.reps}.`,
     `<b>Один раз на все бионагрузки:</b> контроль ${C.tsa} TSA + ${C.sda} SDA, ${C.filters} фильтра, ${C.naclMl} мл NaCl, ${BIO.hoses} шланга, пинцет.`,
   ].map((x) => `<li>${x}</li>`).join('');
 }
@@ -1901,25 +2644,9 @@ function applyTheme() {
   const t = dark ? 'Светлая тема' : 'Тёмная тема';
   $('themeBtn').setAttribute('aria-label', t); $('themeBtn').title = t;
 }
-// 404: котик 6 секунд, потом перелистывание на МБЧ
-let catPlayer = null, dilTimers = [];
-function leaveDil() {
-  dilTimers.forEach(clearTimeout); dilTimers = [];
-  $('panel-dil').classList.remove('flip');
-  $('nfBar').classList.remove('run');
-}
-function enterDil() {
-  leaveDil();
-  if (!catPlayer) catPlayer = makePlayer($('catAnim'), SCENES.cat);
-  catPlayer.restart();
-  const bar = $('nfBar'); void bar.offsetWidth; bar.classList.add('run');
-  const reduce = REDUCED.matches;
-  if (!reduce) dilTimers.push(setTimeout(() => $('panel-dil').classList.add('flip'), 5450));
-  dilTimers.push(setTimeout(goMbch, 6000));
-}
-function goMbch() {
-  setTab('mbch');
-  const p = $('panel-mbch'); p.classList.remove('flip-in'); void p.offsetWidth; p.classList.add('flip-in');
+// анимации справочника и «почему так» играют, только пока видны
+function syncDilAnims() {
+  document.querySelectorAll('#panel-dil .anim').forEach((a) => { const d = a.closest('details'); (a.offsetParent !== null && (!d || d.open) ? playScene : stopScene)(a); });
 }
 function setTab(tab, focus) {
   state.tab = tab;
@@ -1929,8 +2656,104 @@ function setTab(tab, focus) {
   });
   if (focus) $(tab === 'mbch' ? 'tab-mbch' : 'tab-dil').focus();
   hideToast();
-  if (tab === 'dil') enterDil(); else leaveDil();
-  updateDock(); save();
+  if (tab === 'dil') renderBeta();
+  syncDilAnims();
+  updateDock(); toTopCheck(); save();
+}
+
+/* =====================================================================
+   Котик-лаборант: окно из кнопки рядом с подсказками
+   ===================================================================== */
+const CAT = { player: null, phase: 'off', timer: 0 };
+function catPlay(scene, onEnd) {
+  const host = $('catStage');
+  if (CAT.player) CAT.player.stop();
+  host.replaceChildren();
+  CAT.player = makePlayer(host, scene, { onEnd });
+  CAT.player.restart();
+  if (REDUCED.matches && onEnd) CAT.timer = setTimeout(onEnd, 4000);   // без движения — кадр «О! Привет!» и закрываем
+}
+// окно вылетает из кнопки и улетает обратно в неё
+function catFly(back) {
+  const dlg = $('catDlg'), b = $('catBtn').getBoundingClientRect(), r = dlg.getBoundingClientRect();
+  if (REDUCED.matches || !dlg.animate) return null;
+  const dx = b.left + b.width / 2 - (r.left + r.width / 2), dy = b.top + b.height / 2 - (r.top + r.height / 2);
+  const small = { transform: `translate(${dx}px, ${dy}px) scale(.08)`, opacity: 0 }, big = { transform: 'none', opacity: 1 };
+  try { dlg.animate(back ? [{ opacity: 1 }, { opacity: 0 }] : [{ opacity: 0 }, { opacity: 1 }], { duration: back ? 380 : 300, pseudoElement: '::backdrop', fill: 'both' }); } catch (e) { /* без фона */ }
+  return dlg.animate(back ? [big, small] : [small, big], back
+    ? { duration: 420, easing: 'cubic-bezier(.6,0,.8,.2)', fill: 'both' }
+    : { duration: 420, easing: 'cubic-bezier(.2,.9,.25,1.08)', fill: 'both' });
+}
+function openCat() {
+  const dlg = $('catDlg');
+  if (dlg.open) return;
+  clearTimeout(CAT.timer);
+  CAT.phase = 'show';
+  dlg.showModal();
+  const a = catFly(false); if (a) a.onfinish = () => a.cancel();
+  catPlay(SCENES.catShow, () => { CAT.timer = setTimeout(closeCat, 250); });
+}
+function closeCat() {
+  const dlg = $('catDlg');
+  if (!dlg.open || CAT.phase === 'closing') return;
+  CAT.phase = 'closing'; clearTimeout(CAT.timer);
+  const done = () => { dlg.close(); };
+  const a = catFly(true);
+  if (a) a.onfinish = () => { done(); a.cancel(); }; else done();
+}
+function initCat() {
+  const dlg = $('catDlg');
+  $('catBtn').addEventListener('click', openCat);
+  $('catClose').addEventListener('click', closeCat);
+  dlg.addEventListener('cancel', (e) => { e.preventDefault(); closeCat(); });
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) closeCat(); });
+  dlg.addEventListener('close', () => { clearTimeout(CAT.timer); if (CAT.player) CAT.player.stop(); $('catStage').replaceChildren(); CAT.player = null; CAT.phase = 'off'; });
+}
+
+/* =====================================================================
+   Наверх и липкая шапка таблицы
+   ===================================================================== */
+const TO_TOP_FROM = 20;           // стрелка — когда видна 20-я проба
+let toTopCheck = () => {};
+function smoothTop() {
+  const y0 = window.scrollY;
+  if (y0 <= 0) return;
+  if (REDUCED.matches) { window.scrollTo(0, 0); return; }
+  const dur = Math.min(650, Math.max(320, y0 * 0.12));      // плавно, но не дольше 0,65 с
+  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+  let stop = false;
+  const cancel = () => { stop = true; };
+  window.addEventListener('wheel', cancel, { once: true, passive: true });
+  window.addEventListener('touchstart', cancel, { once: true, passive: true });
+  const t0 = performance.now();
+  const step = (now) => {
+    if (stop) return;
+    const p = Math.min(1, (now - t0) / dur);
+    window.scrollTo({ top: Math.round(y0 * (1 - ease(p))), behavior: 'instant' });
+    if (p < 1) requestAnimationFrame(step);
+    else { window.removeEventListener('wheel', cancel); window.removeEventListener('touchstart', cancel); }
+  };
+  requestAnimationFrame(step);
+}
+function initScrollUI() {
+  const btn = $('toTop');
+  let raf = 0, shown = false;
+  const check = () => {
+    raf = 0;
+    const r = $('rows').children[TO_TOP_FROM - 1];
+    const show = state.tab === 'mbch' && !!r && r.offsetParent !== null && r.getBoundingClientRect().top < window.innerHeight - 40;
+    if (show === shown) return;
+    shown = show;
+    btn.classList.toggle('show', show); btn.tabIndex = show ? 0 : -1; btn.setAttribute('aria-hidden', String(!show));
+  };
+  toTopCheck = () => { if (!raf) raf = requestAnimationFrame(check); };
+  window.addEventListener('scroll', toTopCheck, { passive: true });
+  window.addEventListener('resize', toTopCheck);
+  btn.addEventListener('click', () => { smoothTop(); btn.blur(); });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => { $('thead').classList.toggle('stuck', !e.isIntersecting && e.boundingClientRect.top < 40); }, { rootMargin: '-32px 0px 0px 0px' }).observe($('theadSentinel'));
+  }
+  toTopCheck();
 }
 
 /* =====================================================================
@@ -2032,9 +2855,48 @@ function init() {
   $('rulesBtn').addEventListener('click', () => { $('rulesDet').open = true; $('helpBtn').click(); requestAnimationFrame(() => $('rulesDet').scrollIntoView({ block: 'start' })); });
   $('dockBtn').addEventListener('click', () => $('totals').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }));
   if ('IntersectionObserver' in window) new IntersectionObserver((en) => { totalsVisible = en[0].isIntersecting; updateDock(); }, { threshold: 0.1 }).observe($('totals'));
-  window.addEventListener('resize', () => { updateDock(); const b = document.querySelector('#dOut .bench'); if (b) b.dispatchEvent(new Event('scroll')); });
+  window.addEventListener('resize', () => { updateDock();  });
 
-  $('nfBack').addEventListener('click', goMbch);
+  // Эндотоксины
+  const D = state.dil;
+  $('bMode').addEventListener('change', (e) => { D.mode = e.target.value; renderBeta(); save(); syncDilAnims(); });
+  document.querySelectorAll('.fx-why-btn').forEach((b) => b.addEventListener('click', () => {
+    const open = b.getAttribute('aria-expanded') !== 'true', pnl = $(b.getAttribute('aria-controls'));
+    b.setAttribute('aria-expanded', String(open)); pnl.hidden = !open;
+    const a = pnl.querySelector('.anim');
+    if (open) { const p = players.get(a); if (p) p.restart(); }
+    syncDilAnims();
+  }));
+  const gAccs = [...document.querySelectorAll('.gacc details')];
+  gAccs.forEach((d) => d.addEventListener('toggle', () => {
+    if (d.open) { gAccs.forEach((o) => { if (o !== d) o.open = false; }); const p = players.get(d.querySelector('.anim')); if (p) p.restart(); }
+    syncDilAnims();
+  }));
+  const panel = $('dilBeta');
+  panel.addEventListener('input', (e) => {
+    const b = e.target.dataset.bind; if (!b) return;
+    const [g, k] = b.split('.'), v = e.target.value;
+    if (g === 'lam') D.lam = (e.target.classList.contains('lam-own') && !parseNum(v)) ? LAMBDAS[0] : v; else D[g][k] = v;
+    if (g === 'sample' || g === 'kse' || g === 'lam') { D.sample.steps = null; D.kse.steps = null; D.sample.alt = null; D.kse.alt = null; }
+    // одно и то же поле в нескольких формулах — синхронно
+    panel.querySelectorAll(`[data-bind="${b}"]`).forEach((el) => { if (el !== e.target) el.value = v; });
+    if (D.mode === 'calc') { calcOut(); $('kLam').querySelectorAll('[data-lam]').forEach((c) => c.classList.toggle('on', parseNum(c.dataset.lam) === parseNum(D.lam))); }
+    else renderBeta();
+    save();
+  });
+  panel.addEventListener('change', (e) => {
+    const t = e.target;
+    if (t.name && t.name.startsWith('vol-')) { const g = t.name.slice(4); D[g].vol = Number(t.value); D[g].steps = null; renderBeta(); save(); }
+    else if (t.dataset.steps) { D[t.dataset.steps].steps = Number(t.value); D[t.dataset.steps].alt = null; renderBeta(); save(); const r = panel.querySelector(`input[name="${t.name}"]:checked`); if (r) r.focus(); }
+    else if (t.dataset.alt) { D[t.dataset.alt].alt = t.value; renderBeta(); save(); const r = panel.querySelector(`input[name="${t.name}"]:checked`); if (r) r.focus(); }
+  });
+  panel.addEventListener('click', (e) => {
+    const l = e.target.closest('[data-lam]'), kt = e.target.closest('[data-ktarget]');
+    if (l) { D.lam = l.dataset.lam; D.kse.steps = null; D.kse.alt = null; }
+    else if (kt) { D.kse.target = Number(kt.dataset.ktarget); D.kse.custom = ''; D.kse.steps = null; D.kse.alt = null; }
+    else return;
+    renderBeta(); save();
+  });
 
   // Шапка
   $('tab-mbch').addEventListener('click', () => setTab('mbch'));
@@ -2048,21 +2910,23 @@ function init() {
   // Справка
   const dlg = $('help');
   function openHelp() {
-    const mb = state.tab === 'mbch';
-    $('acc-mbch').hidden = !mb; $('acc-dil').hidden = mb;
-    const box = $(mb ? 'acc-mbch' : 'acc-dil');
+    const mb = state.tab === 'mbch', which = mb ? 'acc-mbch' : 'acc-beta';
+    ['acc-mbch', 'acc-beta'].forEach((id) => { $(id).hidden = id !== which; });
+    const box = $(which);
     if (!box.querySelector('details[open]')) box.querySelector('details').open = true;
-    $('helpTitle').textContent = mb ? 'Подсказки' : 'Подсказки: разведения';
+    $('helpTitle').textContent = mb ? 'Подсказки' : 'Подсказки: эндотоксины';
     if (typeof dlg.showModal === 'function') { if (!dlg.open) dlg.showModal(); } else dlg.setAttribute('open', '');
   }
   $('helpBtn').addEventListener('click', openHelp);
-  const accs = [...document.querySelectorAll('.acc details')];
+  const accs = [...document.querySelectorAll('#help .acc details')];
   const syncAnims = () => accs.forEach((d) => { const a = d.querySelector('.anim'); if (a) (dlg.open && d.open && !d.closest('.acc').hidden ? playScene : stopScene)(a); });
   accs.forEach((d) => d.addEventListener('toggle', () => { if (d.open) accs.forEach((o) => { if (o !== d) o.open = false; }); syncAnims(); }));
   $('helpBtn').addEventListener('click', syncAnims);
   dlg.addEventListener('close', syncAnims);
   $('helpClose').addEventListener('click', () => (dlg.close ? dlg.close() : dlg.removeAttribute('open')));
   dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+  initScrollUI();
+  initCat();
 }
 init();
 </script>
