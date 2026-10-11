@@ -12,7 +12,7 @@
   --text:#000000; --text-2:#6B6B70; --text-3:#A1A1A6;
   --line:rgba(0,0,0,.08); --line-2:rgba(0,0,0,.16);
   --blue:#2D7DFF; --blue-hover:#256DE0; --blue-soft:rgba(45,125,255,.10); --on-blue:#FFFFFF;
-  --red:#D7263D; --red-soft:rgba(215,38,61,.08);
+  --red:#D7263D; --red-soft:rgba(215,38,61,.08); --amber:#B87A00; --amber-soft:rgba(227,155,0,.14);
   --glass:rgba(255,255,255,.82);
   --shadow:0 1px 2px rgba(0,0,0,.06),0 1px 1px rgba(0,0,0,.03);
   color-scheme:light;
@@ -23,7 +23,7 @@
     --text:#E6E6E6; --text-2:#9C9CA1; --text-3:#6E6E73;
     --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.18);
     --blue:#4C8DFF; --blue-hover:#6A9FFF; --blue-soft:rgba(76,141,255,.16);
-    --red:#FF6B7A; --red-soft:rgba(255,107,122,.12);
+    --red:#FF6B7A; --red-soft:rgba(255,107,122,.12); --amber:#F2B544; --amber-soft:rgba(242,181,68,.16);
     --glass:rgba(36,36,36,.82);
     --shadow:0 1px 2px rgba(0,0,0,.4);
     color-scheme:dark;
@@ -34,7 +34,7 @@
   --text:#E6E6E6; --text-2:#9C9CA1; --text-3:#6E6E73;
   --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.18);
   --blue:#4C8DFF; --blue-hover:#6A9FFF; --blue-soft:rgba(76,141,255,.16);
-  --red:#FF6B7A; --red-soft:rgba(255,107,122,.12);
+  --red:#FF6B7A; --red-soft:rgba(255,107,122,.12); --amber:#F2B544; --amber-soft:rgba(242,181,68,.16);
   --glass:rgba(36,36,36,.82);
   --shadow:0 1px 2px rgba(0,0,0,.4);
   color-scheme:dark;
@@ -378,6 +378,99 @@ details.variants[open] summary .ico{transform:rotate(90deg)}
 .anim{max-width:440px;margin:0 auto;width:100%;border-radius:16px;background:var(--bg);box-shadow:0 0 0 1px var(--line);padding:8px}
 .anim svg{display:block;width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-variant-numeric:tabular-nums}
 
+/* ---------- Посев ---------- */
+.seed-lead{color:var(--text-2);font-size:15px;margin:-6px 2px 16px;max-width:70ch}
+.seed-lead b{color:var(--text);font-weight:700}
+.seed-q{list-style:none;margin:0 0 6px;padding:0;display:grid;gap:2px}
+.seed-q li{position:relative;padding-left:14px}
+.seed-q li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--blue)}
+.seed-cats{margin:0 0 18px}
+.seed-cats .chip{min-height:36px;padding:0 16px;font-size:15px}
+.seed-grid{display:grid;gap:24px;grid-template-columns:minmax(0,1fr);align-items:start}
+@media (min-width:1100px){ .seed-grid{grid-template-columns:minmax(0,1fr) 360px} .seed-about{position:sticky;top:16px} }
+@media (max-width:1099px){ .seed-about{order:-1} }
+.seed-main{display:grid;gap:12px;min-width:0}
+.seed-about{display:grid;gap:14px;min-width:0}
+.seed-about .anim{max-width:none;margin:0}
+.seed-h{font-size:20px;font-weight:700;letter-spacing:-.01em}
+.seed-norms{width:100%;border-collapse:collapse;font-size:14px}
+.seed-norms caption{text-align:left;font-size:13px;font-weight:600;color:var(--text-2);padding:0 0 6px 2px}
+.seed-norms th,.seed-norms td{padding:7px 10px;border-top:1px solid var(--line);text-align:left}
+.seed-norms th{font-weight:600}
+.seed-norms td{text-align:right;color:var(--blue);font-weight:600;white-space:nowrap}
+.seed-about u{text-decoration:underline;text-decoration-color:var(--blue);text-decoration-thickness:2px;text-underline-offset:3px;text-decoration-skip-ink:none;font-weight:650;color:var(--text)}
+.seed-note{font-size:13px;color:var(--text-2)}
+.tchip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.tchip::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.tchip.t32{background:var(--blue-soft);color:var(--blue)}
+.tchip.t43{background:var(--red-soft);color:var(--red)}
+.plan-h{font-size:17px;font-weight:700;letter-spacing:-.01em;margin:0}
+/* схема: вертикальный алгоритм */
+.flow{padding:16px 16px 14px;border-radius:20px;background:var(--surface);margin:0 0 24px}
+.flow-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;margin:0 2px 12px}
+.flow-h p{font-size:13px;color:var(--text-2)}
+.sf-hint{display:none}
+@media (max-width:1100px){ .sf-hint{display:inline} }
+.sf-scroll{overflow-x:auto;margin:0 -16px;padding:2px 16px 4px;scrollbar-width:thin}
+.sf-grid{display:grid;grid-template-columns:minmax(118px,.8fr) 108px repeat(3,minmax(128px,1fr) 108px) minmax(128px,1fr);row-gap:8px;min-width:1040px}
+.sf-n{position:relative;display:flex;min-width:0;align-self:center}
+.sf-n.stub::after{content:"";position:absolute;right:-14px;top:calc(50% - 1px);width:14px;height:2px;background:var(--line-2)}
+.sf-box{flex:1;display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:0;padding:8px 11px 9px;border-radius:12px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--line)}
+.sf-t{font-size:13px;font-weight:650;line-height:1.3}
+.sf-t.sp{font-style:italic}
+.sf-d{font-size:12px;line-height:1.35;color:var(--text-2)}
+.sf-d b{color:var(--text);font-weight:700}
+.sf-d.gf{margin-top:3px;font-size:11px;color:var(--text-3)}
+.sf-tag{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.01em}
+.sf-tag.sp{font-style:italic}
+.sf-n.sf-root .sf-box{background:var(--field);box-shadow:inset 0 0 0 1.5px var(--line-2)}
+.sf-n.sf-res .sf-box{background:var(--blue-soft);box-shadow:none}
+.sf-n.sf-res .sf-t{display:flex;align-items:center;gap:5px;color:var(--blue)}
+.sf-n.sf-res .sf-t .ico{width:14px;height:14px;stroke-width:2.8;flex:none}
+.sf-n.sf-res .sf-d b{color:var(--blue)}
+.sf-dil{display:flex;flex-wrap:wrap;align-items:center;gap:2px;margin:3px 0 2px}
+.sf-dil i{font-style:normal;font-size:11.5px;font-weight:700;padding:1px 6px;border-radius:999px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}
+.sf-dil .ico{width:11px;height:11px;color:var(--text-3)}
+.sf-out{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:5px}
+.sf-out li{display:grid;grid-template-columns:15px minmax(0,1fr);gap:6px;align-items:start;font-size:11.5px;line-height:1.3;color:var(--text-2)}
+.sf-out li span{display:grid}
+.sf-out li b{font-size:12px;font-weight:650;color:var(--text)}
+.sf-out .ico{width:15px;height:15px;stroke-width:2.3}
+.sf-out .o-check .ico{color:var(--blue)} .sf-out .o-search .ico{color:var(--text)} .sf-out .o-alert .ico,.sf-out .o-alert b{color:var(--red)}
+.sf-c{position:relative;display:grid;grid-template-rows:1fr 1fr;min-height:46px;min-width:0}
+.sf-c::before{content:"";position:absolute;left:0;right:3px;top:calc(50% - 1px);height:2px;border-radius:1px;background:var(--line-2)}
+.sf-c::after{content:"";position:absolute;right:3px;top:calc(50% - 4px);width:6px;height:6px;border-top:2px solid var(--line-2);border-right:2px solid var(--line-2);transform:rotate(45deg)}
+.sf-c.bus::before{left:13px}
+.sf-v{position:absolute;left:13px;width:2px;background:var(--line-2)}
+.bus.first .sf-v{top:50%;bottom:-8px}
+.bus.mid .sf-v{top:0;bottom:-8px}
+.bus.last .sf-v{top:0;bottom:50%}
+.sf-lab{grid-row:1;align-self:end;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:0 6px 6px 8px;min-width:0}
+.bus .sf-lab{padding-left:20px}
+.sf-go{font-size:11.5px;font-weight:800;color:var(--text);background:var(--bg);padding:2px 8px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line-2)}
+.ichip{flex-wrap:wrap;align-items:center;gap:3px 5px;padding:3px 3px 3px 8px;border-radius:10px;font-size:11px;line-height:1.25;white-space:normal}
+.ichip::before{display:none}
+.ichip>span,.ichip>b{white-space:nowrap}
+.ichip-w{font-weight:800}
+.ichip-d{font-size:11px;font-weight:800;color:var(--text);background:var(--bg);padding:1px 7px;border-radius:999px;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.tchip.t22{background:var(--amber-soft);color:var(--amber)}
+.sf-sep{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;margin-top:6px;padding:12px 2px 0;border-top:1px solid var(--line-2)}
+.sf-sep b{font-size:14px}
+.sf-sep span{font-size:12.5px;color:var(--text-2)}
+/* появление: этап за этапом слева направо */
+@keyframes sfIn{from{opacity:0;transform:translateX(-8px)}}
+@keyframes sfFade{from{opacity:0}}
+@keyframes sfGrow{from{transform:scaleX(0)}}
+#panel-seed:not([hidden]) .sf-n{animation:sfIn .45s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--s,0) * 380ms)}
+#panel-seed:not([hidden]) .sf-c::before{transform-origin:left;animation:sfGrow .36s ease-out both;animation-delay:calc(var(--s,0) * 380ms + 200ms)}
+#panel-seed:not([hidden]) :is(.sf-c::after,.sf-v,.sf-n.stub::after){animation:sfFade .25s both;animation-delay:calc(var(--s,0) * 380ms + 380ms)}
+#panel-seed:not([hidden]) .sf-lab{animation:sfFade .35s both;animation-delay:calc(var(--s,0) * 380ms + 280ms)}
+@media (prefers-reduced-motion:reduce){ .flow *,.flow *::before,.flow *::after{animation:none!important} }
+.sacc .anim{margin:0;max-width:340px}
+@media (min-width:720px){ .sacc .acc-body{grid-template-columns:minmax(0,300px) minmax(0,1fr);align-items:center;gap:18px} }
+.seed-src{margin:20px 2px 0;font-size:13px;color:var(--text-3)}
+@media (max-width:420px){ .top .seg button{padding:0 9px;font-size:14px} }
+
 /* ---------- Котик-лаборант ---------- */
 .cat-btn{padding:0;overflow:hidden}
 .cat-btn svg{width:40px;height:40px;display:block}
@@ -389,7 +482,23 @@ dialog.cat-dlg{width:min(480px,calc(100% - 24px));max-width:none;padding:18px 16
 dialog.cat-dlg::backdrop{background:rgba(0,0,0,.35);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
 .cat-stage{display:block;border-radius:20px}
 .cat-stage svg{display:block;width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-.cat-x{position:absolute;left:14px;top:14px;z-index:1}
+.cat-head{display:flex;align-items:center;gap:10px;margin:0 2px 8px 6px}
+.cat-name{font-size:18px;font-weight:700;letter-spacing:-.01em}
+.cat-role{color:var(--text-2);font-size:14px;margin-right:auto}
+.cat-chat{display:grid;gap:10px;margin-top:10px;min-height:46px}
+.cat-you{justify-self:end;max-width:85%;padding:7px 13px;border-radius:16px 16px 4px 16px;background:var(--blue);color:var(--on-blue);font-size:14px;animation:youIn .25s ease-out}
+.cat-you-row{display:flex;justify-content:flex-end;align-items:flex-end}
+.cat-you.ghost{visibility:hidden;animation:none}
+.cat-qs{align-content:flex-start}
+.cat-qs.gone{opacity:0;pointer-events:none}
+.cat-say{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@keyframes youIn{from{opacity:0;transform:translateY(6px)}}
+.cat-qs{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;transition:opacity .25s}
+.cat-qs.off{opacity:.4;pointer-events:none}
+.cat-qs:empty{display:none}
+.cat-q{border:0;border-radius:999px;padding:9px 14px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);color:var(--text);font-size:14px;font-weight:500;transition:background .15s,box-shadow .15s,color .15s}
+.cat-q:hover{background:var(--blue-soft);color:var(--blue);box-shadow:none}
+.cat-q:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 
 /* ---------- Разведения ---------- */
 .beta-head{display:flex;align-items:center;justify-content:space-between;gap:4px 16px;flex-wrap:wrap}
@@ -629,6 +738,10 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
   <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9.2 18h5.6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.4 1.1 2.2h5c0-.8.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M6.5 10.5 12 5l5.5 5.5"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M14 7l5 5-5 5"/></symbol>
+  <symbol id="i-jar" viewBox="0 0 24 24"><path d="M7 3.5h10v3.5H7z"/><path d="M7.5 7h9v12a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2z"/><path d="M7.5 13h9"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></symbol>
+  <symbol id="i-therm" viewBox="0 0 24 24"><path d="M10 14.2V5a2 2 0 0 1 4 0v9.2a3.6 3.6 0 1 1-4 0z"/><path d="M12 9.5v7"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><path d="M12 16.5h.01" stroke-width="2.6"/></symbol>
   <!-- среды -->
@@ -655,9 +768,10 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
   <header class="top">
     <div class="seg" role="tablist" aria-label="Раздел">
       <button role="tab" id="tab-mbch" aria-controls="panel-mbch" aria-selected="true" type="button">МБЧ</button>
+      <button role="tab" id="tab-seed" aria-controls="panel-seed" aria-selected="false" tabindex="-1" type="button">Категории</button>
       <button role="tab" id="tab-dil" aria-controls="panel-dil" aria-selected="false" tabindex="-1" type="button">Разведения</button>
     </div>
-    <button class="icon-btn cat-btn" id="catBtn" type="button" aria-label="Котик-лаборант" title="Котик-лаборант" aria-haspopup="dialog">
+    <button class="icon-btn cat-btn" id="catBtn" type="button" aria-label="Кот Борис, лаборант" title="Кот Борис" aria-haspopup="dialog">
       <svg viewBox="0 0 40 40" aria-hidden="true">
         <defs>
           <radialGradient id="avFur" cx="38%" cy="30%" r="78%"><stop offset="0" stop-color="#FFCB94"/><stop offset=".55" stop-color="#F2A65E"/><stop offset="1" stop-color="#D47F3C"/></radialGradient>
@@ -743,6 +857,19 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
           <div class="t-foot"><button class="link" id="rulesBtn" type="button">Как считается</button></div>
         </aside>
       </div>
+    </section>
+
+    <!-- ================= Посев по категориям ================= -->
+    <section id="panel-seed" role="tabpanel" aria-labelledby="tab-seed" hidden>
+      <h1 class="title">Посев по категориям</h1>
+      <div class="seed-lead"><ul class="seed-q"><li><b>Что</b> сеем</li><li>на <b>какие</b> среды</li><li><b>сколько</b> держим</li><li>и <b>куда</b> пересеваем</li></ul><p>По ГФ РФ, ОФС.1.2.4.0002 «Микробиологическая чистота».</p></div>
+      <div class="chips seed-cats" id="seedCats" role="group" aria-label="Категория"></div>
+      <section class="flow" id="seedFlow" aria-label="Схема посева"></section>
+      <div class="seed-grid">
+        <div class="seed-main" id="seedLanes"></div>
+        <aside class="surface seed-about" id="seedAbout" aria-live="polite"></aside>
+      </div>
+      <p class="seed-src">Схемы по ГФ РФ XIV, ОФС.1.2.4.0002.18. Стандартные условия: бактерии 30–35 °C, грибы 20–25 °C. Точные объёмы и среды сверяйте с СОП лаборатории.</p>
     </section>
 
     <!-- ================= Разведения: эндотоксины ================= -->
@@ -847,9 +974,15 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
 
 <div class="toast hide" id="toast" role="status" aria-live="polite"><span id="toastText"></span><button id="toastUndo" type="button" hidden>Вернуть</button></div>
 
-<dialog class="cat-dlg" id="catDlg" aria-label="Котик-лаборант">
-  <div class="cat-stage" id="catStage" role="img" aria-label="Котик-лаборант: «О! Привет!», ставит опыт, колба взрывается, и его засасывает портал со словами «Мне, похоже, пора… Хорошего дня!»"></div>
-  <button class="icon-btn cat-x" id="catClose" type="button" aria-label="Закрыть"><svg class="ico"><use href="#i-x"/></svg></button>
+<dialog class="cat-dlg" id="catDlg" aria-labelledby="catName">
+  <div class="cat-head"><span class="cat-name" id="catName">Борис</span><span class="cat-role">кот-лаборант</span>
+    <button class="icon-btn cat-x" id="catClose" type="button" aria-label="Закрыть"><svg class="ico"><use href="#i-x"/></svg></button></div>
+  <div class="cat-stage" id="catStage" role="img" aria-label="Кот Борис в лаборатории"></div>
+  <div class="cat-chat">
+    <div class="cat-you-row" id="catYouRow"><p class="cat-you ghost" id="catYou"></p></div>
+    <p class="cat-say" id="catSay" aria-live="polite"></p>
+    <div class="cat-qs off" id="catQs" role="group" aria-label="Спросить Бориса"></div>
+  </div>
 </dialog>
 
 <dialog class="sheet" id="help" aria-labelledby="helpTitle">
@@ -866,13 +999,19 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
       <details name="help"><summary><span class="acc-n">3</span><span class="acc-t">Список из Excel</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
         <div class="acc-body"><p>Скопируйте пробы и вставьте в поле «Первая проба». Запись не важна: MP-FP-1124/26, mp-fp-1126 или FP-1127/26, всё встанет как FP-1124…</p><div class="anim" data-scene="paste"></div></div></details>
       <details name="help"><summary><span class="acc-n">4</span><span class="acc-t">Формат</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
-        <div class="acc-body"><p>Формат подсказывает инструмент: для таблетки мельничка, для порошка ложка. Для PPM и PM всегда ножницы.</p><div class="anim" data-scene="format"></div></div></details>
+        <div class="acc-body"><p>Формат подсказывает инструмент: для таблетки мельничка, для порошка ложка. У PPM и PM формат всегда «Упаковка», её режут ножницами.</p><div class="anim" data-scene="format"></div></div></details>
       <details name="help"><summary><span class="acc-n">5</span><span class="acc-t">Разведения и бионагрузка</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
         <div class="acc-body"><p>Отметьте у пробы, и новые пробы повторят отметки. У бионагрузки выберите число промывок.</p><div class="anim" data-scene="ticks"></div></div></details>
       <details name="help"><summary><span class="acc-n">6</span><span class="acc-t">BB: бионагрузка</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
         <div class="acc-body"><p>BB это отдельная проба только на бионагрузку: 2 TSA + 2 SDA. Галочка «Бионагрузка» у обычной пробы считается иначе: 1 TSA + 1 SDA. У 1.2Б и 4.2: фильтр в TSA, фильтр в SDA и по фильтру в 2 банки 200 мл со 100 мл среды №8. Фильтры и воронки считаются упаковками.</p><div class="anim" data-scene="bb"></div></div></details>
       <details name="help" id="rulesDet"><summary><span class="acc-n">7</span><span class="acc-t">Как считается</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
         <div class="acc-body"><p>Итог пересчитывается сам после каждого изменения.</p><div class="anim" data-scene="calc"></div><ul class="rules-list" id="rulesList"></ul><div class="rules-wrap"><table class="rules" id="rulesTable"></table></div></div></details>
+    </div>
+    <div class="acc" id="acc-seed" hidden>
+      <details name="help" open><summary><span class="acc-n">1</span><span class="acc-t">Как читать схему</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <div class="acc-body"><p>Выберите категорию. Схема идёт слева направо: от навески к результату. Над каждой стрелкой написано, в какой термостат и на сколько ставим. Ниже справочник с ответами на вопросы по категории, справа: кто в неё входит и какие нормы.</p><div class="anim" data-scene="seed_3b"></div></div></details>
+      <details name="help"><summary><span class="acc-n">2</span><span class="acc-t">Откуда данные</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <div class="acc-body"><p>Нормы и схемы взяты из ГФ РФ, ОФС.1.2.4.0002 «Микробиологическая чистота». Калькулятор МБЧ эти схемы не меняют: это справочник. Объёмы и конкретные среды лаборатории сверяйте с СОП.</p></div></details>
     </div>
     <div class="acc" id="acc-beta" hidden>
       <details name="help" open><summary><span class="acc-n">1</span><span class="acc-t">Образец</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
@@ -932,7 +1071,7 @@ const FORMATS = [
   { id: 'tablet',   label: 'Таблетка', tool: 'grinders' },
   { id: 'capsule',  label: 'Капсула',  tool: null },
   { id: 'powder',   label: 'Порошок',  tool: 'spoons' },
-  { id: 'scissors', label: 'Ножницы',  tool: 'scissors' },
+  { id: 'scissors', label: 'Упаковка', tool: 'scissors' },   // упаковку режут ножницами
 ];
 const PREFIX_RULES = {
   FP:  { format: 'tablet' },
@@ -1018,7 +1157,7 @@ function parseCountExpr(raw, cur) {
    ===================================================================== */
 const KEY = 'mbch-calc:v5';
 const state = {
-  tab: 'mbch', theme: null,
+  tab: 'mbch', theme: null, seedCat: '3a',
   series: [],   // { id, first } — серия начинается с кода первой пробы
   cur: null,    // текущая серия: к ней относятся «Первая проба» и «Количество»
   samples: [],  // { id, sid, code, auto, format, formatAuto, cat, d100, d1000, bio, washes, bbWashes }
@@ -1052,7 +1191,8 @@ function load() {
     const raw = localStorage.getItem(KEY) || localStorage.getItem('mbch-calc:v4') || localStorage.getItem('mbch-calc:v3') || localStorage.getItem('mbch-calc:v2');
     if (!raw) return;
     const d = JSON.parse(raw);
-    if (d.tab === 'mbch' || d.tab === 'dil') state.tab = d.tab;
+    if (d.tab === 'mbch' || d.tab === 'dil' || d.tab === 'seed') state.tab = d.tab;
+    if (typeof d.seedCat === 'string') state.seedCat = d.seedCat;
     if (d.theme === 'light' || d.theme === 'dark') state.theme = d.theme;
     if (Array.isArray(d.series)) state.series = d.series.filter((x) => x && typeof x.id === 'string').map((x) => ({ id: x.id, first: typeof x.first === 'string' ? x.first : '' }));
     if (Array.isArray(d.samples)) state.samples = d.samples.map(sanitize).filter(Boolean).slice(0, MAX_SAMPLES);
@@ -1079,8 +1219,8 @@ function save() {
   clearTimeout(saveT);
   saveT = setTimeout(() => {
     try {
-      const { tab, theme, series, cur, samples } = state;
-      localStorage.setItem(KEY, JSON.stringify({ tab, theme, series, cur, samples, dil: state.dil }));
+      const { tab, theme, series, cur, samples, seedCat } = state;
+      localStorage.setItem(KEY, JSON.stringify({ tab, theme, series, cur, samples, seedCat, dil: state.dil }));
     } catch (e) { /* без сохранения */ }
   }, 200);
 }
@@ -1751,10 +1891,12 @@ function buildNode(spec, parent, list) {
   const el = document.createElementNS(SVGNS, spec.t);
   if (spec.t === 'rect') el.setAttribute('rx', spec.r || 0);
   if (spec.t === 'path') el.setAttribute('d', spec.d);
+  if (spec.rule) el.setAttribute('fill-rule', spec.rule);
   if (spec.t === 'text') {
     el.setAttribute('font-size', spec.fs || 11);
     el.setAttribute('font-weight', spec.fw || 400);
     if (spec.anchor) el.setAttribute('text-anchor', spec.anchor);
+    if (spec.it) el.setAttribute('font-style', 'italic');
   }
   const fill = spec.fill || (spec.t === 'text' ? 'text' : null);
   el.style.fill = fill ? (ACOL[fill] || fill) : 'none';
@@ -1789,19 +1931,20 @@ function makePlayer(host, scene, opts = {}) {
   const list = [];
   const fade = scene.noFade || scene.seamless ? [[0, 1]] : scene.once ? [[0, 0], [250, 1, 'out']] : [[0, 0], [300, 1, 'out'], [scene.dur - 400, 1], [scene.dur, 0, 'in']];
   buildNode({ t: 'g', k: { o: fade }, c: scene.els }, svg, list);
-  list.forEach((it) => paint(it, scene.still, true));
+  const FROM = opts.from || 0, UNTIL = opts.until || scene.dur, STILL = opts.still != null ? opts.still : scene.still;
+  list.forEach((it) => paint(it, STILL, true));
   host.appendChild(svg);
   const live = list.filter((it) => it.spec.k);
   let raf = 0, t0 = 0;
   const tick = (now) => {
-    const e = now - t0, t = scene.once ? Math.min(e, scene.dur) : e % scene.dur;
+    const e = now - t0, t = scene.once ? Math.min(FROM + e, UNTIL) : e % scene.dur;
     for (const it of live) paint(it, t);
-    if (scene.once && e >= scene.dur) { raf = 0; if (opts.onEnd) opts.onEnd(); } else raf = requestAnimationFrame(tick);
+    if (scene.once && FROM + e >= UNTIL) { raf = 0; if (opts.onEnd) opts.onEnd(); } else raf = requestAnimationFrame(tick);
   };
   return {
     play() { if (raf || REDUCED.matches) return; t0 = performance.now(); raf = requestAnimationFrame(tick); },
-    restart() { cancelAnimationFrame(raf); raf = 0; if (REDUCED.matches) { list.forEach((it) => paint(it, scene.still, true)); return; } list.forEach((it) => paint(it, 0, true)); this.play(); },
-    stop() { cancelAnimationFrame(raf); raf = 0; list.forEach((it) => paint(it, scene.still, true)); },
+    restart() { cancelAnimationFrame(raf); raf = 0; if (REDUCED.matches) { list.forEach((it) => paint(it, STILL, true)); return; } list.forEach((it) => paint(it, FROM, true)); this.play(); },
+    stop() { cancelAnimationFrame(raf); raf = 0; list.forEach((it) => paint(it, STILL, true)); },
   };
 }
 
@@ -1900,7 +2043,7 @@ const SCENES = {
       TX(14, 128, 'Пробы', { fs: 12, fw: 700 }), TX(59, 128, '13', { fs: 12, fw: 700, fill: 'text3', k: { text: [[0, '13'], [T3, '18']] } }),
       row(138, 'FP-', 'Таблетка', 0),
       TX(150, 178, '… и ещё 12 FP', { fs: 9, fill: 'text2', anchor: 'middle' }),
-      row(188, 'PPM-', 'Ножницы', T3 + 120), row(214, 'PPM-', 'Ножницы', T3 + 200),
+      row(188, 'PPM-', 'Упаковка', T3 + 120), row(214, 'PPM-', 'Упаковка', T3 + 200),
       TX(150, 254, '… и ещё 3 PPM', { fs: 9, fill: 'text2', anchor: 'middle', o: 0, k: { o: showAt(T3 + 300) } }),
       ripple(chipX('PPM'), 75, T1), ripple(232, 46, T2), ripple(261, 46, T3),
       finger([[400, 175, 230], [1100, chipX('PPM'), 75], [1600, chipX('PPM'), 75], [2200, 232, 46], [2600, 232, 46], [3200, 261, 46], [3800, 261, 46]], [T1, T2, T3]),
@@ -1950,7 +2093,7 @@ const SCENES = {
       TX(26, 34, 'EX-40', { fs: 11, fw: 600, k: { text: [[0, 'EX-40'], [T2 + 200, ''], [T2 + 400, 'P'], [T2 + 550, 'PM'], [T2 + 700, 'PM-'], [T2 + 850, 'PM-7']] } }),
       R(110, 17, 96, 26, 8, 'field', { stroke: 'line', sw: 1 }),
       R(110, 17, 96, 26, 8, 'surface', { o: 0, k: { o: showAt(T3, 200) } }),
-      TX(119, 34, 'Таблетка', { fs: 11, k: { text: [[0, 'Таблетка'], [T1, 'Порошок'], [T3, 'Ножницы']], fill: [[0, 'text'], [T3, 'text2']] } }),
+      TX(119, 34, 'Таблетка', { fs: 11, k: { text: [[0, 'Таблетка'], [T1, 'Порошок'], [T3, 'Упаковка']], fill: [[0, 'text'], [T3, 'text2']] } }),
       { t: 'path', x: 192, y: 28, d: 'M0 0l3 3 3-3', stroke: 'text3', sw: 1.2 },
       R(212, 17, 70, 26, 8, 'field', { stroke: 'line', sw: 1 }), TX(220, 34, '2.2 / 3A', { fs: 11 }),
       R(10, 60, 280, 90, 12, 'surface'),
@@ -1959,7 +2102,7 @@ const SCENES = {
       line(118, 'Ложки', [[0, '0'], [T1, '1'], [T3, '0']], [[T1, 0], [T1 + 150, 1], [T1 + 900, 0]]),
       line(138, 'Ножницы', [[0, '0'], [T3, '1']], [[T3, 0], [T3 + 150, 1], [T3 + 900, 0]]),
       TX(14, 172, 'Таблетка: мельничка, порошок: ложка', { fs: 9.5, fill: 'text2' }),
-      TX(14, 189, 'PPM и PM: всегда ножницы', { fs: 9.5, fill: 'text2', o: 0.5, k: { o: [[0, 0.5], [T3, 0.5], [T3 + 200, 1]] } }),
+      TX(14, 189, 'PPM и PM: упаковка, режем ножницами', { fs: 9.5, fill: 'text2', o: 0.5, k: { o: [[0, 0.5], [T3, 0.5], [T3 + 200, 1]] } }),
       ripple(158, 30, T1), ripple(61, 30, T2),
       finger([[300, 200, 120], [1100, 158, 30], [1600, 158, 30], [2600, 61, 30], [3500, 61, 30]], [T1, T2]),
     ] };
@@ -2182,7 +2325,7 @@ const ks = (o) => { const k = {}; for (const p in o) if (o[p]) k[p] = o[p]; retu
 const first = (keys, def) => (keys ? keys[0][1] : def);
 const shift = (keys, d) => keys && keys.map(([t, v, e]) => [t, v + d, e]);
 // запаздывание (follow-through): тот же ход, позже и чуть сильнее
-const lag = (keys, dt, k = 1.4, base = 0) => keys && keys.map(([t, v, e], i) => [i ? t + dt : t, base + (v - keys[0][1]) * k + keys[0][1] * 0.5, e]);
+const lag = (keys, dt, k = 1.4, base = 0) => keys && keys.map(([t, v, e], i) => [i && i < keys.length - 1 ? t + dt : t, base + (v - keys[0][1]) * k + keys[0][1] * 0.5, e]);
 const ell = (cx, cy, rx, ry) => `M${cx - rx} ${cy}a${rx} ${ry} 0 1 0 ${rx * 2} 0a${rx} ${ry} 0 1 0 ${-rx * 2} 0Z`;
 // кубическая кривая: точка, касательная и кусок [t..1] — чтобы кончик хвоста и полоски лежали точно на хвосте
 const cub = (P, t) => { const u = 1 - t; return [0, 1].map((i) => u * u * u * P[0][i] + 3 * u * u * t * P[1][i] + 3 * u * t * t * P[2][i] + t * t * t * P[3][i]); };
@@ -2210,6 +2353,8 @@ const CAT_DEFS = { t: 'defs', html: `
   <linearGradient id="cg-liqR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB8D2"/><stop offset="1" stop-color="#E9609A"/></linearGradient>
   <linearGradient id="cg-bench" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3F6FA"/><stop offset="1" stop-color="#DCE3EB"/></linearGradient>
   <linearGradient id="cg-benchF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CDD5DF"/><stop offset="1" stop-color="#B7C2CF"/></linearGradient>
+  <linearGradient id="cg-shade3d" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".32"/><stop offset=".42" stop-color="#FFFFFF" stop-opacity="0"/><stop offset=".72" stop-color="#6B300C" stop-opacity=".16"/><stop offset="1" stop-color="#6B300C" stop-opacity=".45"/></linearGradient>
+  <radialGradient id="cg-fist" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFD3A3"/><stop offset=".6" stop-color="#EC9C55"/><stop offset="1" stop-color="#C27030"/></radialGradient>
   <radialGradient id="cg-bg" cx="50%" cy="42%" r="60%"><stop offset="0" style="stop-color:var(--blue);stop-opacity:.05"/><stop offset=".75" style="stop-color:var(--blue);stop-opacity:.12"/><stop offset="1" style="stop-color:var(--blue);stop-opacity:.16"/></radialGradient>
   <radialGradient id="cg-vortex" cx="50%" cy="50%" r="50%"><stop offset="0" style="stop-color:var(--blue);stop-opacity:.5"/><stop offset=".45" style="stop-color:var(--blue);stop-opacity:.22"/><stop offset="1" style="stop-color:var(--blue);stop-opacity:0"/></radialGradient>` };
 function blinkKeys(list) {
@@ -2238,7 +2383,7 @@ function catRig(o = {}) {
     R(-1.4, -1.8, 2.8, 3.6, 1.4, INK, ks({ h: o.blinkH, y: o.blinkY })),
     { t: 'circle', x: 0.6, y: -1.1, r: 0.6, fill: 'white', ...ks({ o: o.blinkO }) }] });
   // рукав-конус с манжетой и лапка-«варежка» с пальчиками
-  const arm = (x, rot, keys, extra = []) => ({ t: 'g', x, y: 4, rot, ...ks({ rot: keys }), c: [
+  const arm = (x, rot, keys, extra = [], oK) => ({ t: 'g', x, y: 4, rot, o: first(oK, 1), ...ks({ rot: keys, o: oK }), c: [
     { t: 'path', d: 'M-8.6-1C-9.2 12-8.6 26-7.4 37H7.4C8.6 26 9.2 12 8.6-1C8.2-8.5-8.2-8.5-8.6-1Z', fill: 'url(#cg-sleeve)', stroke: SEAM, sw: 1.4 },
     ...extra,
     { t: 'path', d: 'M-7.2 43C-8.4 49-5.4 54.6 0 54.6S8.4 49 7.2 43C6 38.6-6 38.6-7.2 43Z', fill: 'url(#cg-paw)', stroke: FUR_L, sw: 0.9 },
@@ -2271,11 +2416,20 @@ function catRig(o = {}) {
     { t: 'circle', x: 0, y: 30, r: 1.8, fill: SEAM }, { t: 'circle', x: 0, y: 44, r: 1.8, fill: SEAM },
     R(19, 22, 3, 12, 1.5, '#2D7DFF'), R(24.5, 24, 3, 10, 1.5, '#E5734F'), R(15, 30, 17, 16, 4, SLEEVE, { stroke: SEAM, sw: 1 }),
     { t: 'path', d: ell(0, -11, 21, 3.6), fill: '#000', o: 0.1 },
+    { t: 'path', d: ell(1, -8, 19, 5), fill: '#000', o: 0, ...ks({ o: o.chadO && o.chadO.map(([t, v, e]) => [t, v * 0.16, e]) }) },
     arm(-30, first(o.armL, 12), o.armL),
-    arm(30, first(o.armR, -12), o.armR, [tube]),
+    arm(30, first(o.armR, -12), o.armR, [tube], o.armRO),
     { t: 'g', x: 0, y: -14, rot: first(o.headRot, 0), ...ks({ rot: o.headRot, y: o.headY }), c: [{ t: 'g', y: -26, c: [{ t: 'g', x: -55, y: -51.15, s: 2.75, c: [
       { t: 'g', x: 20, y: 8.2, s: first(o.tuftS, 0), ...ks({ s: o.tuftS }), c: [{ t: 'path', d: 'M-5.6 2.6L-4.1-2.9L-1.9 0.5L0-3.8L1.9 0.5L4.1-2.9L5.6 2.6Z', fill: FUR }] },
       { t: 'path', d: 'M8.2 18.6C7.9 13.6 8.9 9.4 10.4 5.9Q10.9 4.6 12.2 5.5L15.9 8.7C18.5 8 21.5 8 24.1 8.7L27.8 5.5Q29.1 4.6 29.6 5.9C31.1 9.4 32.1 13.6 31.8 18.6C31.5 24.8 26.4 28.8 20 28.8S8.5 24.8 8.2 18.6Z', fill: 'url(#cg-fur)', stroke: FUR_L, sw: 0.35 },
+      // голова «гигачада»: широкие скулы и квадратная челюсть поверх обычной
+      { t: 'path', d: 'M8.2 18.6C7.9 13.6 8.9 9.4 10.4 5.9Q10.9 4.6 12.2 5.5L15.9 8.7C18.5 8 21.5 8 24.1 8.7L27.8 5.5Q29.1 4.6 29.6 5.9C31.1 9.4 32.1 13.6 31.8 18.6C31.7 21.4 31.3 23.6 30.4 25.4L27.6 28.8Q24.6 30.9 20 30.9Q15.4 30.9 12.4 28.8L9.6 25.4C8.7 23.6 8.3 21.4 8.2 18.6Z', fill: 'url(#cg-fur)', stroke: '#A85A24', sw: 0.5, o: first(o.chadO, 0), ...ks({ o: o.chadO }) },
+      { t: 'g', o: first(o.chadO, 0), ...ks({ o: o.chadO }), c: [
+        { t: 'path', d: 'M8.2 18.6C7.9 13.6 8.9 9.4 10.4 5.9Q10.9 4.6 12.2 5.5L15.9 8.7C18.5 8 21.5 8 24.1 8.7L27.8 5.5Q29.1 4.6 29.6 5.9C31.1 9.4 32.1 13.6 31.8 18.6C31.7 21.4 31.3 23.6 30.4 25.4L27.6 28.8Q24.6 30.9 20 30.9Q15.4 30.9 12.4 28.8L9.6 25.4C8.7 23.6 8.3 21.4 8.2 18.6Z', fill: 'url(#cg-shade3d)' },
+        { t: 'path', d: 'M31.7 19.4C31.5 22.2 31.1 23.9 30.4 25.4L27.6 28.8Q25.4 30.4 22.6 30.8L26 27.4Q29.6 23.8 31.7 19.4Z', fill: '#6B300C', o: 0.22 },
+        { t: 'path', d: 'M8.3 19.4C8.5 22.2 8.9 23.9 9.6 25.4L12.4 28.8Q13.6 29.7 15 30.2L12.6 27.2Q9.6 23.8 8.3 19.4Z', fill: '#6B300C', o: 0.1 },
+        { t: 'path', d: 'M8.7 12.6C8.2 15.6 8.2 19.4 8.9 22.6', stroke: '#FFFFFF', sw: 0.6, o: 0.6 },
+        { t: 'path', d: 'M14 29.6Q20 32 26 29.6', stroke: '#6B300C', sw: 0.8, o: 0.25 }] },
       { t: 'path', d: 'M11.4 7.4L14.5 10C13.1 10.7 12.1 11.6 11.2 12.6ZM28.6 7.4L25.5 10C26.9 10.7 27.9 11.6 28.8 12.6Z', fill: PINK, o: 0.85 },
       { t: 'path', d: 'M18.3 9.6l.4 2.1M20 9.4v2.3M21.7 9.6l-.4 2.1', stroke: '#C97434', sw: 1 },
       { t: 'path', d: ell(20, 23.2, 4.6, 3.1), fill: CREAM },
@@ -2292,7 +2446,27 @@ function catRig(o = {}) {
       { t: 'g', o: first(o.happyO, 0), ...ks({ o: o.happyO }), c: [
         { t: 'path', d: 'M17.6 24Q20 28.6 22.4 24Z', fill: INK }, { t: 'path', d: 'M18.7 26.2Q20 25.3 21.3 26.2Q20 27.3 18.7 26.2Z', fill: PINK }] },
       { t: 'circle', x: 20, y: 25.3, r: 1.05, fill: INK, o: first(o.ohO, 0), ...ks({ o: o.ohO }) },
+      // «гигачад»: тяжёлые брови, скулы, квадратный подбородок с ямочкой, ухмылка
+      { t: 'g', o: first(o.chadO, 0), ...ks({ o: o.chadO }), c: [
+        { t: 'path', d: 'M10.4 21.4Q12.3 22.8 14.4 22.5M29.6 21.4Q27.7 22.8 25.6 22.5', stroke: FUR_L, sw: 0.6, o: 0.75 },
+        { t: 'path', d: 'M10.4 25.3L13 28.3M29.6 25.3L27 28.3', stroke: FUR_L, sw: 0.55, o: 0.6 },
+        { t: 'path', d: ell(12.9, 20.4, 1.7, 0.6), fill: '#FFFFFF', o: 0.45 }, { t: 'path', d: ell(27.1, 20.4, 1.4, 0.5), fill: '#FFFFFF', o: 0.25 },
+        { t: 'path', d: 'M19.7 19.6l.3 1.2', stroke: '#FFFFFF', sw: 0.5, o: 0.6 },
+        { t: 'path', d: 'M20 29.3v1.1', stroke: FUR_L, sw: 0.6 },
+        ...[[15.6, 27.6], [17, 28.6], [18.6, 29.2], [21.4, 29.2], [23, 28.6], [24.4, 27.6], [16.2, 26.4], [23.8, 26.4], [19.2, 27.8], [20.8, 27.8]].map(([x, y]) => ({ t: 'circle', x, y, r: 0.26, fill: '#B5652E', o: 0.75 })),
+        { t: 'path', d: 'M11.4 12.9Q14.7 12.6 17.9 13.9', stroke: INK, sw: 1.15 },
+        { t: 'g', y: first(o.browY, 0), ...ks({ y: o.browY }), c: [{ t: 'path', d: 'M22.2 12.2Q25.4 9.2 28.8 10.9', stroke: INK, sw: 1.15 }] },
+        { t: 'path', d: 'M18.7 25.2Q20.9 25.7 22.5 24.2', stroke: INK, sw: 0.9 }] },
       { t: 'g', x: 15, y: 9.8, rot: -18, o: 0.3, c: [{ t: 'path', d: ell(0, 0, 3.6, 1.6), fill: '#fff' }] }] }] }] },
+    // «гигачад»: лапа у подбородка — большой палец под подбородком, указательный вдоль щеки
+    { t: 'g', o: first(o.chinO, 0), ...ks({ o: o.chinO }), c: [
+      { t: 'path', d: 'M30 2L25 29L13 -7', stroke: SEAM, sw: 17.6 }, { t: 'path', d: 'M30 2L25 29L13 -10', stroke: SLEEVE, sw: 15 },
+      { t: 'path', d: 'M28.2 5L25.8 23', stroke: '#fff', sw: 3, o: 0.7 },
+      { t: 'path', d: 'M23.3 -3.4L7.7 2.4', stroke: SEAM, sw: 7.6 }, { t: 'path', d: 'M23.4 -6.2L7.8 -0.4', stroke: SLEEVE, sw: 5.4 },
+      { t: 'path', d: 'M7.6 -12.4L-1.6 -13.6', stroke: FUR_L, sw: 6.4 }, { t: 'path', d: 'M7.6 -15.4L-1.4 -16.9', stroke: FUR, sw: 4.8 },
+      { t: 'path', d: ell(11.8, -9, 7.4, 6.8), fill: 'url(#cg-fist)', stroke: FUR_L, sw: 0.9 }, { t: 'path', d: ell(9.4, -12, 2.4, 1.3), fill: '#FFFFFF', o: 0.45 },
+      { t: 'path', d: 'M14.4 -13L19.8 -32', stroke: FUR_L, sw: 6.4 }, { t: 'path', d: 'M14.4 -16L19.6 -34', stroke: FUR, sw: 4.8 },
+      { t: 'path', d: 'M9.4 -6.4Q11.6 -5.2 14 -6.6M8.6 -9.4Q10.6 -8.4 12.6 -9.4', stroke: FUR_L, sw: 0.9, o: 0.8 }] },
     { t: 'g', x: 0, y: -98, o: 0, s: 1, ...ks({ o: o.markO, s: o.markS }), c: [R(-3.5, -24, 7, 17, 3.5, 'blue'), { t: 'circle', x: 0, y: 0, r: 3.8, fill: 'blue' }] },
   ] };
 }
@@ -2360,7 +2534,7 @@ SCENES.catShow = (() => {
     { t: 'path', d: 'M0-7L1.8-1.8L7 0L1.8 1.8L0 7L-1.8 1.8L-7 0L-1.8-1.8Z', fill }] });
   const burst = (fill) => ({ t: 'path', d: 'M0-40L9-14L36-22L17-2L38 14L11 13L4 40L-6 15L-32 26L-16 3L-38-10L-11-12Z', fill });
   const frantic = []; for (let t = 4300; t < B - 50; t += 110) frantic.push([t, 1.6 + ((t / 110) % 3) * 0.6, FLASK_X - 10 + ((t / 37) % 20)]);
-  const TAIL = [[0, 1], [1400, 8], [2800, 1], [4200, 8], [B, 6], [B + 100, 30, 'out'], [B + 900, 6, 'io'], [PULL, 10], [PULL + 400, 40], [PULL + 800, 18], [PULL + 1200, 44], [PULL + 1600, 20], [FLY, 40]];
+  const TAIL = [[0, 1], [1400, 8], [3060, 6], [4200, 8], [B, 6], [B + 100, 30, 'out'], [B + 900, 6, 'io'], [PULL, 10], [PULL + 400, 40], [PULL + 800, 18], [PULL + 1200, 44], [PULL + 1600, 20], [FLY, 40]];
   const wob = [[PULL, 0], [PULL + 300, -6], [PULL + 600, 4], [PULL + 900, -7], [PULL + 1200, 5], [PULL + 1500, -8], [PULL + 1800, 3], [FLY, -4]];
   return { w: 360, h: 250, dur: END, still: 1700, once: true, els: [
     ...labBack([
@@ -2417,6 +2591,71 @@ SCENES.catShow = (() => {
     star(206, 156, 1.3, GONE + 500, SPARK), star(150, 56, 1.2, GONE + 600, SPARK), star(152, 186, 0.9, GONE + 640, 'blue'),
   ] };
 })();
+// ---------- Борис отвечает на вопросы: короткие сцены, все начинаются и заканчиваются в позе покоя ----------
+function speechLines(x, y, w, lines, oKeys, more = {}) {
+  const h = 16 + lines.length * 17;
+  return { t: 'g', x, y, o: oKeys[0][1], s: 1, k: { o: oKeys, ...more }, c: [{ t: 'g', x: -12, y: -h - 13, c: [
+    R(0, 0, w, h, 18, 'bg', { stroke: 'line', sw: 1.5 }),
+    { t: 'path', d: `M22 ${h - 1}L12 ${h + 13}L36 ${h - 1}`, fill: 'bg', stroke: 'line', sw: 1.5 }, R(16, h - 4, 22, 5, 0, 'bg'),
+    ...lines.map((l, i) => TX(w / 2, 22 + i * 17, l, { fs: 13, fw: i ? 500 : 700, fill: i ? 'text2' : 'text', anchor: 'middle' }))] }] };
+}
+const heart = (x, y, t0, s = 1) => ({ t: 'g', x, y, o: 0, s, k: { y: [[t0, y], [t0 + 1600, y - 34, 'out']], o: [[t0 - 1, 0], [t0, 1], [t0 + 1100, 1], [t0 + 1600, 0]], rot: [[t0, -10], [t0 + 800, 10], [t0 + 1600, -6]] }, c: [
+  { t: 'path', d: 'M0 3C-4-2-9 1-7 5L0 11L7 5C9 1 4-2 0 3Z', fill: PINK }] });
+const bolt = (x, y, t0, rot = 0) => ({ t: 'g', x, y, rot, s: 0, o: 0, k: { s: [[t0, 0], [t0 + 200, 1.1, 'back'], [t0 + 650, 0, 'in']], o: [[t0 - 1, 0], [t0, 1]] }, c: [
+  { t: 'path', d: 'M2-10L-4 1H1L-2 10L5-2H0L3-10Z', fill: SPARK }] });
+function catReply(kind) {
+  const D = 3600, bub = [[0, 0], [250, 0], [400, 1], [D - 450, 1], [D - 200, 0]], pop = { s: [[250, 0.6], [600, 1, 'back']] };
+  const base = { rootY: [[0, 150], [D / 2, 151.5], [D, 150]], tail: [[0, 6], [900, 1], [1800, 8], [2700, 1], [D, 6]] };
+  base.tailTip = lag(base.tail, 160, 1.3);
+  const say = (lines) => speechLines(194, 92 + Math.max(0, lines.length - 3) * 14, 174, lines, bub, pop);
+  const P = {
+    hi: { lines: ['Привет-привет!', 'Я Борис, лаборант.', 'Мур на связи!'],
+      o: { armL: [[0, 12], [300, 158, 'out'], [550, 136], [800, 160], [1050, 136], [1300, 156], [1800, 12, 'io']],
+        happyO: [[0, 0], [200, 1], [D - 500, 1], [D - 400, 0]], smileO: [[0, 1], [200, 0], [D - 500, 0], [D - 400, 1]], ...blinkKeys([2300]),
+        tail: [[0, 6], [300, 24], [600, 2], [900, 24], [1200, 2], [1500, 20], [2200, 6], [D, 6]] } },
+    deals: { lines: ['Отлично!', 'Посевы растут,', 'колбы целы… пока что.'],
+      o: { headRot: [[0, 0], [400, 8, 'io'], [900, -5, 'io'], [1400, 0, 'io']], lookX: [[0, 0], [300, 1, 'io'], [1400, 1], [1700, 0, 'io']], lookY: [[0, 0], [300, 0.6, 'io'], [1400, 0.6], [1700, 0, 'io']],
+        armL: [[0, 12], [1900, 12], [2200, 42, 'out'], [2700, 42], [3000, 12, 'io']], armR: [[0, -12], [1900, -12], [2200, -42, 'out'], [2700, -42], [3000, -12, 'io']],
+        headY: [[0, -14], [1900, -14], [2200, -17, 'out'], [2700, -17], [3000, -14, 'io']], ...blinkKeys([1600, 3100]) } },
+    news: { lines: ['Вывел новую среду.', 'Пахнет как TSB,', 'но мурчит.'],
+      o: { armR: [[0, -12], [300, -78, 'out'], [2600, -78], [3000, -12, 'io']], lookX: [[0, 0], [300, 1, 'io'], [2500, 1], [2800, 0, 'io']], lookY: [[0, 0], [300, 0.7, 'io'], [2500, 0.7], [2800, 0, 'io']],
+        headRot: [[0, 0], [300, 6, 'io'], [2500, 6], [2800, 0, 'io']], happyO: [[0, 0], [900, 0], [1000, 1], [2700, 1], [2800, 0]], smileO: [[0, 1], [900, 1], [1000, 0], [2700, 0], [2800, 1]], ...blinkKeys([2000]) },
+      lab: { purpleO: [[0, 0], [600, 0], [1000, 0.95], [2400, 0.95], [2900, 0]], blueO: [[0, 0.9], [600, 0.9], [1000, 0], [2400, 0], [2900, 0.9]],
+        bubbles: (() => { const b = [[200]]; for (let t = 700; t < 2400; t += 120) b.push([t, 1.4 + ((t / 120) % 3) * 0.5, FLASK_X - 10 + ((t / 37) % 20)]); return b; })() } },
+    mood: { lines: ['Мурчательное!', '10 из 10', 'по шкале мурчания.'],
+      o: { rootY: [[0, 150], [200, 151, 'out'], [420, 140, 'out'], [660, 150, 'in'], [880, 141, 'out'], [1120, 150, 'in'], [D, 150]],
+        happyO: [[0, 0], [300, 1], [2900, 1], [3000, 0]], smileO: [[0, 1], [300, 0], [2900, 0], [3000, 1]], ...blinkKeys([[300, 1300]]),
+        headRot: [[0, 0], [1700, 0], [2000, -7, 'io'], [2600, -7], [2900, 0, 'io']] },
+      front: [heart(122, 66, 500, 1), heart(178, 58, 900, 0.8), heart(104, 96, 1300, 0.7), heart(168, 40, 1700, 0.9)] },
+    energy: { lines: ['Тоже хочешь', 'энергию кота Бориса?'],
+      zoom: { s: [[0, 1], [300, 1], [1000, 2.2, 'io'], [D - 750, 2.2], [D - 200, 1, 'io']], x: [[0, 0], [300, 0], [1000, -208, 'io'], [D - 750, -208], [D - 200, 0, 'io']], y: [[0, 0], [300, 0], [1000, -72, 'io'], [D - 750, -72], [D - 200, 0, 'io']] },
+      o: { armL: [[0, 12], [500, -70, 'io'], [D - 700, -70], [D - 250, 12, 'io']], armR: [[0, -12], [450, 22, 'io'], [D - 650, 22], [D - 250, -12, 'io']],
+        armRO: [[0, 1], [380, 1], [520, 0], [D - 700, 0], [D - 560, 1]], chinO: [[0, 0], [400, 0], [560, 1, 'out'], [D - 700, 1], [D - 560, 0]],
+        browY: [[0, 1.4], [700, 1.4], [900, -0.8, 'out'], [1080, 0, 'io'], [D, 0]],
+        headRot: [[0, 0], [500, -7, 'io'], [D - 600, -7], [D - 250, 0, 'io']], headY: [[0, -14], [500, -16, 'io'], [D - 600, -16], [D - 250, -14, 'io']],
+        rootY: [[0, 150], [500, 148, 'io'], [D - 600, 148], [D - 250, 150, 'io']],
+        chadO: [[0, 0], [350, 0], [650, 1], [D - 500, 1], [D - 250, 0]], smileO: [[0, 1], [350, 1], [450, 0], [D - 500, 0], [D - 300, 1]],
+        blinkH: [[0, 3.6], [350, 3.6], [650, 2.7, 'io'], [D - 500, 2.7], [D - 250, 3.6]], blinkY: [[0, -1.8], [350, -1.8], [650, -0.9, 'io'], [D - 500, -0.9], [D - 250, -1.8]],
+        tail: [[0, 6], [600, 14, 'io'], [D - 600, 14], [D, 6]] },
+      front: [{ t: 'path', rule: 'evenodd', d: 'M0 0H360V250H0ZM14 138a110 110 0 1 0 220 0a110 110 0 1 0-220 0Z', fill: '#0B0E14', o: 0, k: { o: [[0, 0], [600, 0], [1100, 0.5], [D - 700, 0.5], [D - 300, 0]] } },
+        { t: 'circle', x: 124, y: 138, r: 110, stroke: '#FFFFFF', sw: 2, o: 0, k: { o: [[0, 0], [600, 0], [1100, 0.25], [D - 700, 0.25], [D - 300, 0]] } }] },
+  }[kind];
+  const o = { ...base, ...P.o };
+  if (P.o.tail) o.tailTip = lag(P.o.tail, 120, 1.3);
+  const world = [...labBack(), ...(P.back || []), catRig(o), ...labFront({ bubbles: [[300], [1300, 1.6], [2300]], ...(P.lab || {}) })];
+  return { w: 360, h: 250, dur: D, still: 1400, once: true, noFade: true, els: [
+    ...(P.zoom ? [{ t: 'g', x: 0, y: 0, s: 1, k: P.zoom, c: world }] : world),
+    ...(P.front || []),
+    say(P.lines)] };
+}
+['hi', 'deals', 'news', 'mood', 'energy'].forEach((k) => { SCENES['cat_' + k] = catReply(k); });
+// ожидание вопроса: дышит, моргает, хвост покачивается
+SCENES.catIdle = { w: 360, h: 250, dur: 3600, still: 0, seamless: true, els: [
+  ...labBack(),
+  catRig({ rootY: [[0, 150], [1800, 151.5], [3600, 150]], tail: [[0, 6], [1800, 1], [3600, 6]], tailTip: [[0, 3], [2000, -3.5], [3600, 3]], ...blinkKeys([1900]) }),
+  ...labFront({ bubbles: [[200], [1100, 1.6], [2000], [2700, 1.6]] }),
+] };
+
 // ---------- Справочник и «почему так»: сцены ----------
 const BLOOD = '#3F7DE8', SHELL = '#A88B62', SHELL_D = '#8A6F49', GERM = '#E5734F';
 // пробирка гель-тромба: переворот на 180°; гель держится, жидкость стекает к крышке
@@ -2611,6 +2850,468 @@ function playScene(host) {
 function stopScene(host) { const p = players.get(host); if (p) p.stop(); }
 
 /* =====================================================================
+   ПОСЕВ ПО КАТЕГОРИЯМ — по ГФ РФ, ОФС.1.2.4.0002 «Микробиологическая чистота»
+   Стандартные условия: бактерии (32,5 ± 2,5) °C, грибы (22,5 ± 2,5) °C
+   ===================================================================== */
+const SEED_LANES = {
+  tamc: { org: 'ОЧМ', what: 'общее число микроорганизмов', kind: 'plate', steps: [
+    ['1 мл разведения 1:10', 'на соево-казеиновый агар (TSA, среда №1)'], ['30–35 °C', 'предварительно 24–72 ч, итог через 5 суток'], ['Считаем колонии', '× 10 = КОЕ в 1 г']] },
+  tymc: { org: 'ОЧГ', what: 'дрожжи и плесени', kind: 'plate', steps: [
+    ['1 мл разведения 1:10', 'на агар Сабуро с глюкозой (SDA, среда №2)'], ['20–25 °C', 'итог через 5 суток'], ['Считаем колонии', '× 10 = КОЕ в 1 г']] },
+  ecoli: { org: 'E. coli', what: 'кишечная палочка', kind: 'bottle', steps: [
+    ['10 мл 1:10 → 100 мл TSB', 'соево-казеиновый бульон, среда №8 · 30–35 °C · 18–24 ч'], ['1 мл → 100 мл бульона Мак-Конки', 'среда №3 · 42–44 °C · 24–48 ч'],
+    ['Агар Мак-Конки или Эндо', 'среда №4 · 30–35 °C · 18–48 ч'], ['Подтверждение', 'оксидаза −, цитрат − (среда №14), индол +']] },
+  entQ: { org: 'Энтеробактерии', what: 'желчеустойчивые грамотрицательные', kind: 'bottle', steps: [
+    ['1:10 в TSB', 'оживление · 20–25 °C · 2 ч, не дольше 5 ч'], ['10 мл → 100 мл бульона Моссель', '30–35 °C · 24–48 ч'],
+    ['Агар Моссель или Эндо', '30–35 °C · 18–24 ч'], ['Подтверждение', 'грамотрицательные палочки без спор, оксидаза −']] },
+  entN: { org: 'Энтеробактерии', what: 'счёт методом НВЧ', kind: 'tubes', steps: [
+    ['1:10 в TSB', 'оживление · 20–25 °C · 2 ч, не дольше 5 ч'], ['Бульон Моссель: 0,1 · 0,01 · 0,001 г', '3 пробирки · 30–35 °C · 24–48 ч'],
+    ['Пересев каждой на агар Моссель', '30–35 °C · 18–24 ч'], ['Таблица НВЧ', 'по положительным пробиркам: наиболее вероятное число в 1 г']] },
+  paer: { org: 'P. aeruginosa', what: 'синегнойная палочка', kind: 'bottle', steps: [
+    ['10 мл 1:10 → 100 мл TSB', 'среда №8 · 30–35 °C · 24–48 ч'], ['Цетримидный агар', 'среда №16 · 30–35 °C · 24–48 ч'],
+    ['Подтверждение', 'пиоцианин (среда №9), оксидаза +, рост при 42 °C']] },
+  saur: { org: 'S. aureus', what: 'золотистый стафилококк', kind: 'bottle', steps: [
+    ['10 мл 1:10 → 100 мл TSB', 'среда №8 · 30–35 °C · 18–24 ч'], ['Маннит-солевой агар', '30–35 °C · 18–72 ч'],
+    ['Подтверждение', 'жёлтые колонии с жёлтой зоной → идентификация']] },
+  salm10: { org: 'Salmonella', what: 'отдельная навеска 10 г', kind: 'sample', steps: [
+    ['10 г → 90 мл TSB', 'среда №8 · 30–35 °C · 18–24 ч'], ['0,1 мл → 10 мл бульона Раппапорт-Вассилиадиса', '30–35 °C · 18–24 ч'],
+    ['XLD или висмут-сульфит агар', 'среда №5 · 30–35 °C · 18–48 ч'], ['Подтверждение на TSI', 'среда №13 · 24 ч: кислый столбик, H₂S +']] },
+  salm25: { org: 'Salmonella', what: 'отдельная навеска 25 г', kind: 'sample', steps: [
+    ['25 г → 225 мл TSB', 'среда №8 · 30–35 °C · 18–24 ч'], ['0,1 мл → 10 мл бульона Раппапорт-Вассилиадиса', '30–35 °C · 18–24 ч'],
+    ['XLD или висмут-сульфит агар', 'среда №5 · 30–35 °C · 18–48 ч'], ['Подтверждение на TSI', 'среда №13 · 24 ч: кислый столбик, H₂S +']] },
+};
+const SEED_CATS = [
+  { id: '3a', label: '3А / 2.2', title: 'Категории 3А и 2.2',
+    who: '<b>3А</b>: <u>готовые нестерильные препараты для приёма внутрь и ректальные</u>: таблетки, капсулы, сиропы, свечи. <b>2.2</b>: <u>синтетические субстанции</u> для таких препаратов.',
+    why: 'Нормы у них совпадают, поэтому в лаборатории их считают вместе. <u>Всё это попадает в кишечник</u>, и главный «подозреваемый» здесь E. coli: она выдаёт фекальное загрязнение.',
+    note: 'Жидкие формы для приёма внутрь (3А) строже: ОЧМ ≤ 10², ОЧГ ≤ 10¹.',
+    lanes: [['tamc', '≤ 10³'], ['tymc', '≤ 10²'], ['ecoli', 'нет в 1 г']] },
+  { id: '42', label: '4.2', title: 'Категория 4.2',
+    who: '<u>Вспомогательные вещества</u>: крахмал, тальк, пшеничная мука и подобные.',
+    why: '<u>По массе их в таблетке больше всего, и многие природного происхождения</u>. Поэтому общий счёт как у обычных таблеток (10³), а набор опасных микробов как у природного сырья, с сальмонеллой в 25 г.',
+    lanes: [['tamc', '≤ 10³'], ['tymc', '≤ 10²'], ['entN', '≤ 10² в 1 г'], ['ecoli', 'нет в 1 г'], ['paer', 'нет в 1 г'], ['saur', 'нет в 1 г'], ['salm25', 'нет в 25 г']] },
+  { id: '12b22', label: '1.2Б + 2.2', title: 'Категория 1.2Б + 2.2',
+    who: '<u>Одна и та же субстанция идёт и в стерильные лекарственные формы (СЛФ), и в обычную готовую продукцию</u>.',
+    why: 'Поэтому её проверяют сразу по двум категориям. <u>Числа берут из 1.2Б, она в 10 раз строже</u>, а списки микробов складывают: энтеробактерии, P. aeruginosa и S. aureus из 1.2Б плюс E. coli из 2.2.',
+    lanes: [['tamc', '≤ 10²'], ['tymc', '≤ 10¹'], ['entQ', 'нет в 1 г'], ['ecoli', 'нет в 1 г'], ['paer', 'нет в 1 г'], ['saur', 'нет в 1 г']] },
+  { id: '12b', label: '1.2Б', title: 'Категория 1.2Б',
+    who: '<u>Субстанции для стерильных препаратов, которые потом стерилизуют</u> в упаковке или фильтрацией, например для инъекций. Сюда же субстанции для препаратов категории 2: мазей, капель в нос, ингаляций.',
+    why: '<u>Стерилизация убьёт микробы, но не уберёт их «следы»</u>, поэтому сырьё должно быть чистым заранее. Отсюда строгие числа и «тройка» микробов, опасных для кожи, слизистых и ран.',
+    lanes: [['tamc', '≤ 10²'], ['tymc', '≤ 10¹'], ['entQ', 'нет в 1 г'], ['paer', 'нет в 1 г'], ['saur', 'нет в 1 г']] },
+  { id: '3b', label: '3Б', title: 'Категория 3Б',
+    who: 'Готовые препараты для приёма внутрь <u>из природного сырья (растительного, животного, минерального), которое нельзя обеззаразить, не испортив</u>. Например, препараты панкреатина. Лекарственное растительное сырьё сюда не входит, у него категория 4.',
+    why: '<u>Природа приносит больше микробов</u>, поэтому общий счёт мягче, 10⁴. Зато ищут сальмонелл в 10 г и считают энтеробактерии: это «гости» с ферм и полей.',
+    lanes: [['tamc', '≤ 10⁴'], ['tymc', '≤ 10²'], ['entN', '≤ 10² в 1 г'], ['ecoli', 'нет в 1 г'], ['saur', 'нет в 1 г'], ['salm10', 'нет в 10 г']] },
+  { id: '32', label: '3.2', title: 'Категория 3.2',
+    who: '<u>Субстанции природного происхождения для нестерильных препаратов</u>: растительные экстракты, ферменты, другое сырьё животного или минерального происхождения.',
+    why: '<u>Сырьё «с полей и ферм»</u>, поэтому список самый длинный: сальмонеллу ищут уже в 25 г, энтеробактерии считают, а кишечная и синегнойная палочки и стафилококк должны отсутствовать.',
+    lanes: [['tamc', '≤ 10⁴'], ['tymc', '≤ 10²'], ['entN', '≤ 10² в 1 г'], ['ecoli', 'нет в 1 г'], ['paer', 'нет в 1 г'], ['saur', 'нет в 1 г'], ['salm25', 'нет в 25 г']] },
+];
+// Сцена: навеска → 1:10 → веером на чашки и бульоны; колонии растут, бульоны мутнеют, нормы загораются
+function seedScene(cat) {
+  const n = cat.lanes.length, gap = 27, top = 30, h = top + n * gap + 18, midY = top + ((n - 1) * gap) / 2;
+  const els = [];
+  const jar = { x: 30, y: midY }, flask = { x: 92, y: midY };
+  els.push(
+    { t: 'g', x: jar.x, y: jar.y, c: [R(-13, -16, 26, 30, 6, 'field', { stroke: 'text3', sw: 1.4 }), R(-14, -20, 28, 6, 3, 'line'), R(-10, -2, 20, 13, 4, '#E8D9B8'), TX(0, -26, 'образец', { fs: 8.5, fill: 'text2', anchor: 'middle' })] },
+    { t: 'path', d: `M46 ${midY}h26M67 ${midY - 4}l5 4-5 4`, stroke: 'text3', sw: 1.4, o: 0, k: { o: showAt(250) } },
+    { t: 'g', x: flask.x, y: flask.y, o: 0, k: { o: showAt(400) }, c: [
+      { t: 'path', d: 'M-5-18h10M-4-18v8L-14 8a3 3 0 0 0 3 4h22a3 3 0 0 0 3-4L4-10v-8', fill: 'field', stroke: 'text3', sw: 1.4 },
+      { t: 'path', d: 'M-9-1h18l4.6 9a1.6 1.6 0 0 1-1.4 2.4h-24.4a1.6 1.6 0 0 1-1.4-2.4z', fill: '#E8D9B8', o: 0.9 },
+      TX(0, 28, '1:10', { fs: 9, fw: 700, fill: 'text2', anchor: 'middle' })] });
+  cat.lanes.forEach(([key, norm], i) => {
+    const L = SEED_LANES[key], y = top + i * gap, t = 700 + i * 380, fromJar = L.kind === 'sample';
+    const sx = fromJar ? jar.x + 8 : flask.x + 16, sy = fromJar ? jar.y + 14 : flask.y;
+    const d = fromJar ? `M${sx} ${sy}C${sx + 14} ${y} ${sx + 40} ${y} 152 ${y}` : `M${sx} ${sy}C${sx + 30} ${sy} 128 ${y} 152 ${y}`;
+    els.push({ t: 'path', d, stroke: fromJar ? 'red' : 'blue', sw: 1.4, o: 0, k: { o: [[t - 1, 0], [t, 0.5]] } });
+    const icon = { t: 'g', x: 166, y, o: 0, k: { o: showAt(t + 80) }, c: [] };
+    if (L.kind === 'plate') {
+      icon.c.push({ t: 'path', d: ell(0, 0, 11, 6), fill: 'field', stroke: 'text3', sw: 1.3 }, { t: 'path', d: ell(0, -1.2, 9, 4.2), fill: key === 'tymc' ? '#F3E4C8' : '#F5EBD6' });
+      [[-4, -1.5], [3, -2.5], [1, 1], [5, 0], [-2, 1.6]].forEach(([cx, cy], j) => icon.c.push({ t: 'circle', x: cx, y: cy, r: 0, fill: key === 'tymc' ? '#C9A46A' : '#D9B36C', k: { r: [[t + 300 + j * 140, 0], [t + 600 + j * 140, 1.3, 'out']] } }));
+    } else if (L.kind === 'tubes') {
+      [-6, 0, 6].forEach((dx, j) => icon.c.push(R(dx - 2.2, -9, 4.4, 16, 2.2, 'field', { stroke: 'text3', sw: 1.1 }), R(dx - 1.4, -2, 2.8, 8, 1.4, 'blue', { o: 0.15, k: { o: [[t + 300 + j * 150, 0.15], [t + 700 + j * 150, j < 2 ? 0.55 : 0.15]] } })));
+    } else {
+      icon.c.push({ t: 'path', d: 'M-3.5-10h7M-3-10v5L-9 6a2 2 0 0 0 2 3h14a2 2 0 0 0 2-3L3-5v-5', fill: 'field', stroke: 'text3', sw: 1.2 },
+        { t: 'path', d: 'M-6 0h12l3 6a1.2 1.2 0 0 1-1 1.8h-16a1.2 1.2 0 0 1-1-1.8z', fill: fromJar ? 'red' : 'blue', o: 0.2, k: { o: [[t + 300, 0.2], [t + 900, 0.55]] } });
+    }
+    els.push(icon);
+    els.push(TX(184, y + 3.5, L.org, { fs: 10, fw: 700, o: 0, k: { o: showAt(t + 120) } }));
+    els.push({ t: 'g', o: 0, k: { o: showAt(t + 700, 250) }, c: [R(274, y - 8, 50, 16, 8, 'soft'), TX(299, y + 3.5, norm.replace(' в 1 г', '').replace(' в 10 г', ' 10 г').replace(' в 25 г', ' 25 г'), { fs: 8.5, fw: 700, fill: 'blue', anchor: 'middle' })] });
+  });
+  return { w: 330, h, dur: 900 + n * 380 + 3000, still: 900 + n * 380 + 1200, els };
+}
+SEED_CATS.forEach((c) => { SCENES['seed_' + c.id] = seedScene(c); });
+
+// ---------- Схема посева: слева направо, колонки = этапы. Описана в JSON ----------
+// Колонки сетки: c0 навеска · g0 · c1 · g1 · c2 · g2 · c3 · g3 · c4 результат (g = стрелки)
+const SEED_T = { 32: '32,5 ± 2,5 °C', 22: '22,5 ± 2,5 °C', 43: '43 ± 1 °C' };
+const ICO = (id) => `<svg class="ico" aria-hidden="true"><use href="#i-${id}"/></svg>`;
+const FC = { c0: 1, g0: 2, c1: 3, g1: 4, c2: 5, g2: 6, c3: 7, g3: 8, c4: 9 };
+const FSTAGE = { c0: 0, g0: 0, c1: 1, g1: 1, c2: 2, g2: 2, c3: 3, g3: 3, c4: 4 };
+// **текст** → жирный; неразрывные пробелы в числах
+const nb = (x) => String(x).replace(/(\d) (?=(г|мл|мкл|сут|ч)(?=[\s,.)*]|$))/g, '$1 ').replace(/ №/g, ' №').replace(/ ± /g, ' ± ').replace(/КОЕ\/г/g, 'КОЕ/⁠г').replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+const SEED_NODES = {
+  prep: { t: 'Образец 10 г + FBR', d: ['разведение **1:10**', 'по верификации 1:50, 1:100 или 1:1000'], kind: 'root' },
+  dishes: { t: 'Чашки Петри', d: 'по **1 мл** разведения образца в пустые чашки' },
+  tsa: { t: 'TSA (среда №1)', d: 'заливаем **15–25 мл** при **42,5 ± 2,5 °C**', tag: 'ОЧМ' },
+  sda: { t: 'SDA (среда №2)', d: 'заливаем **15–25 мл** при **42,5 ± 2,5 °C**', tag: 'ОЧГ' },
+  tsb: { t: 'Среда №8 (TSB)', d: '**100 мл** + **10 мл** образца' },
+  mos: { t: 'Мак-Конки (№3) / MOS', d: '**10 мл** + **100 мкл** среды №8', tag: 'E. coli' },
+  endo: { t: 'Агар Эндо (№4)', d: 'штрих из бульона' },
+  cet: { t: 'Цетримидный агар (CET)', tag: 'P. aeruginosa' },
+  msa: { t: 'Маннит-солевой агар (MSA)', tag: 'S. aureus' },
+  bio: { t: 'Наращивание биомассы', d: 'образец 1:10 в среде №8', tag: 'Энтеробактерии' },
+  mosQ: { t: 'Бульон MOS', d: '**100 мл** + **10 мл** из №8' },
+  mosN: { t: 'MOS, три разведения', dil: ['0,1 г', '0,01 г', '0,001 г'], d: '**9 мл** MOS + **1 мл**, дальше по 1 мл' },
+  endoN: { t: 'Агар Эндо (№4)', d: 'штрих из каждой пробирки' },
+  rvs: { t: 'Бульон RVS', d: '**10 мл** + **100 мкл** из №8' },
+  xld: { t: 'Агар XLD', d: 'или висмут-сульфит (№5)' },
+};
+const RESN = (t, d, it) => ({ t, d, kind: 'res', it });
+const OUT = { t: 'Смотрим рост', kind: 'out', out: [['check', 'Нет роста', 'соответствует'], ['search', 'Есть рост', 'на идентификацию'], ['alert', 'Типичный рост', 'отклонение']] };
+function seedGrid(cat) {
+  const keys = cat.lanes.map(([k]) => k), nm = Object.fromEntries(cat.lanes);
+  const cells = []; let r = 1;
+  const put = (c, row, span, item, cspan) => cells.push({ c, row, span: span || 1, cspan, ...item });
+  const groups = [];
+  // чашки: один узел на две строки, развилка на TSA и SDA
+  groups.push({ row: r, span: 2, go: '1 мл' });
+  put('c1', r, 2, { n: SEED_NODES.dishes, stub: true });
+  [['tsa', 32, 'tamc', 'ОЧМ'], ['sda', 22, 'tymc', 'ОЧГ']].forEach(([n, t, k, res], i) => {
+    put('g1', r + i, 1, { go: '', bus: i ? 'last' : 'first' }); put('c2', r + i, 1, { n: SEED_NODES[n] });
+    put('g2', r + i, 1, { inc: [[t, '5 сут']] }, 3); put('c4', r + i, 1, { n: RESN(res, `норма **${nm[k]}** КОЕ/г`) });
+  });
+  r += 2;
+  // флакон со средой №8 и ветки из него
+  const br = ['ecoli', 'paer', 'saur'].filter((k) => keys.includes(k));
+  groups.push({ row: r, span: br.length, go: '10 мл' });
+  put('c1', r, br.length, { n: SEED_NODES.tsb, stub: br.length > 1 });
+  br.forEach((k, i) => {
+    const row = r + i, bus = br.length > 1 ? (i === 0 ? 'first' : i === br.length - 1 ? 'last' : 'mid') : '';
+    put('g1', row, 1, { inc: [[32, '1 сут']], bus });
+    if (k === 'ecoli') {
+      put('c2', row, 1, { n: SEED_NODES.mos }); put('g2', row, 1, { inc: [[43, '2 сут', 'Мак-Конки'], [32, '2 сут', 'MOS']] });
+      put('c3', row, 1, { n: SEED_NODES.endo }); put('g3', row, 1, { inc: [[32, '1 сут']] });
+      put('c4', row, 1, { n: RESN('E. coli', '**нет** в 1 г', true) });
+    } else {
+      put('c2', row, 1, { n: SEED_NODES[k === 'paer' ? 'cet' : 'msa'] }); put('g2', row, 1, { inc: [[32, '2 сут']] }, 3);
+      put('c4', row, 1, { n: RESN(k === 'paer' ? 'P. aeruginosa' : 'S. aureus', '**нет** в 1 г', true) });
+    }
+  });
+  r += br.length;
+  // энтеробактерии
+  const ent = keys.find((k) => k === 'entQ' || k === 'entN');
+  if (ent) {
+    groups.push({ row: r, span: 1, go: '' });
+    put('c1', r, 1, { n: SEED_NODES.bio }); put('g1', r, 1, { inc: [[22, '2 ч']] });
+    put('c2', r, 1, { n: SEED_NODES[ent === 'entN' ? 'mosN' : 'mosQ'] }); put('g2', r, 1, { inc: [[32, '2 сут']] });
+    put('c3', r, 1, { n: SEED_NODES[ent === 'entN' ? 'endoN' : 'endo'] }); put('g3', r, 1, { inc: [[32, '1 сут']] });
+    put('c4', r, 1, { n: RESN('Энтеробактерии', ent === 'entN' ? `по таблице НВЧ, норма **${nm.entN.replace(' в 1 г', '')}** в 1 г` : '**нет** в 1 г') });
+    r += 1;
+  }
+  // навеска: шина слева раздаёт разведение по группам
+  put('c0', 1, 2, { n: SEED_NODES.prep, stub: true });
+  groups.forEach((g, i) => put('g0', g.row, g.span, { go: g.go, bus: i === 0 ? 'first' : i === groups.length - 1 ? 'last' : 'mid' }));
+  // сальмонелла: своя навеска
+  const salm = keys.find((k) => k.startsWith('salm'));
+  if (salm) {
+    const g = salm === 'salm10' ? 10 : 25;
+    cells.push({ sep: true, row: r });
+    r += 1;
+    put('c0', r, 1, { n: { t: 'Навеска 10 г', d: ['+ **100 мл** среды №8', `по ГФ: ${g} г + ${g * 9} мл`], tag: 'Salmonella', kind: 'root', gf: 1 } });
+    put('g0', r, 1, { inc: [[32, '1 сут']] }); put('c1', r, 1, { n: SEED_NODES.rvs }); put('g1', r, 1, { inc: [[32, '1 сут']] });
+    put('c2', r, 1, { n: SEED_NODES.xld }); put('g2', r, 1, { inc: [[32, '2 сут']] }, 3); put('c4', r, 1, { n: OUT });
+  }
+  return cells;
+}
+// плашка инкубации: температура в цвете термостата, срок в белом овале
+const ichip = ([t, dur, what]) => `<span class="tchip ichip t${t}">${what ? `<b class="ichip-w">${what}</b>` : ''}<span>${SEED_T[t]}</span><span class="ichip-d">${dur}</span></span>`;
+function seedFlowHTML(cat) {
+  const sp = (s) => /^[A-Z][a-z]*\.? /.test(s) || s === 'Salmonella';
+  const cells = seedGrid(cat).map((x) => {
+    if (x.sep) return `<div class="sf-sep" style="grid-row:${x.row}"><b>Отдельная навеска</b><span>сальмонеллу ищут не в разведении, а в своей навеске</span></div>`;
+    const pos = `grid-column:${FC[x.c]}${x.cspan ? ` / span ${x.cspan}` : ''};grid-row:${x.row}${x.span > 1 ? ` / span ${x.span}` : ''};--s:${FSTAGE[x.c]}`;
+    if (!x.n) {
+      const lab = x.inc ? x.inc.map(ichip).join('') : x.go ? `<span class="sf-go">${nb(x.go)}</span>` : '';
+      return `<div class="sf-c${x.bus ? ` bus ${x.bus}` : ''}" style="${pos}">${x.bus ? '<i class="sf-v"></i>' : ''}<div class="sf-lab">${lab}</div></div>`;
+    }
+    const n = x.n;
+    const tag = n.tag ? `<span class="sf-tag${sp(n.tag) ? ' sp' : ''}">${n.tag}</span>` : '';
+    const dil = n.dil ? `<span class="sf-dil">${n.dil.map((v) => `<i>${v}</i>`).join(ICO('arrow'))}</span>` : '';
+    const d = [].concat(n.d || []).map((v, i) => `<span class="sf-d${n.gf && i === 1 ? ' gf' : ''}">${nb(v)}</span>`).join('');
+    const out = n.out ? `<ul class="sf-out">${n.out.map(([ic, a, b]) => `<li class="o-${ic}">${ICO(ic)}<span><b>${a}</b>${b}</span></li>`).join('')}</ul>` : '';
+    const head = n.kind === 'res' ? `<b class="sf-t${n.it ? ' sp' : ''}">${ICO('check')}${n.t}</b>` : `<b class="sf-t">${nb(n.t)}</b>`;
+    return `<div class="sf-n${n.kind ? ' sf-' + n.kind : ''}${x.span > 1 ? ' span' : ''}${x.stub ? ' stub' : ''}" style="${pos}"><div class="sf-box">${tag}${head}${dil}${d}${out}</div></div>`;
+  }).join('');
+  return `<div class="flow-h"><h2 class="plan-h">Схема посева · ${cat.label}</h2><p>Над стрелкой: термостат и сколько стоит<span class="sf-hint">. Схему можно листать вбок →</span></p></div>
+    <div class="sf-scroll"><div class="sf-grid">${cells}</div></div>`;
+}
+
+// ---------- Справочник по категориям: сцены в JSON ----------
+const AGAR = '#F3E2BF', ENDO_A = '#F6C1CB', ECOLI_C = '#A8204A', XLD_A = '#F08C8C', YEL = '#F2C14E', TEAL = '#3FA7B5', MSA_A = '#F4B6B6', SALM_C = '#C8323C';
+const dishT = (x, y, r, agar, more = {}) => ({ t: 'g', x, y, ...more, c: [{ t: 'circle', r, fill: 'field', stroke: 'text3', sw: 1.4 }, { t: 'circle', r: r - 4, fill: agar }, ...(more.kids || [])] });
+const colony = (x, y, r, fill, t, more = {}) => ({ t: 'circle', x, y, r: 0, fill, ...more, k: { r: [[t, 0], [t + 500, r, 'back']], ...(more.k || {}) } });
+const rod = (x, y, rot, fill, more = {}) => ({ t: 'g', x, y, rot, ...more, c: [R(-4.5, -2, 9, 4, 2, fill)] });
+const coccus = (x, y, fill, more = {}) => ({ t: 'g', x, y, ...more, c: [[0, 0], [3.4, 0.6], [1.6, 3], [-1.6, 2.6], [-1, -2.6], [2.6, -2.6]].map(([a, b]) => ({ t: 'circle', x: a, y: b, r: 1.7, fill })) });
+const bigTube = (x, y, liq = 'soft', kids = []) => ({ t: 'g', x, y, c: [
+  { t: 'path', d: 'M-16-18V30a16 16 0 0 0 32 0V-18Z', fill: liq },
+  ...kids,
+  { t: 'path', d: 'M-19-44V30a19 19 0 0 0 38 0V-44', stroke: 'text2', sw: 1.6 }, R(-22, -48, 44, 6, 3, 'line')] });
+const vial = (x, y, kids = []) => ({ t: 'g', x, y, c: [R(-24, -28, 48, 60, 12, 'field', { stroke: 'text2', sw: 1.5 }), R(-16, -36, 32, 9, 3, 'line'), ...kids] });
+const cap = (x, y, s, more = {}) => TX(x, y, s, { fs: 9.5, fill: 'text2', anchor: 'middle', ...more });
+const ttl = (x, y, s, more = {}) => TX(x, y, s, { fs: 11, fw: 700, anchor: 'middle', ...more });
+const pill = (x, y, w, s, t, color = 'blue', bg = 'soft') => ({ t: 'g', o: 0, k: { o: showAt(t) }, c: [R(x - w / 2, y - 10, w, 20, 10, bg), TX(x, y + 3.6, s, { fs: 10, fw: 700, fill: color, anchor: 'middle' })] });
+// тот же «микс» бактерий в двух пробирках: грам+ шарики, кишечные палочки, E. coli
+const MIX = [['c', -8, -6], ['e', 6, -8], ['o', -2, 4], ['c', 7, 10], ['e', -9, 18], ['o', 5, 22], ['e', 0, 30], ['c', -6, 34], ['o', 9, 36]];
+Object.assign(SCENES, {
+  // заливка: 50 °C губит клетки, 42,5 °C в самый раз, холоднее агар схватывается комками
+  sPour: { w: 300, h: 168, dur: 6400, still: 4800, els: [
+    ...[[56, '50 °C', 'red', 300], [150, '42,5 °C', 'blue', 1500], [244, '36 °C', 'text2', 2700]].map(([x, s, c, t]) => ({ t: 'g', o: 0, k: { o: showAt(t) }, c: [ttl(x, 30, s, { fill: c, fs: 12 })] })),
+    dishT(56, 80, 32, AGAR, { o: 0, k: { o: showAt(300) }, kids: [[-10, -6], [6, -10], [10, 6], [-6, 10], [0, 0]].map(([a, b]) => ({ t: 'circle', x: a, y: b, r: 2.2, fill: 'blue', k: { o: [[0, 1], [900, 1], [1300, 0.18]] } })) }),
+    { t: 'path', d: 'M44 68l24 24M68 68 44 92', stroke: 'red', sw: 2.6, o: 0, k: { o: showAt(1300) } },
+    dishT(150, 80, 32, AGAR, { o: 0, k: { o: showAt(1500) }, kids: [[-11, -7], [7, -11], [11, 6], [-6, 11], [1, 0]].map(([a, b], i) => colony(a, b, 3.4, '#D9A85C', 1900 + i * 120)) }),
+    { t: 'circle', x: 150, y: 80, r: 37, stroke: 'blue', sw: 2, o: 0, k: { o: showAt(2400) } },
+    dishT(244, 80, 32, AGAR, { o: 0, k: { o: showAt(2700) }, kids: [{ t: 'path', d: 'M-16-6q6-8 12 0t10 4M-12 10q8-6 14 2M4-14q6 2 10 8', stroke: '#C9A66B', sw: 3.2 }] }),
+    { t: 'g', o: 0, k: { o: showAt(900) }, c: [cap(56, 134, 'клетки гибнут', { fill: 'red', fw: 600 })] },
+    { t: 'g', o: 0, k: { o: showAt(2200) }, c: [cap(150, 134, 'в самый раз', { fill: 'blue', fw: 700 })] },
+    { t: 'g', o: 0, k: { o: showAt(3100) }, c: [cap(244, 134, 'агар в комках', { fw: 600 })] },
+    { t: 'g', o: 0, k: { o: showAt(3600) }, c: [cap(150, 156, 'агар застывает около 40 °C, клетки гибнут после 45 °C')] }] },
+  // жидкие формы: в таблетке воды нет, в сиропе микробы размножаются
+  sWater: { w: 300, h: 172, dur: 6400, still: 4600, els: [
+    ttl(78, 28, 'Таблетка'), ttl(222, 28, 'Сироп'),
+    R(44, 56, 68, 32, 16, 'field', { stroke: 'text2', sw: 1.5 }), { t: 'path', d: 'M78 58v28', stroke: 'line', sw: 1.4 },
+    { t: 'circle', x: 62, y: 68, r: 2.4, fill: 'text3' }, { t: 'circle', x: 94, y: 76, r: 2.4, fill: 'text3' },
+    { t: 'g', x: 222, y: 76, c: [
+      { t: 'path', d: 'M-9-44h18v10c12 3 20 12 20 24v40a8 8 0 0 1-8 8h-42a8 8 0 0 1-8-8v-40c0-12 8-21 20-24z', fill: 'field', stroke: 'text2', sw: 1.5 },
+      { t: 'path', d: 'M-27-8h54v28a6 6 0 0 1-6 6h-42a6 6 0 0 1-6-6z', fill: '#F4C38E', o: 0.55 },
+      ...[[-14, 2, 0], [10, 12, 0], [-4, 16, 1200], [16, 0, 1200], [-18, 14, 2000], [4, 4, 2000], [20, 18, 2600], [-10, 22, 2600]].map(([a, b, t]) => ({ t: 'circle', x: a, y: b, r: 2.4, fill: 'blue', ...(t ? { o: 0, k: { o: showAt(t, 300) } } : {}) }))] },
+    cap(78, 134, 'воды нет, микробы «спят»'), cap(222, 134, 'вода есть, микробы растут'),
+    pill(222, 156, 150, 'норма в 10 раз строже', 3300)] },
+  // MOS и Мак-Конки: у каждого бульона свой фильтр
+  sSelect: { w: 300, h: 168, dur: 6800, still: 4800, els: [
+    ttl(80, 18, 'Мак-Конки'), ttl(220, 18, 'MOS'),
+    ...[[80, 1000, true], [220, 2400, false]].map(([x, t, hot]) => bigTube(x, 74, 'soft', MIX.map(([k, a, b]) => {
+      const keep = k === 'e' || (!hot && k === 'o');
+      const el = k === 'c' ? coccus(a, b, '#E39A4F') : rod(a, b, (a * 7) % 50 - 20, k === 'e' ? 'blue' : 'text3');
+      return keep ? el : { ...el, k: { o: [[0, 1], [t, 1], [t + 500, 0]] } };
+    }))),
+    pill(80, 136, 60, '43 °C', 600, 'red', 'var(--red-soft)'), pill(220, 136, 66, '32,5 °C', 1900),
+    { t: 'g', o: 0, k: { o: showAt(1500) }, c: [cap(80, 160, 'жару терпит E. coli')] },
+    { t: 'g', o: 0, k: { o: showAt(2900) }, c: [cap(220, 160, 'желчь отсеивает грам+')] }] },
+  // E. coli на Эндо: малиновые колонии с металлическим блеском
+  sEndo: { w: 300, h: 168, dur: 6400, still: 4400, els: [
+    dishT(80, 84, 60, ENDO_A, { kids: [
+      ...[[-24, -18], [14, -28], [26, 8], [-6, 22]].map(([a, b], i) => colony(a, b, 6, ECOLI_C, 500 + i * 160)),
+      ...[[-26, 14], [4, -4], [30, -12]].map(([a, b], i) => colony(a, b, 5, '#FBE7EA', 900 + i * 160, { stroke: '#E0A3AF', sw: 1 })),
+      ...[[-24, -18], [14, -28], [26, 8], [-6, 22]].map(([a, b], i) => ({ t: 'path', d: `M${a - 3} ${b - 2}q3-3 6 0`, stroke: '#F7D27A', sw: 1.6, o: 0, k: { o: [[1800 + i * 90, 0], [2100 + i * 90, 1], [2700 + i * 90, 0.3], [3200 + i * 90, 1], [3800, 0.4], [4300, 1]] } }))] }),
+    { t: 'g', o: 0, k: { o: showAt(2300) }, c: [{ t: 'circle', x: 166, y: 58, r: 7, fill: ECOLI_C }, { t: 'path', d: 'M162 56q4-4 8 0', stroke: '#F7D27A', sw: 1.6 },
+      TX(180, 55, 'E. coli', { fs: 11, fw: 700, it: 1 }), TX(180, 69, 'малиновые, с блеском', { fs: 9.5, fill: 'text2' })] },
+    { t: 'g', o: 0, k: { o: showAt(2800) }, c: [{ t: 'circle', x: 166, y: 104, r: 6, fill: '#FBE7EA', stroke: '#E0A3AF', sw: 1 },
+      TX(180, 101, 'другие', { fs: 11, fw: 700 }), TX(180, 115, 'бледные, без блеска', { fs: 9.5, fill: 'text2' })] }] },
+  // стерилизация убивает, но эндотоксин остаётся
+  sSterile: { w: 300, h: 168, dur: 6600, still: 4600, els: [
+    ttl(56, 22, 'до'), ttl(244, 22, 'после'),
+    vial(56, 76, [rod(-8, -8, 30, 'blue'), rod(8, 2, -20, 'blue'), rod(-6, 14, 10, 'blue'), rod(10, -14, 60, 'blue')]),
+    vial(244, 76, [lps(-8, -4, 20), lps(8, 4, -30), lps(-4, 16, 60), lps(10, -12, 0), lps(0, 6, 150)].map((e, i) => ({ ...e, o: 0, k: { o: showAt(2200 + i * 120) } }))),
+    arrowAt('M96 76h104M194 70l6 6-6 6', 600),
+    { t: 'g', o: 0, k: { o: showAt(900) }, c: [ttl(148, 62, '121 °C', { fill: 'red' }), { t: 'path', d: 'M136 98q4-5 0-10t0-10M148 98q4-5 0-10t0-10M160 98q4-5 0-10t0-10', stroke: 'red', sw: 1.6, k: { o: [[900, 1], [1500, 0.4], [2100, 1]] } }] },
+    { t: 'g', o: 0, k: { o: showAt(2900) }, c: [cap(150, 132, 'живых нет, а эндотоксин остался', { fw: 600, fill: 'text' })] },
+    pill(150, 152, 168, 'его проверяют ЛАЛ-тестом', 3500)] },
+  // синегнойная палочка и стафилококк: откуда берутся
+  sSkin: { w: 300, h: 168, dur: 6400, still: 4600, els: [
+    { t: 'g', o: 0, k: { o: showAt(200) }, c: [R(10, 12, 134, 144, 16, 'surface'),
+      { t: 'path', d: 'M77 34c-10 13-16 21-16 29a16 16 0 0 0 32 0c0-8-6-16-16-29z', fill: 'soft', stroke: 'blue', sw: 1.5 },
+      ...[[70, 62, 30], [82, 58, -20], [76, 72, 70], [86, 70, 10]].map(([a, b, r], i) => rod(a, b, r, TEAL, { o: 0, k: { o: showAt(700 + i * 150) } })),
+      TX(77, 106, 'P. aeruginosa', { fs: 11, fw: 700, anchor: 'middle', it: 1 }), cap(77, 124, 'живёт в воде и трубах'), cap(77, 138, 'терпит антисептики')] },
+    { t: 'g', o: 0, k: { o: showAt(1500) }, c: [R(156, 12, 134, 144, 16, 'surface'),
+      { t: 'circle', x: 223, y: 44, r: 13, fill: 'field', stroke: 'text2', sw: 1.5 }, { t: 'path', d: 'M199 84c0-14 10-22 24-22s24 8 24 22', fill: 'field', stroke: 'text2', sw: 1.5 },
+      coccus(238, 46, '#E3A62B', { o: 0, k: { o: showAt(2000) } }), coccus(206, 74, '#E3A62B', { o: 0, k: { o: showAt(2200) } }),
+      TX(223, 106, 'S. aureus', { fs: 11, fw: 700, anchor: 'middle', it: 1 }), cap(223, 124, 'у трети людей в носу'), cap(223, 138, 'источник: человек')] }] },
+  // 2 часа при 22,5 °C: клетки приходят в себя, но не делятся
+  sRevive: { w: 300, h: 168, dur: 7000, still: 5000, els: [
+    ttl(70, 18, 'Среда №8'), ttl(232, 18, 'MOS с желчью'),
+    bigTube(70, 76, 'soft', [[-6, -4], [6, 6], [-4, 20], [7, 28]].flatMap(([a, b]) => [
+      { t: 'circle', x: a, y: b, r: 3.4, fill: 'text3', k: { o: [[0, 0.7], [1600, 0.7], [2200, 0]] } },
+      { t: 'circle', x: a, y: b, r: 3.4, fill: 'blue', o: 0, k: { o: [[1600, 0], [2200, 1]] } }])),
+    { t: 'g', x: 150, y: 50, c: [{ t: 'circle', r: 14, fill: 'field', stroke: 'text2', sw: 1.5 }, { t: 'g', k: { rot: [[0, 0], [300, 0], [2000, 720, 'io']] }, c: [{ t: 'path', d: 'M0 0V-9', stroke: 'blue', sw: 2 }] }, { t: 'circle', r: 1.8, fill: 'blue' }] },
+    cap(150, 80, '2 ч, 22,5 °C', { fw: 700, fill: 'text' }),
+    TX(70, 140, 'оглушены', { fs: 10, fw: 600, fill: 'text2', anchor: 'middle', k: { text: [[0, 'оглушены'], [2200, 'пришли в себя']] } }),
+    { t: 'g', o: 0, k: { o: showAt(2400) }, c: [cap(70, 155, 'и не размножились')] },
+    arrowAt('M118 100h56M168 94l6 6-6 6', 2900),
+    bigTube(232, 76, 'soft', [[-6, 0], [6, 10], [-4, 22], [7, 30]].map(([a, b], i) => ({ t: 'circle', x: a, y: b, r: 3.4, fill: 'blue', o: 0, k: { o: showAt(3200 + i * 120) } }))),
+    { t: 'g', o: 0, k: { o: showAt(3800) }, c: [cap(232, 140, 'теперь выдержат', { fw: 600, fill: 'blue' })] }] },
+  // CET и MSA: на вторые сутки цвет виден чётко
+  sCetMsa: { w: 300, h: 168, dur: 6800, still: 5000, els: [
+    { t: 'g', x: 150, y: 20, c: [R(-30, -11, 60, 22, 11, 'bg', { stroke: 'line', sw: 1.2 }), TX(0, 4, '1 сут', { fs: 11, fw: 800, anchor: 'middle', k: { text: [[0, '1 сут'], [2600, '2 сут']] } })] },
+    dishT(78, 82, 48, '#EEF1F0', { kids: [{ t: 'circle', r: 44, fill: TEAL, o: 0, k: { o: [[2600, 0], [3300, 0.22]] } },
+      ...[[-14, -10], [12, -4], [-2, 16]].flatMap(([a, b], i) => [{ t: 'circle', x: a, y: b, r: 0, fill: TEAL, o: 0.25, k: { r: [[800, 0], [1400, 7], [2700, 7], [3300, 12]], o: [[800, 0.2], [2700, 0.2], [3300, 0.45]] } }, colony(a, b, 4, '#C9D6D4', 600 + i * 150)])] }),
+    dishT(222, 82, 48, MSA_A, { kids: [{ t: 'circle', r: 44, fill: YEL, o: 0, k: { o: [[2600, 0], [3300, 0.25]] } },
+      ...[[-12, -12], [14, -2], [0, 16]].flatMap(([a, b], i) => [{ t: 'circle', x: a, y: b, r: 0, fill: YEL, o: 0.5, k: { r: [[800, 0], [1400, 6], [2700, 6], [3300, 12]], o: [[800, 0.35], [2700, 0.35], [3300, 0.9]] } }, colony(a, b, 4, '#F3E5B5', 600 + i * 150)])] }),
+    TX(78, 148, 'P. aeruginosa', { fs: 10, fw: 700, anchor: 'middle', it: 1 }), cap(78, 162, 'сине-зелёный пигмент'),
+    TX(222, 148, 'S. aureus', { fs: 10, fw: 700, anchor: 'middle', it: 1 }), cap(222, 162, 'жёлтая зона от маннита')] },
+  // один флакон со средой №8 кормит три пересева
+  sCombo: { w: 300, h: 168, dur: 6400, still: 4400, els: [
+    { t: 'g', x: 58, y: 92, s: 1.7, c: [
+      { t: 'path', d: 'M-5-18h10M-4-18v8L-14 8a3 3 0 0 0 3 4h22a3 3 0 0 0 3-4L4-10v-8', fill: 'field', stroke: 'text2', sw: 1 },
+      { t: 'path', d: 'M-9-1h18l4.6 9a1.6 1.6 0 0 1-1.4 2.4h-24.4a1.6 1.6 0 0 1-1.4-2.4z', fill: '#E8D9B8' }] },
+    ttl(58, 138, 'Среда №8'), cap(58, 152, '100 мл + 10 мл образца'),
+    pill(58, 40, 90, '1 сут, 32,5 °C', 300),
+    ...[[36, 'Мак-Конки / MOS', 'E. coli', 'tube'], [84, 'CET', 'P. aeruginosa', 'dish'], [132, 'MSA', 'S. aureus', 'dish']].map(([y, m, org, kind], i) => ({ t: 'g', o: 0, k: { o: showAt(900 + i * 500) }, c: [
+      { t: 'path', d: `M88 ${92 - (1 - i) * 6}C120 ${92 - (1 - i) * 6} 130 ${y} 166 ${y}M160 ${y - 5}l6 5-6 5`, stroke: 'text3', sw: 1.5 },
+      kind === 'tube' ? { t: 'g', x: 184, y, c: [R(-5, -13, 10, 24, 5, 'soft', { stroke: 'text2', sw: 1.3 })] } : dishT(184, y, 13, i === 1 ? '#EEF1F0' : MSA_A),
+      TX(204, y - 2, m, { fs: 11, fw: 700 }), TX(204, y + 12, org, { fs: 9.5, fill: 'text2', it: 1 })] }))] },
+  // НВЧ: рост в трёх разведениях → строка таблицы
+  sMPN: { w: 300, h: 168, dur: 7200, still: 5200, els: [
+    ...[['0,1 г', 44, true], ['0,01 г', 96, false], ['0,001 г', 148, false]].flatMap(([l, x, g], i) => [
+      { t: 'g', x, y: 60, c: [R(-7, -14, 14, 34, 7, 'soft'), ...(g ? [R(-7, -14, 14, 34, 7, 'blue', { o: 0, k: { o: [[900, 0], [1500, 0.45]] } }), ...[[-2, 0], [3, 8], [-3, 14]].map(([a, b]) => ({ t: 'circle', x: a, y: b, r: 1.4, fill: 'white', o: 0, k: { o: showAt(1300) } }))] : []),
+        { t: 'path', d: 'M-9-30v46a9 9 0 0 0 18 0v-46', stroke: 'text2', sw: 1.5 }, R(-11, -34, 22, 5, 2.5, 'line')] },
+      TX(x, 102, l, { fs: 10, fw: 700, anchor: 'middle' }), verdict(x, 124, g, 1700 + i * 150)]),
+    { t: 'g', o: 0, k: { o: showAt(2400) }, c: [R(186, 22, 104, 124, 12, 'surface'), TX(238, 40, 'таблица ГФ', { fs: 9.5, fw: 700, fill: 'text2', anchor: 'middle' }),
+      R(192, 90, 92, 20, 8, 'soft', { o: 0, k: { o: showAt(3000) } }),
+      ...[['+ + +', '> 10³'], ['+ + −', '< 10³'], ['+ − −', '< 10²'], ['− − −', '< 10']].flatMap(([a, b], i) => [TX(200, 64 + i * 22 - 4 + 0, a, { fs: 10.5, fw: 600 }), TX(278, 60 + i * 22, b, { fs: 10.5, fw: 700, anchor: 'end', fill: i === 2 ? 'blue' : 'text' })])] },
+    pill(238, 156, 104, 'норма выполнена', 3500)] },
+  // сальмонелла: в 1 г её легко пропустить, вся навеска надёжнее
+  sSalm: { w: 300, h: 168, dur: 7000, still: 5000, els: [
+    { t: 'g', x: 66, y: 86, c: [R(-34, -40, 68, 80, 14, 'field', { stroke: 'text2', sw: 1.5 }), R(-28, -50, 56, 11, 4, 'line'), R(-28, -14, 56, 48, 9, '#E8D9B8'),
+      { t: 'circle', x: -12, y: 20, r: 3, fill: SALM_C }, { t: 'circle', x: 14, y: 4, r: 3, fill: SALM_C }] },
+    ttl(66, 146, 'навеска'),
+    { t: 'g', o: 0, k: { o: showAt(700) }, c: [arrowAt('M106 64C130 50 148 46 170 46M164 41l6 5-6 5', 700), dishT(196, 46, 18, '#F5EEDC'), TX(222, 44, 'берём 1 г', { fs: 10, fw: 700 }), TX(222, 57, 'пропустили', { fs: 9.5, fill: 'text2' })] },
+    verdict(212, 30, false, 1700),
+    { t: 'g', o: 0, k: { o: showAt(2500) }, c: [arrowAt('M106 108C130 122 148 124 170 124M164 119l6 5-6 5', 2500), { t: 'g', x: 196, y: 124, c: [R(-16, -18, 32, 36, 9, 'soft', { stroke: 'text2', sw: 1.3 }), { t: 'circle', x: -5, y: 6, r: 3, fill: SALM_C }, { t: 'circle', x: 6, y: -4, r: 3, fill: SALM_C }] },
+      TX(222, 122, 'вся навеска', { fs: 10, fw: 700 }), TX(222, 135, 'нашли', { fs: 9.5, fill: 'text2' })] },
+    verdict(212, 106, true, 3400)] },
+  // XLD: чёрный центр выдаёт сальмонеллу
+  sXld: { w: 300, h: 168, dur: 6400, still: 4600, els: [
+    dishT(78, 80, 58, XLD_A, { kids: [
+      ...[[-22, -20], [18, -26], [-4, 24]].flatMap(([a, b], i) => [colony(a, b, 6.5, SALM_C, 500 + i * 180), colony(a, b, 2.8, '#1E1E24', 1300 + i * 180)]),
+      ...[[26, 10], [-28, 8], [6, -2]].flatMap(([a, b], i) => [{ t: 'circle', x: a, y: b, r: 0, fill: YEL, o: 0.55, k: { r: [[900 + i * 150, 0], [1700 + i * 150, 11, 'out']] } }, colony(a, b, 5, '#F6D46A', 800 + i * 150)])] }),
+    { t: 'g', o: 0, k: { o: showAt(2200) }, c: [{ t: 'circle', x: 162, y: 44, r: 7, fill: SALM_C }, { t: 'circle', x: 162, y: 44, r: 3, fill: '#1E1E24' },
+      TX(176, 41, 'Salmonella', { fs: 11, fw: 700, it: 1 }), TX(176, 55, 'красные, чёрный центр', { fs: 9.5, fill: 'text2' })] },
+    { t: 'g', o: 0, k: { o: showAt(2700) }, c: [{ t: 'circle', x: 162, y: 86, r: 6, fill: '#F6D46A' },
+      TX(176, 83, 'другие', { fs: 11, fw: 700 }), TX(176, 97, 'жёлтые, на идентификацию', { fs: 9.5, fill: 'text2' })] },
+    pill(222, 134, 150, 'типичный рост: отклонение', 3300, 'red', 'var(--red-soft)')] },
+});
+const SPORE_C = '#8A6A3A';
+Object.assign(SCENES, {
+  // откуда микробы во вспомогательных веществах: картофель, зерно, тальк
+  sSource: { w: 300, h: 168, dur: 6400, still: 4600, els: [
+    ...[[50, 'крахмал', 'картофель, кукуруза'], [150, 'мука', 'зерно'], [250, 'тальк', 'из земли']].map(([x, a, b], i) => ({ t: 'g', o: 0, k: { o: showAt(200 + i * 500) }, c: [
+      i === 0 ? { t: 'path', d: `M${x - 22} 54c0-14 14-22 26-18 12 3 20 14 16 26-3 11-16 16-28 12-9-3-14-10-14-20z`, fill: '#D9B47A', stroke: '#A9844A', sw: 1.4 }
+        : i === 1 ? { t: 'g', x, y: 56, c: [{ t: 'path', d: 'M0 24V-26', stroke: '#B8955A', sw: 1.6 }, ...[-18, -8, 2, 12].flatMap((yy) => [{ t: 'path', d: ell(-6, yy, 5, 3), fill: '#E2C27E', stroke: '#B8955A', sw: 1 }, { t: 'path', d: ell(6, yy - 3, 5, 3), fill: '#E2C27E', stroke: '#B8955A', sw: 1 }])] }
+        : { t: 'path', d: `M${x - 26} 74l8-26 16-10 20 4 10 18-6 14z`, fill: '#C9CED6', stroke: '#9AA3AF', sw: 1.4 },
+      ...[[-10, -6], [8, 4], [-2, 12], [12, -10]].map(([a2, b2], j) => ({ t: 'path', d: ell(x + a2, 56 + b2, 2.6, 1.7), fill: SPORE_C, o: 0, k: { o: showAt(700 + i * 500 + j * 120) } })),
+      ttl(x, 106, a), cap(x, 120, b)] })),
+    pill(150, 150, 220, 'споры переживают сушку и помол', 2600)] },
+  // КОЕ: колонии × разведение, сравнение с нормой
+  sCount: { w: 300, h: 168, dur: 7000, still: 5000, els: [
+    dishT(70, 80, 54, AGAR, { kids: [[-26, -14], [-12, -30], [6, -24], [22, -12], [30, 6], [16, 20], [-2, 30], [-20, 22], [-32, 4], [-8, -6], [10, 4], [-16, 8], [24, -28], [2, 14]].map(([a, b], i) => colony(a, b, 3.6, '#D9A85C', 300 + i * 110)) }),
+    TX(170, 64, '0', { fs: 26, fw: 800, anchor: 'middle', k: { n: [[300, 0], [300 + 13 * 110 + 300, 14]] } }), cap(170, 82, 'колоний'),
+    { t: 'g', o: 0, k: { o: showAt(2100) }, c: [TX(214, 64, '× 10', { fs: 16, fw: 700, fill: 'text2', anchor: 'middle' }), cap(214, 82, '1:10')] },
+    { t: 'g', o: 0, k: { o: showAt(2700) }, c: [TX(258, 64, '140', { fs: 22, fw: 800, fill: 'blue', anchor: 'middle' }), cap(258, 82, 'КОЕ/г')] },
+    pill(214, 120, 150, 'норма ≤ 10² КОЕ/г', 3300),
+    pill(214, 150, 150, '140 > 100: не соответствует', 3900, 'red', 'var(--red-soft)')] },
+  // панкреатин: фермент — белок, при нагреве разворачивается
+  sEnzyme: { w: 300, h: 168, dur: 7000, still: 5000, els: [
+    { t: 'g', x: 46, y: 80, c: [R(-6, -46, 12, 70, 6, 'field', { stroke: 'text2', sw: 1.5 }), { t: 'circle', y: 32, r: 11, fill: 'red' },
+      R(-3, -10, 6, 34, 3, 'red', { k: { y: [[0, -10], [800, -10], [2400, -38, 'io']], h: [[0, 34], [800, 34], [2400, 62, 'io']] } })] },
+    TX(46, 150, '20 °C', { fs: 12, fw: 700, anchor: 'middle', k: { text: [[0, '20 °C'], [1500, '45 °C'], [2300, '65 °C']] } }),
+    { t: 'g', x: 180, y: 76, c: [
+      { t: 'g', k: { o: [[0, 1], [2200, 1], [2700, 0]] }, c: [{ t: 'path', d: 'M-34 6c-4-22 12-38 32-36 22 2 36 18 30 36-4 12-14 8-18 0-4-8-14-8-16 2-2 12-24 16-28-2z', fill: 'soft', stroke: 'blue', sw: 1.8 },
+        { t: 'circle', x: 4, y: 12, r: 6, fill: SPARK, o: 0.9 }] },
+      { t: 'path', d: 'M-40 0c8-14 14 12 22-2s10 14 18 0 12 14 20 0 10 12 18-2', stroke: 'blue', sw: 2, o: 0, k: { o: [[2300, 0], [2800, 1]] } }] },
+    { t: 'g', k: { o: [[0, 1], [2200, 1], [2600, 0]] }, c: [cap(180, 134, 'фермент работает', { fw: 600, fill: 'blue' })] },
+    { t: 'g', o: 0, k: { o: showAt(2800) }, c: [cap(180, 134, 'белок «сварился»', { fw: 700, fill: 'red' })] },
+    { t: 'g', o: 0, k: { o: showAt(3400) }, c: [cap(180, 152, 'вместе с микробами погиб бы препарат')] }] },
+  // желчеустойчивые: желчь отскакивает от энтеробактерий
+  sBile: { w: 300, h: 168, dur: 6600, still: 4800, els: [
+    bigTube(150, 80, 'soft', [
+      ...[[-8, -4, 20], [6, 8, -30], [-4, 22, 60], [8, 30, 10]].map(([a, b, r]) => rod(a, b, r, 'blue')),
+      ...[[7, -8], [-9, 12], [2, 36]].map(([a, b], i) => coccus(a, b, '#E39A4F', { k: { o: [[0, 1], [1600 + i * 150, 1], [2200 + i * 150, 0]] } }))]),
+    ...[[-28, 0], [-10, 300], [12, 600], [30, 900]].map(([dx, t]) => ({ t: 'path', d: 'M0-6c-3 4-4 6-4 8a4 4 0 0 0 8 0c0-2-1-4-4-8z', fill: '#C9B24A', o: 0, k: { x: [[0, 150 + dx], [5000, 150 + dx]], y: [[t + 400, 6], [t + 1200, 50, 'in']], o: [[t + 400, 0], [t + 500, 0.9], [t + 1200, 0.9], [t + 1400, 0]] } })),
+    ttl(150, 12, 'желчь'), { t: 'g', o: 0, k: { o: showAt(2400) }, c: [TX(214, 70, 'энтеробактерии', { fs: 10, fw: 700, fill: 'blue' }), TX(214, 84, 'живут', { fs: 9.5, fill: 'text2' }),
+      TX(86, 70, 'остальные', { fs: 10, fw: 700, fill: 'red', anchor: 'end' }), TX(86, 84, 'гибнут', { fs: 9.5, fill: 'text2', anchor: 'end' })] }] },
+  // шкала: где 3.2 среди категорий по ОЧМ
+  sScale: { w: 300, h: 168, dur: 6400, still: 4600, els: [
+    ...[['1.2Б', 2], ['3А, 2.2', 3], ['3.2', 4], ['4Б', 5], ['4А', 7]].map(([l, p], i) => {
+      const x = 34 + i * 58, hh = p * 13, on = l === '3.2';
+      return { t: 'g', c: [R(x - 16, 136, 32, 0, 6, on ? 'blue' : 'line', { k: { y: [[200 + i * 250, 136], [800 + i * 250, 136 - hh, 'out']], h: [[200 + i * 250, 0], [800 + i * 250, hh, 'out']] } }),
+        { t: 'g', o: 0, k: { o: showAt(800 + i * 250) }, c: [TX(x, 128 - hh, `10${'⁰¹²³⁴⁵⁶⁷'[p]}`, { fs: 12, fw: 800, anchor: 'middle', fill: on ? 'blue' : 'text' })] },
+        TX(x, 154, l, { fs: 10, fw: on ? 800 : 600, anchor: 'middle', fill: on ? 'blue' : 'text2' })] };
+    }),
+    { t: 'g', o: 0, k: { o: showAt(2600) }, c: [cap(150, 14, 'ОЧМ, КОЕ/г: чем «природнее» сырьё, тем больше допускают')] }] },
+  // споры: рост → спора → переживает сушку → снова рост на агаре
+  sSpore: { w: 300, h: 168, dur: 7600, still: 5600, els: [
+    { t: 'g', x: 52, y: 70, c: [R(-16, -7, 32, 14, 7, 'blue', { k: { o: [[0, 1], [1000, 1], [1400, 0.25]] } }), { t: 'path', d: ell(6, 0, 6, 4.4), fill: SPORE_C, stroke: '#5E4520', sw: 1.4, o: 0, k: { o: showAt(800) } }] },
+    TX(52, 104, 'бацилла', { fs: 10, fw: 700, anchor: 'middle', k: { text: [[0, 'бацилла'], [1000, 'спора']] } }),
+    arrowAt('M84 70h40M118 64l6 6-6 6', 1500),
+    { t: 'g', o: 0, k: { o: showAt(1700) }, c: [{ t: 'path', d: 'M138 50q4-6 0-12t0-12M150 50q4-6 0-12t0-12', stroke: 'red', sw: 1.6 }, TX(144, 62, 'сушка, нагрев', { fs: 9, fill: 'text2', anchor: 'middle' })] },
+    { t: 'g', x: 150, y: 86, o: 0, k: { o: showAt(1900) }, c: [{ t: 'path', d: ell(0, 0, 6, 4.4), fill: SPORE_C, stroke: '#5E4520', sw: 1.4 }] },
+    arrowAt('M172 70h36M202 64l6 6-6 6', 3000),
+    dishT(248, 76, 30, AGAR, { o: 0, k: { o: showAt(3200) }, kids: [colony(0, 0, 9, '#E9D5A8', 3700, { stroke: '#C9A66B', sw: 1 })] }),
+    { t: 'g', o: 0, k: { o: showAt(4100) }, c: [cap(244, 124, 'проснулась на TSA', { fw: 600, fill: 'blue' })] },
+    { t: 'g', o: 0, k: { o: showAt(2200) }, c: [cap(150, 124, 'спит годами')] }] },
+  // TSI: красный скос, жёлтый столбик, чёрный осадок
+  sTsi: { w: 300, h: 168, dur: 6600, still: 4800, els: [
+    { t: 'g', x: 96, y: 84, c: [
+      { t: 'path', d: 'M-16-14L16-38V44a16 16 0 0 1-32 0Z', fill: '#E8604C' },
+      { t: 'path', d: 'M-16 4H16V44a16 16 0 0 1-32 0Z', fill: YEL, o: 0, k: { o: [[900, 0], [1800, 1]] } },
+      { t: 'path', d: 'M-8 30c4-6 12-4 14 2 2 6-4 12-10 10-5-1-6-6-4-12z', fill: '#1E1E24', o: 0, k: { o: [[1900, 0], [2600, 0.9]] } },
+      { t: 'path', d: 'M-19-62V44a19 19 0 0 0 38 0V-62', stroke: 'text2', sw: 1.6 }, R(-22, -66, 44, 6, 3, 'line')] },
+    { t: 'g', o: 0, k: { o: showAt(600) }, c: [{ t: 'path', d: 'M120 46h20', stroke: 'text3', sw: 1.3 }, TX(146, 43, 'скос красный', { fs: 10.5, fw: 700 }), TX(146, 56, 'щелочь сверху', { fs: 9.5, fill: 'text2' })] },
+    { t: 'g', o: 0, k: { o: showAt(1500) }, c: [{ t: 'path', d: 'M120 100h20', stroke: 'text3', sw: 1.3 }, TX(146, 97, 'столбик жёлтый', { fs: 10.5, fw: 700 }), TX(146, 110, 'сбраживает глюкозу', { fs: 9.5, fill: 'text2' })] },
+    { t: 'g', o: 0, k: { o: showAt(2400) }, c: [{ t: 'path', d: 'M112 114L140 128', stroke: 'text3', sw: 1.3 }, TX(146, 131, 'чёрный осадок', { fs: 10.5, fw: 700 }), TX(146, 144, 'сероводород', { fs: 9.5, fill: 'text2' })] },
+    pill(200, 158, 160, 'так выглядит Salmonella', 3100)] },
+});
+// справочник: у каждой категории свои вопросы, без повторов (карточка справа уже отвечает «кто входит» и «почему такие нормы»)
+const SG = {
+  pour: ['Почему заливаем при 42,5 °C', 'sPour', '<p>Агар застывает около 40 °C, а клетки начинают гибнуть уже после 45 °C. Окно узкое, поэтому на чашку с 1 мл разведения льют <b>15–25 мл</b> среды при <b>42,5 ± 2,5 °C</b>.</p><p>Горячее, и часть микробов погибнет: счёт занизится. Холоднее, и агар схватится комками, колонии сольются. Как с желе: чуть остыло, и уже не разольёшь.</p>'],
+  water: ['Почему жидкие формы строже', 'sWater', '<p>В таблетке почти нет свободной воды, и случайные микробы в ней просто «спят». В сиропе или суспензии вода есть, и за время хранения они успевают размножиться.</p><p>Поэтому жидкостям для приёма внутрь дают <b>в 10 раз</b> больше запаса прочности.</p>'],
+  select: ['Мак-Конки или MOS: в чём разница', 'sSelect', '<p>Оба бульона «отсеивают лишних», но по-разному. <b>Мак-Конки</b> ставят на <b>43 °C</b>: такую жару выдерживает E. coli, а большинство её соседей нет. Температура тут и есть фильтр.</p><p>В <b>MOS</b> есть желчь и бриллиантовый зелёный: грамположительные там не растут, а кишечные растут. Поэтому хватает обычных <b>32,5 °C</b>.</p>'],
+  endo: ['Как узнать E. coli на Эндо', 'sEndo', '<p>E. coli сбраживает лактозу, и на Эндо её колонии становятся <b>малиновыми с металлическим блеском</b>. Кто лактозу не трогает, остаётся бледным.</p><p>Блеск даёт фуксин: он выпадает на колонии кристаллами. Похожие колонии отдают на идентификацию.</p>'],
+  source: ['Тальк, крахмал, мука: откуда микробы', 'sSource', '<p>Крахмал делают из картофеля и кукурузы, муку из зерна, тальк добывают из земли. Вместе с сырьём приходят почвенные бактерии, плесени и <b>споры</b>.</p><p>Споры переживают сушку и помол, поэтому даже белый «стерильный на вид» порошок может дать рост на TSA и SDA.</p>'],
+  salm: ['Почему у сальмонеллы своя навеска', 'sSalm', '<p>Сальмонеллы, если они есть, обычно единичны. Из разведения 1:10 на посев уходит всего <b>1 г</b>, и редкую клетку легко пропустить.</p><p>Поэтому навеску целиком заливают средой №8 и проверяют всю массу. Чем больше навеска, тем меньше шанс промахнуться: для 4.2 и 3.2 ГФ просит <b>25 г</b>.</p>'],
+  xld: ['Что значит рост на XLD', 'sXld', '<p>Сальмонеллы на XLD дают <b>красные колонии с чёрным центром</b>: они выделяют сероводород. Кишечная палочка и многие другие окрашивают среду в жёлтый.</p><p>По ГФ XLD держат <b>48 ч</b>. Любой рост отдают на идентификацию, типичный рост сразу повод открыть отклонение.</p>'],
+  combo: ['Один флакон на три микроба', 'sCombo', '<p>Сеять дважды не нужно. Один флакон среды №8 (<b>100 мл + 10 мл</b> образца) сутки растит всех, а потом из него пересевают на три среды: Мак-Конки или MOS для E. coli, CET для синегнойной палочки и MSA для стафилококка.</p><p>Так экономят образец и время, а каждая среда «вылавливает» своего.</p>'],
+  skin: ['Чем опасны P. aeruginosa и S. aureus', 'sSkin', '<p><b>P. aeruginosa</b> живёт в воде, раковинах и шлангах, образует плёнки и переносит многие антисептики. Особенно опасна для глаз, ожогов и ран.</p><p><b>S. aureus</b> носят в носу около трети людей, так что главный источник тут человек. Он вызывает гнойные воспаления и выделяет токсины. Маска, перчатки и чистые руки работают лучше всего.</p>'],
+  count: ['Как считают результат на чашке', 'sCount', '<p>Колонии умножают на разведение: 14 колоний при 1:10 дают <b>140 КОЕ/г</b>.</p><p>Для 1.2Б + 2.2 предел ОЧМ всего 10², то есть 100 КОЕ/г. Значит, уже <b>11 колоний</b> на чашке с 1:10 дают несоответствие. Здесь особенно важны асептика и чистота сред.</p>'],
+  sterile: ['Что остаётся после стерилизации', 'sSterile', '<p>Автоклав убивает бактерии, но их обломки остаются. От грамотрицательных это <b>эндотоксин</b>, и он вызывает лихорадку даже в стерильном препарате.</p><p>Чем грязнее сырьё, тем больше эндотоксина и тем выше шанс, что кто-то переживёт стерилизацию. Сам эндотоксин потом проверяют ЛАЛ-тестом (вкладка «Разведения»).</p>'],
+  revive: ['Зачем 2 часа при 22,5 °C', 'sRevive', '<p>После сушки, нагрева и консервантов бактерии в сырье «оглушены». Если сразу отправить их в MOS с желчью, они погибнут, и мы их пропустим.</p><p>Два часа в мягкой среде №8 при комнатной температуре дают им прийти в себя. Дольше <b>5 часов</b> держать нельзя: начнут делиться, и результат исказится.</p>'],
+  cetmsa: ['Почему CET и MSA держат 2 суток', 'sCetMsa', '<p>На этих средах важен не только рост, но и цвет. P. aeruginosa на CET выделяет <b>сине-зелёный пигмент</b>, а S. aureus на MSA сбраживает маннит, и вокруг колоний появляется <b>жёлтая зона</b>.</p><p>За первые сутки цвет едва заметен, на вторые виден чётко. Сами среды строгие: цетримид и 7,5 % соли пропускают почти только «своих».</p>'],
+  enzyme: ['Почему панкреатин нельзя прогреть', 'sEnzyme', '<p>Панкреатин делают из поджелудочной железы животных, и вся его сила в ферментах. Ферменты это белки: при нагреве они «свариваются», как яичный белок на сковороде.</p><p>Прогреть сырьё, чтобы убить микробы, значит убить и препарат. Поэтому чистоту здесь держат гигиеной на каждом этапе, от сырья до упаковки.</p>'],
+  mpn: ['Что такое НВЧ', 'sMPN', '<p>НВЧ значит «наиболее вероятное число». Колонии не считают, а смотрят, в каких пробирках есть рост: в <b>0,1 г</b>, <b>0,01 г</b> и <b>0,001 г</b> образца.</p><p>Комбинацию сверяют с таблицей ГФ. Рост только в 0,1 г значит меньше 10² в 1 г: норма выполнена. Вырос ещё и 0,01 г, значит энтеробактерий больше 10².</p>'],
+  bile: ['Что значит «желчеустойчивые»', 'sBile', '<p>В ГФ энтеробактерии названы <b>желчеустойчивыми</b>: они живут в кишечнике и желчи не боятся. На этом построен посев: в MOS есть желчь, и почти все остальные бактерии в нём не растут.</p><p>Их число показывает, насколько чисто сырьё обрабатывали и хранили: мало энтеробактерий значит хорошая гигиена производства.</p>'],
+  scale: ['Где 3.2 среди других категорий', 'sScale', '<p>Чем меньше сырьё обработано, тем больше микробов допускают. Субстанции для стерильных форм: <b>10²</b>, синтетика и таблетки: <b>10³</b>, природные субстанции: <b>10⁴</b>. Лекарственное растительное сырьё (категория 4) ещё мягче: до <b>10⁵–10⁷</b>.</p><p>3.2 стоит посередине: это уже экстракты и порошки, но происхождение у них всё ещё «полевое».</p>'],
+  spore: ['Споры: почему сушка не спасает', 'sSpore', '<p>Некоторые бактерии, например бациллы, в трудный момент превращаются в <b>спору</b>: прячут ДНК в прочную оболочку и «засыпают». Так они годами переживают сушку, нагрев и спирт.</p><p>На питательной среде спора просыпается и даёт обычную колонию. Поэтому сухой экстракт может «вырасти» на TSA, хотя выглядит безжизненным.</p>'],
+  tsi: ['Что показывает TSI', 'sTsi', '<p>TSI это агар в пробирке со скосом и тремя сахарами. Сальмонелла даёт узнаваемую картину: <b>красный скос</b>, <b>жёлтый столбик</b> и <b>чёрный осадок</b> от сероводорода.</p><p>По ГФ так подтверждают подозрительные колонии с XLD. В лаборатории их чаще сразу отдают на идентификацию, но картину TSI полезно знать, чтобы читать отчёты.</p>'],
+};
+const SEED_GUIDE = { '3a': ['water', 'select', 'endo', 'pour'], '42': ['source', 'salm', 'xld'], '12b22': ['combo', 'count', 'skin'],
+  '12b': ['sterile', 'revive', 'cetmsa'], '3b': ['enzyme', 'mpn', 'bile'], '32': ['scale', 'spore', 'tsi'] };
+function seedGuideHTML(cat) {
+  return `<div class="guide-head"><h2>Справочник</h2><span>коротко о категории ${cat.label}</span></div><div class="acc gacc sacc">${SEED_GUIDE[cat.id].map((k, i) => { const [t, sc, html] = SG[k]; return `<details name="sguide"${i ? '' : ' open'}><summary><span class="acc-n">${i + 1}</span><span class="acc-t">${t}</span>${ICO('chev').replace('class="ico"', 'class="ico chev"')}</summary>
+    <div class="acc-body"><div class="anim" data-scene="${sc}"></div><div class="g-text">${html}</div></div></details>`; }).join('')}</div>`;
+}
+
+function renderSeed() {
+  const cat = SEED_CATS.find((c) => c.id === state.seedCat) || SEED_CATS[0];
+  $('seedCats').innerHTML = SEED_CATS.map((c) => `<button type="button" class="chip${c.id === cat.id ? ' on' : ''}" data-seed="${c.id}" aria-pressed="${c.id === cat.id}">${c.label}</button>`).join('');
+  const norms = cat.lanes.map(([k, nrm]) => `<tr><th>${SEED_LANES[k].org}</th><td>${nrm}${k === 'tamc' || k === 'tymc' ? ' КОЕ/г' : ''}</td></tr>`).join('');
+  $('seedAbout').innerHTML = `<h2 class="seed-h">${cat.title}</h2>
+    <div class="g-text"><p>${cat.who}</p><p>${cat.why}</p></div>
+    <table class="seed-norms"><caption>Нормы по ГФ</caption><tbody>${norms}</tbody></table>
+    ${cat.note ? `<p class="seed-note">${cat.note}</p>` : ''}`;
+  $('seedFlow').innerHTML = seedFlowHTML(cat);
+  $('seedLanes').querySelectorAll('.anim').forEach((a) => { stopScene(a); players.delete(a); });
+  $('seedLanes').innerHTML = seedGuideHTML(cat);
+  const accs = [...$('seedLanes').querySelectorAll('details')];
+  accs.forEach((d) => d.addEventListener('toggle', () => {
+    if (d.open) { accs.forEach((o) => { if (o !== d) o.open = false; }); const pl = players.get(d.querySelector('.anim')); if (pl) pl.restart(); }
+    syncPanelAnims();
+  }));
+  syncPanelAnims();
+}
+
+
+/* =====================================================================
    Справка
    ===================================================================== */
 function renderRules() {
@@ -2622,7 +3323,7 @@ function renderRules() {
   const B = BIO.bb, P = BIO.inProd, C = BIO.control;
   $('rulesList').innerHTML = [
     `<b>Проба:</b> FBR ${RULES.fbrBaseMl} мл, +${RULES.fbrStepMl} мл за 1:100 и 1:1000. TSA и SDA по ${RULES.tsaMl} мл.`,
-    `<b>Инструмент:</b> для таблетки мельничка, для порошка ложка, для PPM и PM ножницы.`,
+    `<b>Инструмент:</b> для таблетки мельничка, для порошка ложка, для упаковки (PPM и PM) ножницы.`,
     `<b>Бионагрузка у пробы:</b> ${P.tsa} TSA + ${P.sda} SDA, ${P.filters} фильтра, ${P.frits} фриты, ${P.funnels} воронки.`,
     `<b>BB:</b> ${B.tsa} TSA + ${B.sda} SDA, ${B.filters} фильтра, ${B.frits} фриты, ${B.funnels} воронки.`,
     `<b>1.2Б и 4.2</b> (и BB, и бионагрузка у пробы): фильтр в TSA, фильтр в SDA и по фильтру в 2 банки ${BIO.jarMl} мл со ${BIO.jarMediaMl} мл среды №8 (TSB) после промывки. Итого 4 фильтра, среда №8 добавляется к TSB.`,
@@ -2645,33 +3346,62 @@ function applyTheme() {
   $('themeBtn').setAttribute('aria-label', t); $('themeBtn').title = t;
 }
 // анимации справочника и «почему так» играют, только пока видны
-function syncDilAnims() {
-  document.querySelectorAll('#panel-dil .anim').forEach((a) => { const d = a.closest('details'); (a.offsetParent !== null && (!d || d.open) ? playScene : stopScene)(a); });
+function syncPanelAnims() {
+  document.querySelectorAll('#panel-dil .anim, #panel-seed .anim').forEach((a) => { const d = a.closest('details'); (a.offsetParent !== null && (!d || d.open) ? playScene : stopScene)(a); });
 }
 function setTab(tab, focus) {
   state.tab = tab;
-  [['mbch', 'tab-mbch', 'panel-mbch'], ['dil', 'tab-dil', 'panel-dil']].forEach(([k, t, p]) => {
+  [['mbch', 'tab-mbch', 'panel-mbch'], ['seed', 'tab-seed', 'panel-seed'], ['dil', 'tab-dil', 'panel-dil']].forEach(([k, t, p]) => {
     const on = k === tab;
     $(t).setAttribute('aria-selected', String(on)); $(t).tabIndex = on ? 0 : -1; $(p).hidden = !on;
   });
-  if (focus) $(tab === 'mbch' ? 'tab-mbch' : 'tab-dil').focus();
+  if (focus) $('tab-' + tab).focus();
   hideToast();
   if (tab === 'dil') renderBeta();
-  syncDilAnims();
+  if (tab === 'seed') renderSeed();
+  syncPanelAnims();
   updateDock(); toTopCheck(); save();
 }
 
 /* =====================================================================
    Котик-лаборант: окно из кнопки рядом с подсказками
    ===================================================================== */
-const CAT = { player: null, phase: 'off', timer: 0 };
-function catPlay(scene, onEnd) {
+const CAT = { player: null, phase: 'off', timer: 0, asked: 0 };
+const CAT_HELLO_END = 3060;      // конец «О! Привет!» в сцене catShow; дальше — опыт, взрыв и вихрь
+const CAT_Q = [['hi', 'Привет!'], ['deals', 'Как дела?'], ['news', 'Что нового?'], ['mood', 'Как настроение?'], ['energy', 'Откуда у тебя столько энергии, Борис?']];
+const CAT_SAY = { hi: 'Привет-привет! Я Борис, лаборант. Мур на связи!', deals: 'Отлично! Посевы растут, колбы целы… пока что.', news: 'Вывел новую среду. Пахнет как TSB, но мурчит.', mood: 'Мурчательное! 10 из 10 по шкале мурчания.', energy: 'Тоже хочешь энергию кота Бориса?' };
+function catPlay(scene, onEnd, opts = {}) {
   const host = $('catStage');
+  clearTimeout(CAT.timer);
   if (CAT.player) CAT.player.stop();
   host.replaceChildren();
-  CAT.player = makePlayer(host, scene, { onEnd });
+  CAT.player = makePlayer(host, scene, { onEnd, ...opts });
   CAT.player.restart();
-  if (REDUCED.matches && onEnd) CAT.timer = setTimeout(onEnd, 4000);   // без движения — кадр «О! Привет!» и закрываем
+  if (REDUCED.matches && onEnd) CAT.timer = setTimeout(onEnd, opts.reducedMs || 2600);   // без движения: стоп-кадр и дальше
+}
+const catIdle = () => { CAT.phase = 'idle'; catPlay(SCENES.catIdle); catQs(true); };
+function catQs(on) {
+  const box = $('catQs');
+  if (!box.children.length) box.innerHTML = CAT_Q.map(([k, q]) => `<button class="cat-q" type="button" data-q="${k}">${q}</button>`).join('');
+  on = on && CAT.asked < 2;
+  box.classList.toggle('off', !on);
+  box.querySelectorAll('button').forEach((b) => { b.disabled = !on; });
+}
+function catAsk(k) {
+  if (CAT.phase !== 'idle') return;
+  CAT.phase = 'reply'; CAT.asked++;
+  const q = CAT_Q.find(([key]) => key === k)[1];
+  const you = $('catYou'); you.classList.remove('ghost'); you.textContent = q; you.style.animation = 'none'; void you.offsetWidth; you.style.animation = '';
+  $('catSay').textContent = `Борис: ${CAT_SAY[k]}`;
+  const btn = $('catQs').querySelector(`[data-q="${k}"]`); if (btn) btn.remove();
+  catQs(false);
+  catPlay(SCENES['cat_' + k], () => (CAT.asked >= 2 ? catFinale() : catIdle()), { reducedMs: 3200 });
+}
+// после двух ответов — опыт, взрыв и «Мне, похоже, пора… Хорошего дня-я-я!»
+function catFinale() {
+  CAT.phase = 'finale'; catQs(false); $('catQs').classList.add('gone');
+  $('catSay').textContent = 'Борис: Мне, похоже, пора… Хорошего дня!';
+  catPlay(SCENES.catShow, () => { CAT.timer = setTimeout(closeCat, 250); }, { from: CAT_HELLO_END, still: 7800, reducedMs: 3000 });
 }
 // окно вылетает из кнопки и улетает обратно в неё
 function catFly(back) {
@@ -2688,10 +3418,17 @@ function openCat() {
   const dlg = $('catDlg');
   if (dlg.open) return;
   clearTimeout(CAT.timer);
-  CAT.phase = 'show';
+  CAT.phase = 'hello'; CAT.asked = 0;
+  const you = $('catYou'), qs = $('catQs'), row = $('catYouRow');
+  qs.replaceChildren(); qs.classList.remove('gone'); qs.style.minHeight = ''; row.style.minHeight = '';
+  $('catSay').textContent = 'Борис: О! Привет!';
   dlg.showModal();
+  catQs(false);
+  // место под вопросы и реплику резервируем сразу: окно не прыгает, когда кнопок становится меньше
+  you.className = 'cat-you ghost'; you.textContent = CAT_Q.reduce((a, [, q]) => (q.length > a.length ? q : a), '');
+  row.style.minHeight = `${row.offsetHeight}px`; qs.style.minHeight = `${qs.offsetHeight}px`; you.textContent = '';
   const a = catFly(false); if (a) a.onfinish = () => a.cancel();
-  catPlay(SCENES.catShow, () => { CAT.timer = setTimeout(closeCat, 250); });
+  catPlay(SCENES.catShow, catIdle, { until: CAT_HELLO_END, reducedMs: 1500 });
 }
 function closeCat() {
   const dlg = $('catDlg');
@@ -2705,6 +3442,7 @@ function initCat() {
   const dlg = $('catDlg');
   $('catBtn').addEventListener('click', openCat);
   $('catClose').addEventListener('click', closeCat);
+  $('catQs').addEventListener('click', (e) => { const b = e.target.closest('[data-q]'); if (b) catAsk(b.dataset.q); });
   dlg.addEventListener('cancel', (e) => { e.preventDefault(); closeCat(); });
   dlg.addEventListener('click', (e) => { if (e.target === dlg) closeCat(); });
   dlg.addEventListener('close', () => { clearTimeout(CAT.timer); if (CAT.player) CAT.player.stop(); $('catStage').replaceChildren(); CAT.player = null; CAT.phase = 'off'; });
@@ -2859,18 +3597,18 @@ function init() {
 
   // Эндотоксины
   const D = state.dil;
-  $('bMode').addEventListener('change', (e) => { D.mode = e.target.value; renderBeta(); save(); syncDilAnims(); });
+  $('bMode').addEventListener('change', (e) => { D.mode = e.target.value; renderBeta(); save(); syncPanelAnims(); });
   document.querySelectorAll('.fx-why-btn').forEach((b) => b.addEventListener('click', () => {
     const open = b.getAttribute('aria-expanded') !== 'true', pnl = $(b.getAttribute('aria-controls'));
     b.setAttribute('aria-expanded', String(open)); pnl.hidden = !open;
     const a = pnl.querySelector('.anim');
     if (open) { const p = players.get(a); if (p) p.restart(); }
-    syncDilAnims();
+    syncPanelAnims();
   }));
   const gAccs = [...document.querySelectorAll('.gacc details')];
   gAccs.forEach((d) => d.addEventListener('toggle', () => {
     if (d.open) { gAccs.forEach((o) => { if (o !== d) o.open = false; }); const p = players.get(d.querySelector('.anim')); if (p) p.restart(); }
-    syncDilAnims();
+    syncPanelAnims();
   }));
   const panel = $('dilBeta');
   panel.addEventListener('input', (e) => {
@@ -2901,8 +3639,10 @@ function init() {
   // Шапка
   $('tab-mbch').addEventListener('click', () => setTab('mbch'));
   $('tab-dil').addEventListener('click', () => setTab('dil'));
+  $('tab-seed').addEventListener('click', () => setTab('seed'));
+  $('seedCats').addEventListener('click', (e) => { const b = e.target.closest('[data-seed]'); if (!b) return; state.seedCat = b.dataset.seed; renderSeed(); save(); });
   document.querySelector('[role="tablist"]').addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); setTab(state.tab === 'mbch' ? 'dil' : 'mbch', true); }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); const order = ['mbch', 'seed', 'dil'], i = order.indexOf(state.tab); setTab(order[(i + (e.key === 'ArrowRight' ? 1 : 2)) % 3], true); }
   });
   $('themeBtn').addEventListener('click', () => { state.theme = isDark() ? 'light' : 'dark'; applyTheme(); save(); });
   if (mq.addEventListener) mq.addEventListener('change', applyTheme);
@@ -2910,11 +3650,11 @@ function init() {
   // Справка
   const dlg = $('help');
   function openHelp() {
-    const mb = state.tab === 'mbch', which = mb ? 'acc-mbch' : 'acc-beta';
-    ['acc-mbch', 'acc-beta'].forEach((id) => { $(id).hidden = id !== which; });
+    const mb = state.tab === 'mbch', which = mb ? 'acc-mbch' : state.tab === 'seed' ? 'acc-seed' : 'acc-beta';
+    ['acc-mbch', 'acc-seed', 'acc-beta'].forEach((id) => { $(id).hidden = id !== which; });
     const box = $(which);
     if (!box.querySelector('details[open]')) box.querySelector('details').open = true;
-    $('helpTitle').textContent = mb ? 'Подсказки' : 'Подсказки: эндотоксины';
+    $('helpTitle').textContent = mb ? 'Подсказки' : state.tab === 'seed' ? 'Подсказки: категории' : 'Подсказки: эндотоксины';
     if (typeof dlg.showModal === 'function') { if (!dlg.open) dlg.showModal(); } else dlg.setAttribute('open', '');
   }
   $('helpBtn').addEventListener('click', openHelp);
