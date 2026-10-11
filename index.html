@@ -386,6 +386,11 @@ details.variants[open] summary .ico{transform:rotate(90deg)}
 .seed-q li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--blue)}
 .seed-cats{margin:0 0 18px}
 .seed-cats .chip{min-height:36px;padding:0 16px;font-size:15px}
+.seed-cats{align-items:center}
+.seed-sep{width:1px;height:24px;margin:0 6px;background:var(--line-2)}
+@media (max-width:560px){ .seed-sep{flex-basis:100%;width:auto;height:0;margin:0} }
+.seed-cats .chip.mf{display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.seed-cats .chip.mf .ico{width:17px;height:17px}
 .seed-grid{display:grid;gap:24px;grid-template-columns:minmax(0,1fr);align-items:start}
 @media (min-width:1100px){ .seed-grid{grid-template-columns:minmax(0,1fr) 360px} .seed-about{position:sticky;top:16px} }
 @media (max-width:1099px){ .seed-about{order:-1} }
@@ -406,7 +411,7 @@ details.variants[open] summary .ico{transform:rotate(90deg)}
 .tchip.t43{background:var(--red-soft);color:var(--red)}
 .plan-h{font-size:17px;font-weight:700;letter-spacing:-.01em;margin:0}
 /* схема: вертикальный алгоритм */
-.flow{padding:16px 16px 14px;border-radius:20px;background:var(--surface);margin:0 0 24px}
+.flow{--arw:#9A9AA0;padding:16px 16px 14px;border-radius:20px;background:var(--surface);margin:0 0 24px}
 .flow-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;margin:0 2px 12px}
 .flow-h p{font-size:13px;color:var(--text-2)}
 .sf-hint{display:none}
@@ -414,7 +419,7 @@ details.variants[open] summary .ico{transform:rotate(90deg)}
 .sf-scroll{overflow-x:auto;margin:0 -16px;padding:2px 16px 4px;scrollbar-width:thin}
 .sf-grid{display:grid;grid-template-columns:minmax(118px,.8fr) 108px repeat(3,minmax(128px,1fr) 108px) minmax(128px,1fr);row-gap:8px;min-width:1040px}
 .sf-n{position:relative;display:flex;min-width:0;align-self:center}
-.sf-n.stub::after{content:"";position:absolute;right:-14px;top:calc(50% - 1px);width:14px;height:2px;background:var(--line-2)}
+.sf-n.stub::after{content:"";position:absolute;right:-14px;top:calc(50% - 1px);width:14px;height:2px;background:var(--arw)}
 .sf-box{flex:1;display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:0;padding:8px 11px 9px;border-radius:12px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--line)}
 .sf-t{font-size:13px;font-weight:650;line-height:1.3}
 .sf-t.sp{font-style:italic}
@@ -438,13 +443,13 @@ details.variants[open] summary .ico{transform:rotate(90deg)}
 .sf-out .ico{width:15px;height:15px;stroke-width:2.3}
 .sf-out .o-check .ico{color:var(--blue)} .sf-out .o-search .ico{color:var(--text)} .sf-out .o-alert .ico,.sf-out .o-alert b{color:var(--red)}
 .sf-c{position:relative;display:grid;grid-template-rows:1fr 1fr;min-height:46px;min-width:0}
-.sf-c::before{content:"";position:absolute;left:0;right:3px;top:calc(50% - 1px);height:2px;border-radius:1px;background:var(--line-2)}
-.sf-c::after{content:"";position:absolute;right:3px;top:calc(50% - 4px);width:6px;height:6px;border-top:2px solid var(--line-2);border-right:2px solid var(--line-2);transform:rotate(45deg)}
+.sf-c::before{content:"";position:absolute;left:0;right:9px;top:calc(50% - 1px);height:2px;background:var(--arw)}
+.sf-c::after{content:"";position:absolute;right:2px;top:calc(50% - 5px);width:9px;height:10px;background:var(--arw);clip-path:polygon(0 0,100% 50%,0 100%)}
 .sf-c.bus::before{left:13px}
-.sf-v{position:absolute;left:13px;width:2px;background:var(--line-2)}
-.bus.first .sf-v{top:50%;bottom:-8px}
-.bus.mid .sf-v{top:0;bottom:-8px}
-.bus.last .sf-v{top:0;bottom:50%}
+.sf-v{position:absolute;left:13px;width:2px;background:var(--arw)}
+.bus.first .sf-v{top:calc(50% - 1px);bottom:-9px}
+.bus.mid .sf-v{top:-1px;bottom:-9px}
+.bus.last .sf-v{top:-1px;bottom:calc(50% - 1px)}
 .sf-lab{grid-row:1;align-self:end;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:0 6px 6px 8px;min-width:0}
 .bus .sf-lab{padding-left:20px}
 .sf-go{font-size:11.5px;font-weight:800;color:var(--text);background:var(--bg);padding:2px 8px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line-2)}
@@ -461,9 +466,12 @@ details.variants[open] summary .ico{transform:rotate(90deg)}
 @keyframes sfIn{from{opacity:0;transform:translateX(-8px)}}
 @keyframes sfFade{from{opacity:0}}
 @keyframes sfGrow{from{transform:scaleX(0)}}
+@keyframes sfGrowY{from{transform:scaleY(0)}}
 #panel-seed:not([hidden]) .sf-n{animation:sfIn .45s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--s,0) * 380ms)}
-#panel-seed:not([hidden]) .sf-c::before{transform-origin:left;animation:sfGrow .36s ease-out both;animation-delay:calc(var(--s,0) * 380ms + 200ms)}
-#panel-seed:not([hidden]) :is(.sf-c::after,.sf-v,.sf-n.stub::after){animation:sfFade .25s both;animation-delay:calc(var(--s,0) * 380ms + 380ms)}
+#panel-seed:not([hidden]) .sf-c::before{transform-origin:left;animation:sfGrow .34s ease-out both;animation-delay:calc(var(--s,0) * 380ms + 240ms)}
+#panel-seed:not([hidden]) .sf-c::after{animation:sfFade .16s both;animation-delay:calc(var(--s,0) * 380ms + 540ms)}
+#panel-seed:not([hidden]) .sf-v{transform-origin:top;animation:sfGrowY .2s ease-out both;animation-delay:calc(var(--s,0) * 380ms + 200ms)}
+#panel-seed:not([hidden]) .sf-n.stub::after{animation:sfFade .15s both;animation-delay:calc(var(--s,0) * 380ms + 200ms)}
 #panel-seed:not([hidden]) .sf-lab{animation:sfFade .35s both;animation-delay:calc(var(--s,0) * 380ms + 280ms)}
 @media (prefers-reduced-motion:reduce){ .flow *,.flow *::before,.flow *::after{animation:none!important} }
 .sacc .anim{margin:0;max-width:340px}
@@ -1009,7 +1017,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
     </div>
     <div class="acc" id="acc-seed" hidden>
       <details name="help" open><summary><span class="acc-n">1</span><span class="acc-t">Как читать схему</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
-        <div class="acc-body"><p>Выберите категорию. Схема идёт слева направо: от навески к результату. Над каждой стрелкой написано, в какой термостат и на сколько ставим. Ниже справочник с ответами на вопросы по категории, справа: кто в неё входит и какие нормы.</p><div class="anim" data-scene="seed_3b"></div></div></details>
+        <div class="acc-body"><p>Выберите категорию. Схема идёт слева направо: от навески к результату. Над каждой стрелкой написано, в какой термостат и на сколько ставим. Ниже справочник с ответами на вопросы по категории, справа: кто в неё входит и какие нормы. Последняя кнопка, «Мембранная фильтрация», это не категория, а метод: со своей схемой и справочником.</p><div class="anim" data-scene="seed_3b"></div></div></details>
       <details name="help"><summary><span class="acc-n">2</span><span class="acc-t">Откуда данные</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
         <div class="acc-body"><p>Нормы и схемы взяты из ГФ РФ, ОФС.1.2.4.0002 «Микробиологическая чистота». Калькулятор МБЧ эти схемы не меняют: это справочник. Объёмы и конкретные среды лаборатории сверяйте с СОП.</p></div></details>
     </div>
@@ -1892,6 +1900,7 @@ function buildNode(spec, parent, list) {
   if (spec.t === 'rect') el.setAttribute('rx', spec.r || 0);
   if (spec.t === 'path') el.setAttribute('d', spec.d);
   if (spec.rule) el.setAttribute('fill-rule', spec.rule);
+  if (spec.t === 'use') { el.setAttribute('href', spec.href); el.setAttribute('width', 24); el.setAttribute('height', 24); }
   if (spec.t === 'text') {
     el.setAttribute('font-size', spec.fs || 11);
     el.setAttribute('font-weight', spec.fw || 400);
@@ -2023,11 +2032,11 @@ const SCENES = {
   add: (() => {
     const T1 = 1200, T2 = 2200, T3 = 3500;
     return { w: 300, h: 236, dur: 6400, still: 4800, els: [
-      ...entryPanel({ codeKeys: [[0, ''], [T1, 'FP-']], placeholder: 'FP-1856', countKeys: [[0, '0'], [T2 + 80, ''], [2650, '1'], [2900, '13']], focusAt: T2, enterAt: T3,
+      ...entryPanel({ codeKeys: [[0, ''], [T1, 'FP-'], [T1 + 300, 'FP-1'], [T1 + 420, 'FP-18'], [T1 + 540, 'FP-185'], [T1 + 660, 'FP-1856']], placeholder: 'FP-1856', countKeys: [[0, '0'], [T2 + 80, ''], [2650, '1'], [2900, '13']], focusAt: T2, enterAt: T3,
         chips: { FP: [[0, 0], [T1, 0], [T1 + 220, 1, 'out']] } }),
       TX(14, 128, 'Пробы', { fs: 12, fw: 700 }), TX(59, 128, '', { fs: 12, fw: 700, fill: 'text3', k: { text: [[0, ''], [T3, '13']] } }),
       TX(150, 160, 'Пока пусто', { fs: 10, fill: 'text3', anchor: 'middle', k: { o: hideAt(T3, 150) } }),
-      row(138, 'FP-', 'Таблетка', T3 + 120), row(164, 'FP-', 'Таблетка', T3 + 200), row(190, 'FP-', 'Таблетка', T3 + 280),
+      row(138, 'FP-1856', 'Таблетка', T3 + 120), row(164, 'FP-1857', 'Таблетка', T3 + 200), row(190, 'FP-1858', 'Таблетка', T3 + 280),
       TX(150, 228, '… и ещё 10', { fs: 9, fill: 'text2', anchor: 'middle', o: 0, k: { o: showAt(T3 + 380) } }),
       ripple(chipX('FP'), 75, T1), ripple(232, 46, T2), ripple(261, 46, T3),
       finger([[400, 175, 215], [1000, chipX('FP'), 75], [1500, chipX('FP'), 75], [2000, 232, 46], [2500, 232, 46], [3200, 261, 46], [3800, 261, 46]], [T1, T2, T3]),
@@ -2037,13 +2046,13 @@ const SCENES = {
   prefix: (() => {
     const T1 = 1300, T2 = 2400, T3 = 3500;
     return { w: 300, h: 262, dur: 6600, still: 4900, els: [
-      ...entryPanel({ codeKeys: [[0, 'FP-'], [T1, 'PPM-']], countKeys: [[0, '13'], [T1, '0'], [T2 + 80, ''], [2900, '5']], focusAt: T2, enterAt: T3,
+      ...entryPanel({ codeKeys: [[0, 'FP-1869'], [T1, 'PPM-'], [T1 + 300, 'PPM-4'], [T1 + 420, 'PPM-41'], [T1 + 540, 'PPM-412']], countKeys: [[0, '13'], [T1, '0'], [T2 + 80, ''], [2900, '5']], focusAt: T2, enterAt: T3,
         chips: { FP: [[0, 1], [T1, 1], [T1 + 220, 0, 'out']], PPM: [[0, 0], [T1, 0], [T1 + 220, 1, 'out']] },
         hintKeys: [[0, ''], [T1, 'Всего в списке: 13'], [T3, 'Всего в списке: 18']] }),
       TX(14, 128, 'Пробы', { fs: 12, fw: 700 }), TX(59, 128, '13', { fs: 12, fw: 700, fill: 'text3', k: { text: [[0, '13'], [T3, '18']] } }),
-      row(138, 'FP-', 'Таблетка', 0),
+      row(138, 'FP-1856', 'Таблетка', 0),
       TX(150, 178, '… и ещё 12 FP', { fs: 9, fill: 'text2', anchor: 'middle' }),
-      row(188, 'PPM-', 'Упаковка', T3 + 120), row(214, 'PPM-', 'Упаковка', T3 + 200),
+      row(188, 'PPM-412', 'Упаковка', T3 + 120), row(214, 'PPM-413', 'Упаковка', T3 + 200),
       TX(150, 254, '… и ещё 3 PPM', { fs: 9, fill: 'text2', anchor: 'middle', o: 0, k: { o: showAt(T3 + 300) } }),
       ripple(chipX('PPM'), 75, T1), ripple(232, 46, T2), ripple(261, 46, T3),
       finger([[400, 175, 230], [1100, chipX('PPM'), 75], [1600, chipX('PPM'), 75], [2200, 232, 46], [2600, 232, 46], [3200, 261, 46], [3800, 261, 46]], [T1, T2, T3]),
@@ -2135,10 +2144,10 @@ const SCENES = {
     const T1 = 1200, T2 = 2200, T3 = 3200, T4 = 5200;
     const wash = (y, appear, moves) => ({ t: 'g', o: 0, k: { o: showAt(appear) }, c: [TX(22, y + 12, 'Промывок', { fs: 9, fill: 'text2' }), optionStrip(76, y, 19, ['1', '2', '3', '4', '5'], 2, moves || []), TX(186, y + 12, 'по 100 мл NaCl', { fs: 8, fill: 'text3' })] });
     return { w: 300, h: 306, dur: 7800, still: 4800, els: [
-      ...entryPanel({ codeKeys: [[0, ''], [T1, 'BB-']], placeholder: 'FP-1856', countKeys: [[0, '0'], [T2 + 80, ''], [2700, '2']], focusAt: T2, enterAt: T3,
+      ...entryPanel({ codeKeys: [[0, ''], [T1, 'BB-'], [T1 + 300, 'BB-2'], [T1 + 450, 'BB-21']], placeholder: 'FP-1856', countKeys: [[0, '0'], [T2 + 80, ''], [2700, '2']], focusAt: T2, enterAt: T3,
         chips: { BB: [[0, 0], [T1, 0], [T1 + 220, 1, 'out']] } }),
-      row(116, 'BB-', 'Бионагрузка', T3 + 120, { bb: true }), wash(142, T3 + 200, [[T4, 4]]),
-      row(166, 'BB-', 'Бионагрузка', T3 + 220, { bb: true }), wash(192, T3 + 300),
+      row(116, 'BB-21', 'Бионагрузка', T3 + 120, { bb: true }), wash(142, T3 + 200, [[T4, 4]]),
+      row(166, 'BB-22', 'Бионагрузка', T3 + 220, { bb: true }), wash(192, T3 + 300),
       { t: 'g', o: 0, k: { o: showAt(T3 + 700, 320) }, c: [
         R(10, 216, 280, 86, 12, 'surface'),
         TX(22, 234, 'Бионагрузка BB', { fs: 9, fill: 'text2' }),
@@ -2290,7 +2299,7 @@ Object.assign(SCENES, {
       TX(12, 69, 'λ', { fs: 10, fill: 'text2' }), chip(26, 57, 52, '0,03125', [[0, 1]]), chip(82, 57, 40, '0,035'),
       TX(130, 69, 'Нужно', { fs: 9, fill: 'text2' }), chip(166, 57, 30, '20λ', sel(true)), chip(200, 57, 30, '10λ', sel(false)), chip(234, 57, 24, '5λ'), chip(262, 57, 30, '2,5λ'),
       R(10, 86, 280, 148, 12, 'surface'),
-      TX(150, 166, 'Впишите КСЭ, и появится схема', { fs: 9, fill: 'text3', anchor: 'middle', k: { o: hideAt(T1, 150) } }),
+      TX(150, 166, 'Впишите КСЭ, и появится схема', { fs: 9, fill: 'text3', anchor: 'middle', k: { o: hideAt(T1 - 220, 180) } }),
       { t: 'g', y: -10, c: [one, two] },
       ripple(110, 34, 300), ripple(215, 66, T2),
       finger([[100, 220, 120], [280, 110, 34], [700, 110, 34], [2900, 215, 66], [3700, 215, 66]], [300, T2]),
@@ -2970,6 +2979,7 @@ const SEED_NODES = {
 const RESN = (t, d, it) => ({ t, d, kind: 'res', it });
 const OUT = { t: 'Смотрим рост', kind: 'out', out: [['check', 'Нет роста', 'соответствует'], ['search', 'Есть рост', 'на идентификацию'], ['alert', 'Типичный рост', 'отклонение']] };
 function seedGrid(cat) {
+  if (cat.id === 'mf') return mfGrid();
   const keys = cat.lanes.map(([k]) => k), nm = Object.fromEntries(cat.lanes);
   const cells = []; let r = 1;
   const put = (c, row, span, item, cspan) => cells.push({ c, row, span: span || 1, cspan, ...item });
@@ -3043,7 +3053,7 @@ function seedFlowHTML(cat) {
     const head = n.kind === 'res' ? `<b class="sf-t${n.it ? ' sp' : ''}">${ICO('check')}${n.t}</b>` : `<b class="sf-t">${nb(n.t)}</b>`;
     return `<div class="sf-n${n.kind ? ' sf-' + n.kind : ''}${x.span > 1 ? ' span' : ''}${x.stub ? ' stub' : ''}" style="${pos}"><div class="sf-box">${tag}${head}${dil}${d}${out}</div></div>`;
   }).join('');
-  return `<div class="flow-h"><h2 class="plan-h">Схема посева · ${cat.label}</h2><p>Над стрелкой: термостат и сколько стоит<span class="sf-hint">. Схему можно листать вбок →</span></p></div>
+  return `<div class="flow-h"><h2 class="plan-h">${cat.id === 'mf' ? 'Схема мембранной фильтрации' : `Схема посева · ${cat.label}`}</h2><p>Над стрелкой: термостат и сколько стоит<span class="sf-hint">. Схему можно листать вбок →</span></p></div>
     <div class="sf-scroll"><div class="sf-grid">${cells}</div></div>`;
 }
 
@@ -3112,7 +3122,7 @@ Object.assign(SCENES, {
   sSterile: { w: 300, h: 168, dur: 6600, still: 4600, els: [
     ttl(56, 22, 'до'), ttl(244, 22, 'после'),
     vial(56, 76, [rod(-8, -8, 30, 'blue'), rod(8, 2, -20, 'blue'), rod(-6, 14, 10, 'blue'), rod(10, -14, 60, 'blue')]),
-    vial(244, 76, [lps(-8, -4, 20), lps(8, 4, -30), lps(-4, 16, 60), lps(10, -12, 0), lps(0, 6, 150)].map((e, i) => ({ ...e, o: 0, k: { o: showAt(2200 + i * 120) } }))),
+    vial(244, 76, [lps(-10, -10, 20), lps(9, -14, -30), lps(11, 6, 60), lps(-10, 10, -15), lps(1, 20, 150)].map((e, i) => ({ ...e, o: 0, k: { o: showAt(2200 + i * 120) } }))),
     arrowAt('M96 76h104M194 70l6 6-6 6', 600),
     { t: 'g', o: 0, k: { o: showAt(900) }, c: [ttl(148, 62, '121 °C', { fill: 'red' }), { t: 'path', d: 'M136 98q4-5 0-10t0-10M148 98q4-5 0-10t0-10M160 98q4-5 0-10t0-10', stroke: 'red', sw: 1.6, k: { o: [[900, 1], [1500, 0.4], [2100, 1]] } }] },
     { t: 'g', o: 0, k: { o: showAt(2900) }, c: [cap(150, 132, 'живых нет, а эндотоксин остался', { fw: 600, fill: 'text' })] },
@@ -3124,8 +3134,10 @@ Object.assign(SCENES, {
       ...[[70, 62, 30], [82, 58, -20], [76, 72, 70], [86, 70, 10]].map(([a, b, r], i) => rod(a, b, r, TEAL, { o: 0, k: { o: showAt(700 + i * 150) } })),
       TX(77, 106, 'P. aeruginosa', { fs: 11, fw: 700, anchor: 'middle', it: 1 }), cap(77, 124, 'живёт в воде и трубах'), cap(77, 138, 'терпит антисептики')] },
     { t: 'g', o: 0, k: { o: showAt(1500) }, c: [R(156, 12, 134, 144, 16, 'surface'),
-      { t: 'circle', x: 223, y: 44, r: 13, fill: 'field', stroke: 'text2', sw: 1.5 }, { t: 'path', d: 'M199 84c0-14 10-22 24-22s24 8 24 22', fill: 'field', stroke: 'text2', sw: 1.5 },
-      coccus(238, 46, '#E3A62B', { o: 0, k: { o: showAt(2000) } }), coccus(206, 74, '#E3A62B', { o: 0, k: { o: showAt(2200) } }),
+      { t: 'path', d: 'M199 86c0-14 10-22 24-22s24 8 24 22z', fill: 'field', stroke: 'text2', sw: 1.5 },
+      { t: 'circle', x: 223, y: 42, r: 14, fill: 'field', stroke: 'text2', sw: 1.5 },
+      { t: 'circle', x: 218, y: 39, r: 1.4, fill: 'text2' }, { t: 'circle', x: 228, y: 39, r: 1.4, fill: 'text2' }, { t: 'path', d: 'M221 46q2 1.6 4 0', stroke: 'text2', sw: 1.2 },
+      coccus(234, 50, '#E3A62B', { o: 0, k: { o: showAt(2000) } }), coccus(238, 76, '#E3A62B', { o: 0, k: { o: showAt(2300) } }),
       TX(223, 106, 'S. aureus', { fs: 11, fw: 700, anchor: 'middle', it: 1 }), cap(223, 124, 'у трети людей в носу'), cap(223, 138, 'источник: человек')] }] },
   // 2 часа при 22,5 °C: клетки приходят в себя, но не делятся
   sRevive: { w: 300, h: 168, dur: 7000, still: 5000, els: [
@@ -3188,7 +3200,7 @@ Object.assign(SCENES, {
     { t: 'g', o: 0, k: { o: showAt(2200) }, c: [{ t: 'circle', x: 162, y: 44, r: 7, fill: SALM_C }, { t: 'circle', x: 162, y: 44, r: 3, fill: '#1E1E24' },
       TX(176, 41, 'Salmonella', { fs: 11, fw: 700, it: 1 }), TX(176, 55, 'красные, чёрный центр', { fs: 9.5, fill: 'text2' })] },
     { t: 'g', o: 0, k: { o: showAt(2700) }, c: [{ t: 'circle', x: 162, y: 86, r: 6, fill: '#F6D46A' },
-      TX(176, 83, 'другие', { fs: 11, fw: 700 }), TX(176, 97, 'жёлтые, на идентификацию', { fs: 9.5, fill: 'text2' })] },
+      TX(176, 83, 'другие', { fs: 11, fw: 700 }), TX(176, 97, 'жёлтые', { fs: 9.5, fill: 'text2' })] },
     pill(222, 134, 150, 'типичный рост: отклонение', 3300, 'red', 'var(--red-soft)')] },
 });
 const SPORE_C = '#8A6A3A';
@@ -3227,7 +3239,7 @@ Object.assign(SCENES, {
     bigTube(150, 80, 'soft', [
       ...[[-8, -4, 20], [6, 8, -30], [-4, 22, 60], [8, 30, 10]].map(([a, b, r]) => rod(a, b, r, 'blue')),
       ...[[7, -8], [-9, 12], [2, 36]].map(([a, b], i) => coccus(a, b, '#E39A4F', { k: { o: [[0, 1], [1600 + i * 150, 1], [2200 + i * 150, 0]] } }))]),
-    ...[[-28, 0], [-10, 300], [12, 600], [30, 900]].map(([dx, t]) => ({ t: 'path', d: 'M0-6c-3 4-4 6-4 8a4 4 0 0 0 8 0c0-2-1-4-4-8z', fill: '#C9B24A', o: 0, k: { x: [[0, 150 + dx], [5000, 150 + dx]], y: [[t + 400, 6], [t + 1200, 50, 'in']], o: [[t + 400, 0], [t + 500, 0.9], [t + 1200, 0.9], [t + 1400, 0]] } })),
+    ...[[-8, 0], [4, 300], [-2, 600], [9, 900]].map(([dx, t]) => ({ t: 'path', d: 'M0-6c-3 4-4 6-4 8a4 4 0 0 0 8 0c0-2-1-4-4-8z', fill: '#C9B24A', o: 0, k: { x: [[0, 150 + dx], [5000, 150 + dx]], y: [[t + 400, 30], [t + 1100, 62, 'in']], o: [[t + 400, 0], [t + 500, 0.9], [t + 1050, 0.9], [t + 1200, 0]] } })),
     ttl(150, 12, 'желчь'), { t: 'g', o: 0, k: { o: showAt(2400) }, c: [TX(214, 70, 'энтеробактерии', { fs: 10, fw: 700, fill: 'blue' }), TX(214, 84, 'живут', { fs: 9.5, fill: 'text2' }),
       TX(86, 70, 'остальные', { fs: 10, fw: 700, fill: 'red', anchor: 'end' }), TX(86, 84, 'гибнут', { fs: 9.5, fill: 'text2', anchor: 'end' })] }] },
   // шкала: где 3.2 среди категорий по ОЧМ
@@ -3238,14 +3250,14 @@ Object.assign(SCENES, {
         { t: 'g', o: 0, k: { o: showAt(800 + i * 250) }, c: [TX(x, 128 - hh, `10${'⁰¹²³⁴⁵⁶⁷'[p]}`, { fs: 12, fw: 800, anchor: 'middle', fill: on ? 'blue' : 'text' })] },
         TX(x, 154, l, { fs: 10, fw: on ? 800 : 600, anchor: 'middle', fill: on ? 'blue' : 'text2' })] };
     }),
-    { t: 'g', o: 0, k: { o: showAt(2600) }, c: [cap(150, 14, 'ОЧМ, КОЕ/г: чем «природнее» сырьё, тем больше допускают')] }] },
+    { t: 'g', o: 0, k: { o: showAt(2600) }, c: [cap(150, 14, 'ОЧМ: чем «природнее» сырьё, тем больше допускают')] }] },
   // споры: рост → спора → переживает сушку → снова рост на агаре
   sSpore: { w: 300, h: 168, dur: 7600, still: 5600, els: [
-    { t: 'g', x: 52, y: 70, c: [R(-16, -7, 32, 14, 7, 'blue', { k: { o: [[0, 1], [1000, 1], [1400, 0.25]] } }), { t: 'path', d: ell(6, 0, 6, 4.4), fill: SPORE_C, stroke: '#5E4520', sw: 1.4, o: 0, k: { o: showAt(800) } }] },
-    TX(52, 104, 'бацилла', { fs: 10, fw: 700, anchor: 'middle', k: { text: [[0, 'бацилла'], [1000, 'спора']] } }),
+    { t: 'g', x: 52, y: 70, c: [R(-16, -7, 32, 14, 7, 'blue', { k: { o: [[0, 1], [1000, 1], [1400, 0.25]] } }), { t: 'path', d: ell(6, 0, 6, 4.4), fill: SPORE_C, stroke: '#5E4520', sw: 1.4, o: 0, k: { o: [[800, 0], [1060, 1], [1500, 1], [1520, 0]] } }] },
+    TX(52, 104, 'бацилла', { fs: 10, fw: 700, anchor: 'middle', k: { text: [[0, 'бацилла'], [900, 'прячется в спору'], [1700, 'клетка погибла']] } }),
     arrowAt('M84 70h40M118 64l6 6-6 6', 1500),
     { t: 'g', o: 0, k: { o: showAt(1700) }, c: [{ t: 'path', d: 'M138 50q4-6 0-12t0-12M150 50q4-6 0-12t0-12', stroke: 'red', sw: 1.6 }, TX(144, 62, 'сушка, нагрев', { fs: 9, fill: 'text2', anchor: 'middle' })] },
-    { t: 'g', x: 150, y: 86, o: 0, k: { o: showAt(1900) }, c: [{ t: 'path', d: ell(0, 0, 6, 4.4), fill: SPORE_C, stroke: '#5E4520', sw: 1.4 }] },
+    { t: 'g', x: 58, y: 70, o: 0, k: { o: [[1499, 0], [1500, 1]], x: [[1500, 58], [2200, 150, 'io']], y: [[1500, 70], [2200, 86, 'io']] }, c: [{ t: 'path', d: ell(0, 0, 6, 4.4), fill: SPORE_C, stroke: '#5E4520', sw: 1.4 }] },
     arrowAt('M172 70h36M202 64l6 6-6 6', 3000),
     dishT(248, 76, 30, AGAR, { o: 0, k: { o: showAt(3200) }, kids: [colony(0, 0, 9, '#E9D5A8', 3700, { stroke: '#C9A66B', sw: 1 })] }),
     { t: 'g', o: 0, k: { o: showAt(4100) }, c: [cap(244, 124, 'проснулась на TSA', { fw: 600, fill: 'blue' })] },
@@ -3294,13 +3306,15 @@ Object.assign(SCENES, {
   // кожа и лёгкие: нет кислотного барьера, как у желудка
   sMucosa: { w: 300, h: 168, dur: 6600, still: 4800, els: [
     { t: 'g', c: [R(10, 12, 134, 144, 16, 'surface'),
-      { t: 'path', d: 'M54 36c18-8 40 0 44 18 4 20-8 40-28 42-18 2-26-10-22-22 3-8 12-8 14-16 1-6-12-6-8-22z', fill: '#F6C9C9', stroke: '#D98A8A', sw: 1.4 },
-      TX(74, 70, 'pH 2', { fs: 10, fw: 800, anchor: 'middle', fill: 'red' }),
-      ...[[60, 50], [82, 58], [70, 82]].map(([x, y], i) => ({ t: 'circle', x, y, r: 2.6, fill: 'blue', k: { o: [[0, 0], [400 + i * 150, 1], [1500 + i * 150, 1], [2100 + i * 150, 0]] } })),
+      { t: 'path', d: 'M62 22V40', stroke: '#D98A8A', sw: 5 }, { t: 'path', d: 'M62 22V40', stroke: '#F6C9C9', sw: 2.6 },
+      { t: 'path', d: 'M58 38C58 32 66 32 72 36C88 44 102 52 100 72C98 90 82 98 68 96C56 94 50 86 52 78C54 70 62 70 66 66C70 62 58 50 58 38Z', fill: '#F6C9C9', stroke: '#D98A8A', sw: 1.4 },
+      TX(80, 76, 'pH 2', { fs: 10, fw: 800, anchor: 'middle', fill: 'red' }),
+      ...[[66, 52], [88, 62], [74, 88]].map(([x, y], i) => ({ t: 'circle', x, y, r: 2.6, fill: 'blue', k: { o: [[0, 0], [400 + i * 150, 1], [1500 + i * 150, 1], [2100 + i * 150, 0]] } })),
       ttl(77, 118, 'желудок'), cap(77, 134, 'кислота убивает часть')] },
     { t: 'g', o: 0, k: { o: showAt(1600) }, c: [R(156, 12, 134, 144, 16, 'surface'),
-      { t: 'path', d: 'M223 30v22M223 52c-6 0-10 6-16 6-8 0-12 10-12 22s4 18 12 18 12-8 14-20zM223 52c6 0 10 6 16 6 8 0 12 10 12 22s-4 18-12 18-12-8-14-20z', fill: 'soft', stroke: 'blue', sw: 1.4 },
-      ...[[206, 74], [240, 68], [214, 88], [236, 86]].map(([x, y], i) => ({ t: 'circle', x, y, r: 2.6, fill: 'red', o: 0, k: { o: showAt(2200 + i * 150) } })),
+      { t: 'path', d: 'M211 56C199 58 193 72 193 86C193 96 199 100 207 100C213 100 216 95 216 87V63Q216 56 211 56ZM235 56C247 58 253 72 253 86C253 96 247 100 239 100C233 100 230 95 230 87V63Q230 56 235 56Z', fill: 'soft', stroke: 'blue', sw: 1.4 },
+      { t: 'path', d: 'M223 26V50M223 50L214 60M223 50L232 60', stroke: 'blue', sw: 2.2 },
+      ...[[204, 76], [242, 72], [208, 90], [238, 90]].map(([x, y], i) => ({ t: 'circle', x, y, r: 2.6, fill: 'red', o: 0, k: { o: showAt(2200 + i * 150) } })),
       ttl(223, 118, 'лёгкие, кожа, нос'), cap(223, 134, 'барьера нет')] }] },
 });
 // справочник: у каждой категории свои вопросы, без повторов (карточка справа уже отвечает «кто входит» и «почему такие нормы»)
@@ -3331,18 +3345,113 @@ const SG = {
 };
 const SEED_GUIDE = { '3a': ['count', 'cats', 'pour', 'water', 'select', 'endo'], '42': ['source', 'cetmsa', 'salm', 'rvs', 'xld'], '12b22': ['sal', 'combo', 'skin'],
   '12b': ['mucosa', 'sterile', 'revive'], '3b': ['enzyme', 'mpn', 'bile'], '32': ['scale', 'spore', 'tsi'] };
+// ---------- Мембранная фильтрация: отдельная группа рядом с категориями ----------
+const SEED_MF = { id: 'mf', label: 'Мембранная фильтрация', title: 'Мембранная фильтрация',
+  who: '<u>Это метод, а не категория.</u> Им проверяют то, что <u>само мешает микробам расти</u>: антибиотики, препараты с консервантами, а ещё растворы и большие объёмы.',
+  why: 'Мембрана с порами <u>не больше 0,45 мкм</u> задерживает микробов, а промывка уносит препарат. На питательную среду попадают только микробы. <u>Нормы при этом берут из категории препарата.</u>',
+  params: [['Поры фильтра', '≤ 0,45 мкм'], ['На фильтр', '1 г (10 мл 1:10)'], ['Промывка', '≥ 3 × 100 мл'], ['Всего через фильтр', '≤ 500 мл'], ['Колоний на фильтре', '≤ 100 / ≤ 50'], ['Учёт', '48–72 ч и 5 сут']] };
+const MF_NODES = {
+  prep: { t: 'Образец 10 г + FBR', d: 'разведение **1:10**', kind: 'root' },
+  filt: { t: 'Фильтрация', d: ['мембрана **0,45 мкм**', '**10 мл** разведения = 1 г'], tag: 'под вакуумом' },
+  wash: { t: 'Промывка', d: ['NaCl 0,9 %', 'не менее **3 × 100 мл**', 'всего не больше **500 мл**'] },
+  tsa: { t: 'Фильтр на TSA (№1)', d: 'кладём пинцетом', tag: 'ОЧМ' },
+  sda: { t: 'Фильтр на SDA (№2)', d: 'кладём пинцетом', tag: 'ОЧГ' },
+  tsb: { t: 'Фильтры в среду №8', d: ['по фильтру в **2 банки** 200 мл со **100 мл** №8', 'так делают для 1.2Б и 4.2'], tag: 'Специфические микробы' },
+  next: { t: 'Пересевы по схеме категории', d: 'на селективные среды', kind: 'root' },
+};
+function mfGrid() {
+  const cells = [], put = (c, row, span, item, cspan) => cells.push({ c, row, span: span || 1, cspan, ...item });
+  put('c0', 1, 3, { n: MF_NODES.prep }); put('g0', 1, 3, { go: '10 мл' });
+  put('c1', 1, 3, { n: MF_NODES.filt }); put('g1', 1, 3, { go: '' });
+  put('c2', 1, 3, { n: MF_NODES.wash, stub: true });
+  [['tsa', [[32, '5 сут']], RESN('ОЧМ', ['колонии = **КОЕ в 1 г**', 'на фильтре до **100** колоний'])],
+    ['sda', [[22, '5 сут']], RESN('ОЧГ', ['колонии = **КОЕ в 1 г**', 'на фильтре до **50** колоний'])],
+    ['tsb', [[32, '1 сут']], MF_NODES.next]].forEach(([k, inc, res], i) => {
+    put('g2', i + 1, 1, { go: '', bus: ['first', 'mid', 'last'][i] }); put('c3', i + 1, 1, { n: MF_NODES[k] });
+    put('g3', i + 1, 1, { inc }); put('c4', i + 1, 1, { n: res });
+  });
+  return cells;
+}
+const MEMB = '#F4F1EA';
+// изогнутая стрелка: наконечник строится по касательной в конце кривой
+function curveArrow(x0, y0, c1x, c1y, c2x, c2y, x1, y1, color = 'text3', more = {}) {
+  const a = Math.atan2(y1 - c2y, x1 - c2x), L = 7, w = 0.5;
+  const hx = (s) => (x1 - L * Math.cos(a + s * w)).toFixed(1), hy = (s) => (y1 - L * Math.sin(a + s * w)).toFixed(1);
+  return { t: 'path', d: `M${x0} ${y0}C${c1x} ${c1y} ${c2x} ${c2y} ${x1} ${y1}M${hx(1)} ${hy(1)}L${x1} ${y1}L${hx(-1)} ${hy(-1)}`, stroke: color, sw: 1.5, ...more };
+}
+Object.assign(SCENES, {
+  // мембрана как сито: жидкость проходит, микробы остаются на поверхности
+  sMembrane: { w: 300, h: 168, dur: 7000, still: 5000, els: [
+    { t: 'g', x: 86, y: 0, c: [
+      { t: 'path', d: 'M-40 20H40L26 70H-26Z', fill: 'soft', stroke: 'text2', sw: 1.5 },
+      R(-30, 70, 60, 5, 2, MEMB, { stroke: 'text2', sw: 1.2 }),
+      { t: 'path', d: 'M-26 75H26L20 96H-20Z', fill: 'field', stroke: 'text2', sw: 1.5 }, { t: 'path', d: 'M0 96v20', stroke: 'text2', sw: 1.5 },
+      ...[[-18, 30], [8, 36], [-6, 48], [18, 54], [0, 60]].map(([a, b], i) => ({ t: 'circle', x: a, y: b, r: 2.6, fill: 'blue', k: { y: [[300 + i * 120, b], [1300 + i * 120, 67, 'in']] } })),
+      ...[0, 1, 2].map((i) => ({ t: 'circle', x: 0, y: 100, r: 2.4, fill: 'blue', o: 0.35, k: { y: [[i * 500, 100], [i * 500 + 700, 126, 'in']], o: [[i * 500, 0.35], [i * 500 + 700, 0]] } }))] },
+    TX(86, 140, 'вода и препарат уходят', { fs: 9.5, fill: 'text2', anchor: 'middle' }),
+    { t: 'g', o: 0, k: { o: showAt(1800) }, c: [cap(86, 156, 'микробы остаются на фильтре', { fw: 700, fill: 'blue' })] },
+    arrowAt('M140 74h28M162 68l6 6-6 6', 2400),
+    dishT(230, 74, 46, AGAR, { o: 0, k: { o: showAt(2600) }, kids: [{ t: 'circle', r: 30, fill: MEMB, stroke: '#D6D0C2', sw: 1 },
+      { t: 'path', d: 'M-30 0H30M0-30V30M-21-21L21 21M21-21L-21 21', stroke: '#E2DCCD', sw: 0.8 },
+      ...[[-14, -8], [10, -14], [12, 10], [-6, 14], [0, 0]].map(([a, b], i) => colony(a, b, 3.6, '#D9A85C', 3200 + i * 150))] }),
+    { t: 'g', o: 0, k: { o: showAt(3600) }, c: [cap(230, 140, 'растут на фильтре', { fw: 600 })] }] },
+  // промывка: препарат смывается, тест-штаммы доказывают, что смыли
+  sWash: { w: 300, h: 168, dur: 7600, still: 5600, els: [
+    { t: 'g', x: 70, y: 70, c: [{ t: 'circle', r: 38, fill: MEMB, stroke: 'text2', sw: 1.5 },
+      { t: 'circle', r: 34, fill: '#F07FAE', k: { o: [[0, 0.55], [900, 0.55], [1500, 0.35], [2100, 0.18], [2700, 0]] } },
+      ...[[-12, -8], [10, 6], [-4, 14]].map(([a, b]) => ({ t: 'circle', x: a, y: b, r: 3, fill: 'blue' }))] },
+    TX(70, 128, 'препарат', { fs: 10, fw: 700, anchor: 'middle', fill: 'red', k: { text: [[0, 'препарат'], [2700, 'смыт']], fill: [[0, 'red'], [2700, 'blue']] } }),
+    ...[0, 1, 2].map((i) => ({ t: 'g', o: 0, k: { o: [[700 + i * 600, 0], [800 + i * 600, 1], [1200 + i * 600, 1], [1300 + i * 600, 0]] }, c: [R(126, 40, 40, 30, 8, 'soft', { stroke: 'blue', sw: 1.2 }), TX(146, 60, `${i + 1} × 100`, { fs: 9.5, fw: 700, anchor: 'middle', fill: 'blue' })] })),
+    { t: 'g', o: 0, k: { o: showAt(700) }, c: [cap(146, 92, 'промывка'), cap(146, 106, 'NaCl 0,9 %')] },
+    { t: 'g', o: 0, k: { o: showAt(3100) }, c: [arrowAt('M118 70h56M168 64l6 6-6 6', 3100), TX(146, 22, '+ тест-штаммы, ≤ 100 КОЕ', { fs: 9.5, fw: 700, anchor: 'middle' })] },
+    dishT(234, 70, 42, AGAR, { o: 0, k: { o: showAt(3500) }, kids: [{ t: 'circle', r: 28, fill: MEMB }, ...[[-10, -8], [8, -10], [10, 8], [-8, 10], [0, 0], [-14, 4]].map(([a, b], i) => colony(a, b, 3.4, '#D9A85C', 4000 + i * 120))] }),
+    { t: 'g', o: 0, k: { o: showAt(4800) }, c: [cap(234, 128, 'выросли: помех нет', { fw: 700, fill: 'blue' }), cap(234, 144, 'это проверка пригодности')] }] },
+  // счёт на фильтре: 1 г прошёл через фильтр, колонии сразу = КОЕ/г
+  sFilterCount: { w: 300, h: 168, dur: 7000, still: 5000, els: [
+    dishT(78, 82, 60, AGAR, { kids: [{ t: 'circle', r: 42, fill: MEMB, stroke: '#D6D0C2', sw: 1 },
+      { t: 'path', d: 'M-42-14H42M-42 14H42M-14-42V42M14-42V42', stroke: '#DCD5C4', sw: 0.9 },
+      ...[[-26, -24], [-6, -30], [20, -22], [30, 2], [8, 6], [-18, 2], [-30, 18], [-6, 26], [18, 26], [2, -10], [-20, -6], [24, -6]].map(([a, b], i) => colony(a, b, 3.6, '#D9A85C', 300 + i * 120))] }),
+    TX(200, 60, '0', { fs: 28, fw: 800, anchor: 'middle', k: { n: [[300, 0], [300 + 11 * 120 + 300, 12]] } }), cap(200, 78, 'колоний на фильтре'),
+    { t: 'g', o: 0, k: { o: showAt(2200) }, c: [TX(200, 104, '= 12 КОЕ в 1 г', { fs: 13, fw: 800, anchor: 'middle', fill: 'blue' }), cap(200, 118, 'через фильтр прошёл 1 г')] },
+    pill(200, 148, 170, 'больше 100? берём 1:100', 3200, 'text', 'surface')] },
+  // когда фильтровать, а когда лить в чашку
+  sWhen: { w: 300, h: 168, dur: 6600, still: 4800, els: [
+    { t: 'g', c: [R(70, 12, 160, 36, 12, 'surface'), TX(150, 28, 'Препарат мешает росту?', { fs: 10.5, fw: 700, anchor: 'middle' }), TX(150, 41, 'антибиотик, консервант', { fs: 9, fill: 'text2', anchor: 'middle' })] },
+    { t: 'g', o: 0, k: { o: showAt(700) }, c: [curveArrow(112, 50, 96, 60, 72, 64, 70, 82), TX(80, 80, 'нет', { fs: 10, fw: 700, fill: 'text2' }),
+      dishT(70, 112, 24, AGAR), ttl(70, 152, 'заливаем в чашку'), cap(70, 166, 'глубинный метод')] },
+    { t: 'g', o: 0, k: { o: showAt(1500) }, c: [curveArrow(188, 50, 204, 60, 228, 64, 230, 82, 'blue'), TX(220, 80, 'да', { fs: 10, fw: 700, fill: 'blue', anchor: 'end' }),
+      { t: 'g', x: 230, y: 112, c: [{ t: 'path', d: 'M-22-22H22L14 4H-14Z', fill: 'soft', stroke: 'blue', sw: 1.4 }, R(-16, 4, 32, 4, 2, MEMB, { stroke: 'text2', sw: 1 }), { t: 'path', d: 'M-14 8H14L10 22H-10Z', fill: 'field', stroke: 'text2', sw: 1.4 }] },
+      ttl(230, 152, 'фильтруем', { fill: 'blue' }), cap(230, 166, 'и промываем')] }] , },
+  // что нужно для фильтрации
+  sTools: { w: 300, h: 168, dur: 6400, still: 4600, els: [
+    ...[['manifold', 'манифольд', 'раздаёт вакуум'], ['funnel', 'воронка', 'на каждый фильтр'], ['frit', 'фрита', 'держит мембрану'], ['filter', 'мембрана', 'поры 0,45 мкм'], ['tweezers', 'пинцет', 'только за край']].map(([ic, a, b], i) => {
+      const x = i < 3 ? 34 : 172, y = 32 + (i < 3 ? i : i - 3) * 52;
+      return { t: 'g', o: 0, k: { o: showAt(200 + i * 350) }, c: [R(x - 20, y - 20, 40, 40, 12, 'surface'),
+        { t: 'g', x: x - 12, y: y - 12, c: [{ t: 'use', href: `#i-${ic}`, stroke: 'text', sw: 1.6 }] },
+        TX(x + 30, y - 2, a, { fs: 11, fw: 700 }), TX(x + 30, y + 12, b, { fs: 9, fill: 'text2' })] };
+    })] },
+});
+SG.mfHow = ['Как работает мембрана', 'sMembrane', '<p>Мембрана работает как очень мелкое сито: поры <b>0,45 мкм</b> меньше бактерий. Вакуум протягивает жидкость с препаратом через фильтр, а микробы остаются на его поверхности.</p><p>Потом фильтр кладут на TSA или SDA. Питательные вещества поднимаются к микробам через поры, и колонии вырастают прямо на фильтре.</p>'];
+SG.mfWash = ['Зачем промывать фильтр', 'sWash', '<p>После фильтрации на мембране остаётся немного препарата. Если он антимикробный, то продолжит подавлять рост, и колоний окажется меньше, чем микробов на самом деле. Промывка уносит эти остатки: не меньше <b>3 порций по 100 мл</b>, но всего не больше <b>500 мл</b> на один фильтр.</p><p>Хватает ли промывки, проверяют при валидации (проверке пригодности методики): в последнюю порцию добавляют тест-штаммы, не больше <b>100 КОЕ</b>. Если они выросли, препарат больше не мешает.</p>'];
+SG.mfCount = ['Как считать колонии на фильтре', 'sFilterCount', '<p>Через фильтр пропускают <b>10 мл</b> разведения 1:10, а это ровно <b>1 г</b> образца. Поэтому число колоний на фильтре сразу равно КОЕ в 1 г, умножать ничего не нужно.</p><p>Предварительно колонии смотрят через 48–72 часа, окончательно считают на <b>5-е сутки</b>. Точно посчитать можно до <b>100</b> колоний бактерий или до <b>50</b> колоний грибов на фильтре. Если выросло больше, фильтруют разведение 1:100 и результат умножают на 10.</p>'];
+SG.mfWhen = ['Когда нужна фильтрация', 'sWhen', '<p>Обычно 1 мл разведения вносят в чашку и заливают агаром: это <b>глубинный метод</b>, он проще. Но если препарат сам подавляет рост (антибиотик, консервант) и разведение этого не убирает, микробы в чашке не вырастут, и результат получится ложно хорошим.</p><p>Тогда образец <b>фильтруют</b>: микробы остаются на мембране, а препарат уходит с жидкостью и промывкой. Так же проверяют растворы, большие объёмы и мази, которые сначала растворяют в изопропилмиристате.</p>'];
+SG.mfTools = ['Что нужно для фильтрации', 'sTools', '<p>Вакуум создаёт насос, а <b>манифольд</b> раздаёт его на несколько мест сразу. На каждое место ставят <b>фриту</b> (пористую опору), на неё мембрану, сверху <b>воронку</b>. Мембрану берут стерильным пинцетом только за край, чтобы не повредить рабочую поверхность.</p><p>Для водных и масляных растворов берут фильтры из нитроцеллюлозы, для растворов со спиртом больше 30 %, кислот и щелочей фильтры из ацетата целлюлозы. Фильтры и воронки калькулятор во вкладке «МБЧ» считает упаковками.</p>'];
+SEED_GUIDE.mf = ['mfWhen', 'mfHow', 'mfWash', 'mfCount', 'mfTools'];
+
 function seedGuideHTML(cat) {
-  return `<div class="guide-head"><h2>Справочник</h2><span>коротко о категории ${cat.label}</span></div><div class="acc gacc sacc">${SEED_GUIDE[cat.id].map((k, i) => { const [t, sc, html] = SG[k]; return `<details name="sguide"${i ? '' : ' open'}><summary><span class="acc-n">${i + 1}</span><span class="acc-t">${t}</span>${ICO('chev').replace('class="ico"', 'class="ico chev"')}</summary>
+  return `<div class="guide-head"><h2>Справочник</h2><span>${cat.id === 'mf' ? 'коротко о методе' : `коротко о категории ${cat.label}`}</span></div><div class="acc gacc sacc">${SEED_GUIDE[cat.id].map((k, i) => { const [t, sc, html] = SG[k]; return `<details name="sguide"${i ? '' : ' open'}><summary><span class="acc-n">${i + 1}</span><span class="acc-t">${t}</span>${ICO('chev').replace('class="ico"', 'class="ico chev"')}</summary>
     <div class="acc-body"><div class="anim" data-scene="${sc}"></div><div class="g-text">${html}</div></div></details>`; }).join('')}</div>`;
 }
 
 function renderSeed() {
-  const cat = SEED_CATS.find((c) => c.id === state.seedCat) || SEED_CATS[0];
-  $('seedCats').innerHTML = SEED_CATS.map((c) => `<button type="button" class="chip${c.id === cat.id ? ' on' : ''}" data-seed="${c.id}" aria-pressed="${c.id === cat.id}">${c.label}</button>`).join('');
-  const norms = cat.lanes.map(([k, nrm]) => `<tr><th>${SEED_LANES[k].org}</th><td>${nrm}${k === 'tamc' || k === 'tymc' ? ' КОЕ/г' : ''}</td></tr>`).join('');
+  const cat = state.seedCat === 'mf' ? SEED_MF : SEED_CATS.find((c) => c.id === state.seedCat) || SEED_CATS[0];
+  const chip = (c) => `<button type="button" class="chip${c.id === cat.id ? ' on' : ''}${c.id === 'mf' ? ' mf' : ''}" data-seed="${c.id}" aria-pressed="${c.id === cat.id}">${c.id === 'mf' ? ICO('filter') : ''}${c.label}</button>`;
+  $('seedCats').innerHTML = SEED_CATS.map(chip).join('') + '<span class="seed-sep" aria-hidden="true"></span>' + chip(SEED_MF);
+  const rows = cat.params ? cat.params.map(([a, b]) => `<tr><th>${a}</th><td>${b}</td></tr>`).join('')
+    : cat.lanes.map(([k, nrm]) => `<tr><th>${SEED_LANES[k].org}</th><td>${nrm}${k === 'tamc' || k === 'tymc' ? ' КОЕ/г' : ''}</td></tr>`).join('');
   $('seedAbout').innerHTML = `<h2 class="seed-h">${cat.title}</h2>
     <div class="g-text"><p>${cat.who}</p><p>${cat.why}</p></div>
-    <table class="seed-norms"><caption>Нормы по ГФ</caption><tbody>${norms}</tbody></table>
+    <table class="seed-norms"><caption>${cat.params ? 'Параметры по ГФ' : 'Нормы по ГФ'}</caption><tbody>${rows}</tbody></table>
     ${cat.note ? `<p class="seed-note">${cat.note}</p>` : ''}`;
   $('seedFlow').innerHTML = seedFlowHTML(cat);
   $('seedLanes').querySelectorAll('.anim').forEach((a) => { stopScene(a); players.delete(a); });
