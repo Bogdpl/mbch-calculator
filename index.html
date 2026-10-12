@@ -64,7 +64,7 @@ button{cursor:pointer}
 
 /* ---------- Базовые элементы ---------- */
 .icon-btn{
-  display:inline-grid;place-items:center;width:40px;height:40px;border-radius:50%;border:0;padding:0;
+  flex:none;display:inline-grid;place-items:center;width:40px;height:40px;border-radius:50%;border:0;padding:0;
   background:var(--surface);color:var(--text);transition:background .15s,color .15s,opacity .15s;
 }
 .icon-btn:hover{background:var(--line-2)}
@@ -240,6 +240,13 @@ select.f.is-empty{color:var(--text-3)}
 .t-note .ico{width:18px;height:18px;margin-top:1px;color:var(--text-2)}
 .t-note.warn{color:var(--text)}
 .t-note.warn .ico{color:#E39B00}
+.sup{padding:12px;border-radius:16px;background:var(--blue-soft);box-shadow:inset 0 0 0 1px rgba(45,125,255,.22)}
+.sup h3{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;color:var(--blue);margin:0 2px 8px}
+.sup h3 .ico{width:18px;height:18px}
+.sup-chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:5px}
+.sup-chips li{display:inline-flex;white-space:nowrap;align-items:center;gap:5px;padding:6px 9px 6px 7px;border-radius:10px;background:var(--field);font-size:13.5px;line-height:1.2;color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.sup-chips .ico{width:16px;height:16px;color:var(--text-2);flex:none}
+.sup-n{font-size:12.5px;line-height:1.35;color:var(--text-2);margin:9px 2px 0}
 .t-empty{color:var(--text-2);font-size:15px;padding:4px 2px}
 .t-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:-4px}
 .link{border:0;background:none;padding:6px 2px;color:var(--blue);font-size:14px;font-weight:500}
@@ -379,6 +386,72 @@ details.variants[open] summary .ico{transform:rotate(90deg)}
 .anim svg{display:block;width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-variant-numeric:tabular-nums}
 
 /* ---------- Посев ---------- */
+.sh-grid{display:grid;gap:24px;grid-template-columns:minmax(0,1fr);align-items:start}
+@media (min-width:1000px){ .sh-grid{grid-template-columns:minmax(0,1fr) 380px} .sh-out{position:sticky;top:16px} }
+.sh-form{display:grid;gap:20px;min-width:0}
+.sh-head{display:grid;grid-template-columns:minmax(0,250px) minmax(0,1fr);gap:14px;padding:16px}
+@media (max-width:480px){ .sh-head{grid-template-columns:1fr} }
+.sh-date{display:flex;align-items:center;gap:10px;min-height:52px;padding:0 12px 0 14px;text-align:left;cursor:pointer;color:var(--text);font:inherit}
+.sh-date>.ico{width:22px;height:22px;color:var(--blue);flex:none}
+.sh-date-t{flex:1;min-width:0;display:grid;line-height:1.2}
+.sh-date-t b{font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sh-date-t small{font-size:12.5px;color:var(--text-2)}
+.sh-date .sh-date-chev{width:16px;height:16px;color:var(--text-3);flex:none;transform:rotate(90deg)}
+dialog.date-dlg{width:min(380px,calc(100% - 24px));padding:0 0 16px;border:0;border-radius:26px;background:var(--bg);color:var(--text);box-shadow:0 30px 80px -20px rgba(0,0,0,.45);overflow:hidden}
+dialog.date-dlg::backdrop{background:rgba(0,0,0,.35);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+dialog.date-dlg[open]{animation:ddIn .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes ddIn{from{transform:translateY(24px);opacity:0}}
+.dd-head{position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:20px 14px 6px 22px}
+.dd-cap{display:block;font-size:13px;font-weight:500;color:var(--text-2);margin-bottom:4px}
+.dd-now{display:block;font-size:20px;font-weight:700;line-height:1.2}
+.dd-now::first-letter{text-transform:uppercase}
+.dd-wheels{--row:40px;position:relative;display:grid;grid-template-columns:64px minmax(0,1fr) 86px;gap:4px;height:calc(var(--row) * 5);margin:6px 16px 14px;perspective:600px}
+.dd-band{position:absolute;left:0;right:0;top:calc(var(--row) * 2);height:var(--row);border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);pointer-events:none}
+.wheel{position:relative;height:100%;overflow-y:auto;overscroll-behavior:contain;scroll-snap-type:y mandatory;scrollbar-width:none;padding:calc(var(--row) * 2) 0;outline:none;border-radius:12px;
+  -webkit-mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent);transform-style:preserve-3d;touch-action:pan-y}
+.wheel::-webkit-scrollbar{display:none}
+.wheel:focus-visible{box-shadow:inset 0 0 0 2px var(--blue)}
+.wh-i{height:var(--row);display:flex;align-items:center;justify-content:center;font-size:19px;font-variant-numeric:tabular-nums;scroll-snap-align:center;cursor:pointer;user-select:none;-webkit-user-select:none;color:var(--text);will-change:transform}
+.wh-i[aria-selected="true"]{font-weight:600}
+.dd-foot{display:flex;gap:8px;padding:0 16px}
+.dd-chip{border:0;border-radius:14px;min-height:44px;padding:0 14px;font:inherit;font-size:15px;font-weight:600;background:var(--surface);color:var(--text);cursor:pointer}
+.dd-chip[aria-pressed="true"]{background:var(--blue-soft);color:var(--blue)}
+.dd-foot .btn{margin-left:auto;min-width:108px}
+@media (max-width:640px){
+  dialog.date-dlg{width:100%;max-width:100%;margin:auto 0 0;border-radius:26px 26px 0 0;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+  dialog.date-dlg[open]{animation:ddUp .32s cubic-bezier(.2,.8,.2,1)}
+  @keyframes ddUp{from{transform:translateY(100%)}}
+  .dd-head::before{content:"";position:absolute;left:50%;top:7px;width:36px;height:5px;border-radius:3px;background:var(--line-2);transform:translateX(-50%)}
+}
+.sh-group{display:grid;gap:8px}
+.sh-h{font-size:13px;font-weight:500;color:var(--text-2);margin:0 2px}
+.sh-list{padding:4px 16px}
+.sh-row{display:grid;grid-template-columns:28px minmax(0,1fr) auto;grid-template-areas:"i n y" ". m m";gap:4px 12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.sh-row:first-child{border-top:0}
+.sh-row>.ico{grid-area:i;width:22px;height:22px;color:var(--text-2);justify-self:center}
+.sh-name{grid-area:n;font-size:15px;min-width:0}
+.sh-name small{display:block;font-size:12.5px;color:var(--text-2)}
+.sh-yn{grid-area:y;display:inline-flex;padding:3px;gap:2px;border-radius:12px;background:var(--field);box-shadow:inset 0 0 0 1px var(--line)}
+.sh-yn button{border:0;background:none;font:inherit;font-size:14px;font-weight:600;color:var(--text-2);min-height:34px;padding:0 14px;border-radius:9px;cursor:pointer}
+.sh-yn button[data-yn="1"][aria-pressed="true"]{background:var(--blue-soft);color:var(--blue)}
+.sh-yn button[data-yn="0"][aria-pressed="true"]{background:var(--red-soft);color:var(--red)}
+.sh-yn button:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.sh-row.no .sh-name{color:var(--text-2)}
+.sh-ml{grid-area:m;white-space:nowrap;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:6px;font-size:13px;color:var(--text-2)}
+.sh-ml-f{position:relative;display:block;width:132px}
+.sh-ml-f .f{min-height:40px;padding-right:38px;text-align:right;font-weight:600}
+.sh-ml-f i{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-style:normal;font-size:13px;color:var(--text-2);pointer-events:none}
+.sh-note{min-height:84px;padding:12px 14px;resize:vertical;line-height:1.45;font:inherit;font-size:16px}
+.sh-out{display:grid;gap:14px;padding:18px}
+.sh-out-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.sh-out-h h2{font-size:18px;font-weight:700}
+#shProgress{font-size:13px;color:var(--text-2)}
+#shProgress.ok{color:var(--blue);font-weight:600}
+.sh-msg{margin:0;padding:14px 16px;border-radius:14px;background:var(--field);box-shadow:inset 0 0 0 1px var(--line);font:inherit;font-size:14px;line-height:1.55;white-space:pre-wrap;word-break:break-word;max-height:60vh;overflow:auto}
+.sh-actions{display:flex;flex-wrap:wrap;gap:8px}
+.sh-actions .btn{flex:1 1 auto}
+.sh-ghost{background:var(--field);color:var(--text);box-shadow:inset 0 0 0 1px var(--line)}
+.sh-ghost:hover{background:var(--surface)}
 .seed-lead{color:var(--text-2);font-size:15px;margin:-6px 2px 16px;max-width:70ch}
 .seed-lead b{color:var(--text);font-weight:700}
 .seed-q{list-style:none;margin:0 0 6px;padding:0;display:grid;gap:2px}
@@ -477,10 +550,14 @@ details.variants[open] summary .ico{transform:rotate(90deg)}
 .sacc .anim{margin:0;max-width:340px}
 @media (min-width:720px){ .sacc .acc-body{grid-template-columns:minmax(0,300px) minmax(0,1fr);align-items:center;gap:18px} }
 .seed-src{margin:20px 2px 0;font-size:13px;color:var(--text-3)}
-@media (max-width:420px){ .top .seg button{padding:0 9px;font-size:14px} }
 
 /* ---------- Котик-лаборант ---------- */
 .cat-btn{padding:0;overflow:hidden}
+.icon-btn.cat-btn{background:#FFE9D2;color:#B5612A;box-shadow:inset 0 0 0 1.5px #F4B985}
+.icon-btn.cat-btn:hover{background:#FFDDBA}
+.icon-btn.cat-btn:focus-visible{outline-color:#F08A3C}
+:root[data-theme="dark"] .icon-btn.cat-btn{background:#3D2A1A;box-shadow:inset 0 0 0 1.5px #8C5A2E}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .icon-btn.cat-btn{background:#3D2A1A;box-shadow:inset 0 0 0 1.5px #8C5A2E} }
 .cat-btn svg{width:40px;height:40px;display:block}
 .cat-btn .cat-head{transform-origin:20px 28px;transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
 .cat-btn:hover .cat-head{transform:rotate(-8deg)}
@@ -502,7 +579,24 @@ dialog.cat-dlg::backdrop{background:rgba(0,0,0,.35);-webkit-backdrop-filter:blur
 .cat-say{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 @keyframes youIn{from{opacity:0;transform:translateY(6px)}}
 .cat-qs{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;transition:opacity .25s}
-.cat-qs.off{opacity:.4;pointer-events:none}
+.cat-qs.off .cat-q{opacity:.45;cursor:default}
+.cat-qs.off .cat-q:hover{background:var(--field);color:var(--ink);box-shadow:var(--chip-sh),inset 0 0 0 1px var(--tint-ring)}
+.cat-q.nudge{animation:qNudge .38s ease}
+@keyframes qNudge{20%{transform:translateX(-5px)}45%{transform:translateX(4px)}70%{transform:translateX(-2px)}}
+.cat-stage-wrap{position:relative}
+.cat-wait{position:absolute;left:50%;bottom:10px;transform:translate(-50%,6px);display:flex;align-items:center;gap:7px;max-width:calc(100% - 24px);padding:7px 13px;border-radius:999px;
+  background:var(--tint-solid);color:var(--ink);box-shadow:inset 0 0 0 1px var(--tint-ring),0 6px 16px -8px rgba(25,55,110,.35);font-size:13px;font-weight:600;line-height:1.25;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s,background .2s,color .2s}
+.cat-wait.on{opacity:1;transform:translate(-50%,0)}
+.cat-wait.warn{background:#FFF3D6;color:#7A4E00;box-shadow:inset 0 0 0 1px rgba(227,155,0,.45),0 6px 16px -8px rgba(120,80,0,.4);animation:cwPop .35s ease}
+:root[data-theme="dark"] .cat-wait.warn{background:#3A2E14;color:#F6CF7A}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .cat-wait.warn{background:#3A2E14;color:#F6CF7A} }
+@keyframes cwPop{40%{transform:translate(-50%,0) scale(1.06)}}
+.cw-dots{display:inline-flex;gap:3px}
+.cw-dots i{width:4px;height:4px;border-radius:50%;background:currentColor;animation:cwDot 1s infinite ease-in-out}
+.cw-dots i:nth-child(2){animation-delay:.15s}.cw-dots i:nth-child(3){animation-delay:.3s}
+.cat-wait.warn .cw-dots{display:none}
+@keyframes cwDot{0%,60%,100%{opacity:.25;transform:none}30%{opacity:1;transform:translateY(-2px)}}
 .cat-qs:empty{display:none}
 .cat-q{border:0;border-radius:999px;padding:9px 14px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);color:var(--text);font-size:14px;font-weight:500;transition:background .15s,box-shadow .15s,color .15s}
 .cat-q:hover{background:var(--blue-soft);color:var(--blue);box-shadow:none}
@@ -728,6 +822,89 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 @media print{ .top,.entry-wrap,.dock,.toast,.r-del,.t-foot{display:none!important} }
+/* ---------- Единый стиль кликабельных элементов: мягкий синий, как у блока «Проверьте перед работой» ----------
+   однозначный выбор — синяя «дорожка», выбранный пункт — белая плашка;
+   переключатели и действия — белые плашки с тонкой синей рамкой, включённые — голубые */
+:root{--on:#2D7DFF;--on-fg:#FFFFFF;--on-sh:0 2px 8px -3px rgba(45,125,255,.7);--tint:rgba(45,125,255,.08);--tint-2:rgba(45,125,255,.15);--tint-solid:#EAF1FD;--tint-ring:rgba(45,125,255,.22);--ink:#2F4F80;
+  --pick:#FFFFFF;--pick-fg:#1F63D6;--pick-sh:0 1px 3px rgba(25,55,110,.16),0 0 0 1px rgba(45,125,255,.10);--chip-sh:0 1px 2px rgba(25,55,110,.08)}
+:root[data-theme="dark"]{--on:#3F7FF0;--on-fg:#FFFFFF;--on-sh:0 2px 8px -3px rgba(0,0,0,.6);--tint:rgba(96,150,255,.12);--tint-2:rgba(96,150,255,.22);--tint-solid:#1D2636;--tint-ring:rgba(120,165,255,.26);--ink:#A9C2EC;
+  --pick:#34425D;--pick-fg:#E6EEFF;--pick-sh:0 1px 3px rgba(0,0,0,.45),0 0 0 1px rgba(140,180,255,.16);--chip-sh:0 1px 2px rgba(0,0,0,.3)}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){--on:#3F7FF0;--on-fg:#FFFFFF;--on-sh:0 2px 8px -3px rgba(0,0,0,.6);--tint:rgba(96,150,255,.12);--tint-2:rgba(96,150,255,.22);--tint-solid:#1D2636;--tint-ring:rgba(120,165,255,.26);--ink:#A9C2EC;
+  --pick:#34425D;--pick-fg:#E6EEFF;--pick-sh:0 1px 3px rgba(0,0,0,.45),0 0 0 1px rgba(140,180,255,.16);--chip-sh:0 1px 2px rgba(0,0,0,.3)} }
+
+/* дорожки выбора */
+.seg,.wseg,.sh-yn,.seed-cats{background:var(--tint);box-shadow:inset 0 0 0 1px var(--tint-ring)}
+.seg{padding:4px;border-radius:14px}
+.seg label,.seg button{color:var(--ink);border-radius:10px}
+.seg label:hover,.seg button:hover{color:var(--pick-fg)}
+.seg input:checked+label,.seg button[aria-selected="true"]{background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh);font-weight:600}
+.top .seg button[aria-selected="true"]{background:var(--pick);color:var(--pick-fg);box-shadow:var(--pick-sh)}
+.wseg{padding:3px;border-radius:11px}
+.wseg label{color:var(--ink)}
+.wseg input:checked+label{background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh)}
+.sh-yn{border-radius:12px}
+.sh-yn button{color:var(--ink)}
+.sh-yn button[data-yn="1"][aria-pressed="true"]{background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh)}
+.sh-yn button[data-yn="0"][aria-pressed="true"]{background:var(--red);color:#fff;box-shadow:0 2px 8px -3px rgba(215,38,61,.6)}
+.seed-cats{display:inline-flex;max-width:100%;padding:4px;gap:2px;border-radius:16px;margin-top:0}
+.seed-cats .chip{background:transparent;box-shadow:none;color:var(--ink);border-radius:12px;font-weight:500}
+.seed-cats .chip:hover{color:var(--pick-fg)}
+.seed-cats .chip.on{background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh);font-weight:600}
+.seed-sep{background:var(--tint-ring)}
+@media (max-width:560px){ .seed-sep{flex-basis:100%;width:auto;height:0;margin:0} }
+/* круглые кнопки-иконки */
+.icon-btn{background:var(--tint);color:var(--ink);box-shadow:inset 0 0 0 1px var(--tint-ring)}
+.icon-btn:hover{background:var(--tint-2);color:var(--pick-fg)}
+.icon-btn:disabled{background:var(--tint);opacity:.4}
+.icon-btn.ghost{background:transparent;box-shadow:none;color:var(--text-3)}
+.counter .icon-btn{background:var(--tint);color:var(--ink);box-shadow:inset 0 0 0 1px var(--tint-ring)}
+.counter .icon-btn:hover:not(:disabled){background:var(--tint-2);color:var(--pick-fg);box-shadow:inset 0 0 0 1px var(--tint-ring)}
+/* плашки: вопросы Борису, «Вчера/Сегодня», категории-галочки на телефоне */
+.chip,.cat-q,.dd-chip{background:var(--field);color:var(--ink);box-shadow:var(--chip-sh),inset 0 0 0 1px var(--tint-ring);font-weight:500}
+.chip:hover,.cat-q:hover,.dd-chip:hover{background:var(--tint);color:var(--pick-fg);box-shadow:inset 0 0 0 1px var(--tint-ring)}
+.chip.on,.dd-chip[aria-pressed="true"]{background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh);font-weight:600}
+.chip.on:hover{background:var(--on);color:var(--on-fg)}
+@container list (max-width:779.98px){
+  .r-tog .tick{background:var(--field);color:var(--ink);box-shadow:var(--chip-sh),inset 0 0 0 1px var(--tint-ring)}
+  .r-tog .tick:has(input:checked){background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh)}
+  .r-tog .tick input:checked+.box{background:#fff;box-shadow:none}
+  .r-tog .tick input:checked+.box svg{stroke:var(--on)}
+}
+.tick .box{box-shadow:inset 0 0 0 1.6px rgba(45,125,255,.38)}
+/* вторичные кнопки и прочее */
+.sh-ghost{background:var(--tint);color:var(--ink);box-shadow:inset 0 0 0 1px var(--tint-ring)}
+.sh-ghost:hover{background:var(--tint-2);color:var(--pick-fg)}
+.fx-why-btn{box-shadow:var(--chip-sh),inset 0 0 0 1px var(--tint-ring)}
+.stp label{background:var(--tint);color:var(--ink);box-shadow:inset 0 0 0 1px var(--tint-ring)}
+.stp label:hover{box-shadow:inset 0 0 0 1px rgba(45,125,255,.45)}
+.stp input:checked+label{background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh)}
+.stp input:checked+label small{color:var(--on-fg);opacity:.85}
+.stp input:checked+label b i{color:#FFD66B}
+.variant:hover,.alt-list label:hover{box-shadow:inset 0 0 0 1px var(--tint-ring)}
+.variant[aria-pressed="true"],.drow[aria-pressed="true"],button.rt-row.on,.alt-list input:checked+label{box-shadow:inset 0 0 0 1.5px var(--blue)}
+.sh-date .sh-date-chev{color:var(--ink)}
+.to-top{background:var(--tint-solid);color:var(--ink);box-shadow:inset 0 0 0 1px var(--tint-ring),0 10px 26px -10px rgba(25,55,110,.35)}
+.btn{border-radius:14px}
+
+/* ---------- Навигация: на компьютере вкладки сверху, на телефоне панель снизу ---------- */
+.tab-ico{display:none}
+@media (max-width:700px){
+  .app{padding-bottom:calc(170px + env(safe-area-inset-bottom,0px))}
+  .top{padding-top:12px}
+  .top .cat-btn{order:-1;margin-right:auto}
+  .top .seg{
+    position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:40;margin:0;
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;padding:5px;border-radius:22px;
+    background:var(--tint-solid);box-shadow:inset 0 0 0 1px var(--tint-ring),0 12px 30px -12px rgba(25,55,110,.38);
+  }
+  .top .seg button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:54px;padding:4px 2px;border-radius:17px;font-size:11px;font-weight:600;color:var(--ink);background:none;box-shadow:none}
+  .top .seg button span{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+  .top .seg .tab-ico{display:block;width:24px;height:24px}
+  .top .seg button[aria-selected="true"]{background:var(--pick);color:var(--pick-fg);font-weight:700;box-shadow:var(--pick-sh)}
+  .dock{bottom:calc(86px + env(safe-area-inset-bottom,0px))}
+  .toast{bottom:calc(160px + env(safe-area-inset-bottom,0px))}
+  .to-top{display:none}
+}
 </style>
 </head>
 <body>
@@ -749,7 +926,15 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
   <symbol id="i-jar" viewBox="0 0 24 24"><path d="M7 3.5h10v3.5H7z"/><path d="M7.5 7h9v12a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2z"/><path d="M7.5 13h9"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></symbol>
   <symbol id="i-therm" viewBox="0 0 24 24"><path d="M10 14.2V5a2 2 0 0 1 4 0v9.2a3.6 3.6 0 1 1-4 0z"/><path d="M12 9.5v7"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="3"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
   <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3.5c-3.6 4.6-6 8-6 11a6 6 0 0 0 12 0c0-3-2.4-6.4-6-11z"/><path d="M9.4 15.2a2.8 2.8 0 0 0 2.6 2.8"/></symbol>
+  <symbol id="i-spray" viewBox="0 0 24 24"><path d="M7.5 11h7v8.5a1.5 1.5 0 0 1-1.5 1.5H9a1.5 1.5 0 0 1-1.5-1.5z"/><path d="M9.5 11V8h3v3"/><path d="M8.5 8V5h6l1.5 2"/><path d="M19 4.5h.01M20.5 7h.01M19 9.5h.01" stroke-width="2.4"/></symbol>
+  <symbol id="i-jarred" viewBox="0 0 24 24"><rect x="6.5" y="3.5" width="11" height="4" rx="1.2" fill="#D7263D" stroke="#D7263D"/><path d="M7.5 7.5h9v11.5a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2z"/><path d="M7.5 12h9"/></symbol>
+  <symbol id="i-pipette" viewBox="0 0 24 24"><path d="M3.5 20.5l2-2"/><path d="M5.5 18.5L17 7l2 2L7.5 20.5z"/><path d="M18 8l2.5-2.5"/><path d="M10.5 13.5l1.4 1.4M13 11l1.4 1.4M15.5 8.5l1.4 1.4"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6.2 20.5C5.6 15.8 7 11.8 10 9.5h4c3 2.3 4.4 6.3 3.8 11z"/><path d="M10 9.5L8.4 5.6M14 9.5l1.6-3.9"/><path d="M10.3 7.2h3.4"/><path d="M9.5 15.5h5" opacity=".5"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3.5 3.5 8 12 12.5 20.5 8z"/><path d="M3.5 12 12 16.5 20.5 12"/><path d="M3.5 16 12 20.5 20.5 16"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><path d="M4 8h13M13.5 4.5 17 8l-3.5 3.5"/><path d="M20 16H7M10.5 12.5 7 16l3.5 3.5"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><path d="M12 16.5h.01" stroke-width="2.6"/></symbol>
   <!-- среды -->
@@ -775,9 +960,10 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
 <div class="app">
   <header class="top">
     <div class="seg" role="tablist" aria-label="Раздел">
-      <button role="tab" id="tab-mbch" aria-controls="panel-mbch" aria-selected="true" type="button">МБЧ</button>
-      <button role="tab" id="tab-seed" aria-controls="panel-seed" aria-selected="false" tabindex="-1" type="button">Категории</button>
-      <button role="tab" id="tab-dil" aria-controls="panel-dil" aria-selected="false" tabindex="-1" type="button">Разведения</button>
+      <button role="tab" id="tab-mbch" aria-controls="panel-mbch" aria-selected="true" type="button"><svg class="ico tab-ico" aria-hidden="true"><use href="#i-dish"/></svg><span>МБЧ</span></button>
+      <button role="tab" id="tab-seed" aria-controls="panel-seed" aria-selected="false" tabindex="-1" type="button"><svg class="ico tab-ico" aria-hidden="true"><use href="#i-layers"/></svg><span>Категории</span></button>
+      <button role="tab" id="tab-dil" aria-controls="panel-dil" aria-selected="false" tabindex="-1" type="button"><svg class="ico tab-ico" aria-hidden="true"><use href="#i-tube"/></svg><span>Разведения</span></button>
+      <button role="tab" id="tab-shift" aria-controls="panel-shift" aria-selected="false" tabindex="-1" type="button"><svg class="ico tab-ico" aria-hidden="true"><use href="#i-swap"/></svg><span>Смена</span></button>
     </div>
     <button class="icon-btn cat-btn" id="catBtn" type="button" aria-label="Кот Борис, лаборант" title="Кот Борис" aria-haspopup="dialog">
       <svg viewBox="0 0 40 40" aria-hidden="true">
@@ -970,6 +1156,33 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
         </div>
       </div>
     </section>
+
+    <!-- ================= Передача смены ================= -->
+    <section id="panel-shift" role="tabpanel" aria-labelledby="tab-shift" hidden>
+      <h1 class="title">Передача смены</h1>
+      <p class="seed-lead">Отметьте, что осталось после смены, и скопируйте готовое сообщение в чат. Отметки сохраняются: в следующий раз поменяйте только то, что изменилось.</p>
+      <div class="sh-grid">
+        <div class="sh-form">
+          <div class="surface sh-head">
+            <div><span class="label" id="shDateL">Дата</span><button class="f sh-date" id="shDate" type="button" aria-haspopup="dialog" aria-labelledby="shDateL shDateTxt"><svg class="ico" aria-hidden="true"><use href="#i-cal"/></svg><span class="sh-date-t"><b id="shDateTxt"></b><small id="shDateSub"></small></span><svg class="ico sh-date-chev" aria-hidden="true"><use href="#i-chev"/></svg></button></div>
+            <label><span class="label">Передаёт</span><input class="f" id="shWho" type="text" autocomplete="off" placeholder="Имя, необязательно"></label>
+          </div>
+          <section class="sh-group" aria-labelledby="shMH"><h2 id="shMH" class="sh-h">Среды</h2><div class="surface sh-list" id="sh-m"></div></section>
+          <section class="sh-group" aria-labelledby="shTH"><h2 id="shTH" class="sh-h">Инструменты</h2><div class="surface sh-list" id="sh-t"></div></section>
+          <section class="sh-group" aria-labelledby="shSH"><h2 id="shSH" class="sh-h">Расходники</h2><div class="surface sh-list" id="sh-s"></div></section>
+          <label class="sh-group"><span class="sh-h">Комментарий</span><textarea class="f sh-note" id="shNote" rows="3" placeholder="Например: TSA заканчивается, термостат 22,5 °C занят"></textarea></label>
+        </div>
+        <aside class="surface sh-out" aria-labelledby="shOutH">
+          <div class="sh-out-h"><h2 id="shOutH">Сообщение</h2><span id="shProgress"></span></div>
+          <pre class="sh-msg" id="shMsg" aria-live="polite"></pre>
+          <div class="sh-actions">
+            <button class="btn" id="shCopy" type="button"><svg class="ico" aria-hidden="true"><use href="#i-copy"/></svg>Скопировать</button>
+            <button class="btn sh-ghost" id="shShare" type="button" hidden><svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg>Отправить</button>
+            <button class="btn sh-ghost" id="shReset" type="button"><svg class="ico" aria-hidden="true"><use href="#i-trash"/></svg>Очистить</button>
+          </div>
+        </aside>
+      </div>
+    </section>
   </main>
 </div>
 
@@ -985,12 +1198,25 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
 <dialog class="cat-dlg" id="catDlg" aria-labelledby="catName">
   <div class="cat-head"><span class="cat-name" id="catName">Борис</span><span class="cat-role">кот-лаборант</span>
     <button class="icon-btn cat-x" id="catClose" type="button" aria-label="Закрыть"><svg class="ico"><use href="#i-x"/></svg></button></div>
-  <div class="cat-stage" id="catStage" role="img" aria-label="Кот Борис в лаборатории"></div>
+  <div class="cat-stage-wrap"><div class="cat-stage" id="catStage" role="img" aria-label="Кот Борис в лаборатории"></div>
+    <p class="cat-wait" id="catWait" aria-live="polite"><span class="cw-t" id="catWaitT">Борис говорит</span><span class="cw-dots" aria-hidden="true"><i></i><i></i><i></i></span></p></div>
   <div class="cat-chat">
     <div class="cat-you-row" id="catYouRow"><p class="cat-you ghost" id="catYou"></p></div>
     <p class="cat-say" id="catSay" aria-live="polite"></p>
     <div class="cat-qs off" id="catQs" role="group" aria-label="Спросить Бориса"></div>
   </div>
+</dialog>
+
+<dialog class="date-dlg" id="dateDlg" aria-labelledby="ddTitle">
+  <div class="dd-head"><div><span class="dd-cap" id="ddTitle">Дата передачи</span><b class="dd-now" id="ddNow"></b></div>
+    <button class="icon-btn" id="ddClose" type="button" aria-label="Закрыть"><svg class="ico"><use href="#i-x"/></svg></button></div>
+  <div class="dd-wheels">
+    <div class="dd-band" aria-hidden="true"></div>
+    <div class="wheel" data-w="d" tabindex="0" role="listbox" aria-label="День"></div>
+    <div class="wheel" data-w="m" tabindex="0" role="listbox" aria-label="Месяц"></div>
+    <div class="wheel" data-w="y" tabindex="0" role="listbox" aria-label="Год"></div>
+  </div>
+  <div class="dd-foot"><button class="dd-chip" type="button" data-dd="-1">Вчера</button><button class="dd-chip" type="button" data-dd="0">Сегодня</button><button class="btn" id="ddOk" type="button">Готово</button></div>
 </dialog>
 
 <dialog class="sheet" id="help" aria-labelledby="helpTitle">
@@ -1020,6 +1246,12 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
         <div class="acc-body"><p>Выберите категорию. Схема идёт слева направо: от навески к результату. Над каждой стрелкой написано, в какой термостат и на сколько ставим. Ниже справочник с ответами на вопросы по категории, справа: кто в неё входит и какие нормы. Последняя кнопка, «Мембранная фильтрация», это не категория, а метод: со своей схемой и справочником.</p><div class="anim" data-scene="seed_3b"></div></div></details>
       <details name="help"><summary><span class="acc-n">2</span><span class="acc-t">Откуда данные</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
         <div class="acc-body"><p>Нормы и схемы взяты из ГФ РФ, ОФС.1.2.4.0002 «Микробиологическая чистота». Калькулятор МБЧ эти схемы не меняют: это справочник. Объёмы и конкретные среды лаборатории сверяйте с СОП.</p></div></details>
+    </div>
+    <div class="acc" id="acc-shift" hidden>
+      <details name="help" open><summary><span class="acc-n">1</span><span class="acc-t">Как передать смену</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <div class="acc-body"><p>У каждой позиции нажмите «Есть» или «Нет». Для сред и инструментов после «Есть» впишите, сколько осталось (мл, штук или упаковок). Справа сразу собирается сообщение: недостающие расходники попадают в строку «Нужно взять», имя передающего выделяется жирным. Нажмите «Скопировать» и вставьте сообщение в рабочий чат.</p></div></details>
+      <details name="help"><summary><span class="acc-n">2</span><span class="acc-t">Что сохраняется</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <div class="acc-body"><p>Отметки, объёмы и комментарий сохраняются в этом браузере, а дата каждый раз ставится сегодняшняя. Обычно передают одно и то же, поэтому достаточно поправить то, что изменилось. Повторное нажатие на «Есть» или «Нет» снимает отметку, «Очистить» сбрасывает всё (можно отменить).</p></div></details>
     </div>
     <div class="acc" id="acc-beta" hidden>
       <details name="help" open><summary><span class="acc-n">1</span><span class="acc-t">Образец</span><svg class="ico chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
@@ -1165,7 +1397,7 @@ function parseCountExpr(raw, cur) {
    ===================================================================== */
 const KEY = 'mbch-calc:v5';
 const state = {
-  tab: 'mbch', theme: null, seedCat: '3a',
+  tab: 'mbch', theme: null, seedCat: '3a', supplies: [], shift: null,
   series: [],   // { id, first } — серия начинается с кода первой пробы
   cur: null,    // текущая серия: к ней относятся «Первая проба» и «Количество»
   samples: [],  // { id, sid, code, auto, format, formatAuto, cat, d100, d1000, bio, washes, bbWashes }
@@ -1199,8 +1431,10 @@ function load() {
     const raw = localStorage.getItem(KEY) || localStorage.getItem('mbch-calc:v4') || localStorage.getItem('mbch-calc:v3') || localStorage.getItem('mbch-calc:v2');
     if (!raw) return;
     const d = JSON.parse(raw);
-    if (d.tab === 'mbch' || d.tab === 'dil' || d.tab === 'seed') state.tab = d.tab;
+    if (['mbch', 'dil', 'seed', 'shift'].includes(d.tab)) state.tab = d.tab;
     if (typeof d.seedCat === 'string') state.seedCat = d.seedCat;
+    if (Array.isArray(d.supplies)) state.supplies = d.supplies.filter((k) => typeof k === 'string');
+    if (d.shift && typeof d.shift === 'object') state.shift = { ...d.shift, v: d.shift.v && typeof d.shift.v === 'object' ? d.shift.v : {}, who: String(d.shift.who || ''), note: String(d.shift.note || '') };
     if (d.theme === 'light' || d.theme === 'dark') state.theme = d.theme;
     if (Array.isArray(d.series)) state.series = d.series.filter((x) => x && typeof x.id === 'string').map((x) => ({ id: x.id, first: typeof x.first === 'string' ? x.first : '' }));
     if (Array.isArray(d.samples)) state.samples = d.samples.map(sanitize).filter(Boolean).slice(0, MAX_SAMPLES);
@@ -1227,8 +1461,8 @@ function save() {
   clearTimeout(saveT);
   saveT = setTimeout(() => {
     try {
-      const { tab, theme, series, cur, samples, seedCat } = state;
-      localStorage.setItem(KEY, JSON.stringify({ tab, theme, series, cur, samples, seedCat, dil: state.dil }));
+      const { tab, theme, series, cur, samples, seedCat, supplies, shift } = state;
+      localStorage.setItem(KEY, JSON.stringify({ tab, theme, series, cur, samples, seedCat, supplies, shift, dil: state.dil }));
     } catch (e) { /* без сохранения */ }
   }, 200);
 }
@@ -1574,6 +1808,20 @@ const byId = (id) => state.samples.find((s) => s.id === id);
 function tRow(icon, name, value, unit, sub) {
   return `<li class="t-row"><svg class="ico" aria-hidden="true"><use href="#${icon}"/></svg><span class="t-name">${name}${sub ? `<small>${sub}</small>` : ''}</span><span class="t-val">${num(value)}${unit ? `<small>${unit}</small>` : ''}</span></li>`;
 }
+// Расходники: без расчёта и отметок, только напоминание взять с собой
+const SUPPLIES = [
+  { icon: 'i-flask', name: 'Среды в приёмке' },
+  { icon: 'i-drop', name: 'Вода для бани' },
+  { icon: 'i-spray', name: 'Спирт, 2 шт', title: 'Изопропиловый спирт в пульверизаторах, 2 шт' },
+  { icon: 'i-jarred', name: 'Баночки', title: 'Баночки с красной крышкой' },
+  { icon: 'i-pipette', name: 'Пипетки', title: 'Серологические пипетки' },
+  { icon: 'i-bag', name: 'Пакеты', title: 'Мусорные пакеты' },
+];
+function suppliesHTML() {
+  return `<section class="sup" aria-labelledby="supH"><h3 id="supH"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Проверьте перед работой</h3>
+    <ul class="sup-chips">${SUPPLIES.map((x) => `<li${x.title ? ` title="${x.title}" aria-label="${x.title}"` : ''}><svg class="ico" aria-hidden="true"><use href="#${x.icon}"/></svg><span aria-hidden="${!!x.title}">${x.name}</span></li>`).join('')}</ul>
+    <p class="sup-n">Чего нет на месте, возьмите, сверившись с передачей смены.</p></section>`;
+}
 function renderTotals() {
   const n = state.samples.length;
   const { media, tools, bio, noFormat, mbCount } = computeTotals(state.samples);
@@ -1594,6 +1842,7 @@ function renderTotals() {
         <p class="t-note"><svg class="ico"><use href="#i-alert"/></svg><span>Проверьте <b class="accent">этиловый спирт</b></span></p>
         <p class="t-note" style="margin-top:4px"><span style="width:18px;flex:none"></span><span>Контроль учтён один раз: ${BIO.control.tsa} TSA, ${BIO.control.sda} SDA, ${BIO.control.filters} фильтра, ${BIO.control.naclMl} мл NaCl</span></p></section>`;
     }
+    html += suppliesHTML();
   }
   $('totBody').innerHTML = html;
   $('dockCount').textContent = probes(n);
@@ -1921,11 +2170,11 @@ function buildNode(spec, parent, list) {
 function paint(item, t, all) {
   const { el, spec: s } = item, k = s.k || {};
   const v = (p, d) => (k[p] ? keyAt(k[p], t) : (s[p] !== undefined ? s[p] : d));
-  if (all || k.x || k.y || k.w || k.h || k.s || k.r || k.rot) {
+  if (all || k.x || k.y || k.w || k.h || k.s || k.sy || k.r || k.rot) {
     if (s.t === 'rect') { el.setAttribute('x', v('x', 0)); el.setAttribute('y', v('y', 0)); el.setAttribute('width', Math.max(0, v('w', 0))); el.setAttribute('height', Math.max(0, v('h', 0))); }
     else if (s.t === 'circle') { el.setAttribute('cx', v('x', 0)); el.setAttribute('cy', v('y', 0)); el.setAttribute('r', Math.max(0, v('r', 1))); }
     else if (s.t === 'text') { el.setAttribute('x', v('x', 0)); el.setAttribute('y', v('y', 0)); }
-    else { const sc = v('s', 1), rot = v('rot', 0); el.setAttribute('transform', `translate(${v('x', 0)} ${v('y', 0)})${rot ? ` rotate(${rot})` : ''}${sc !== 1 ? ` scale(${sc})` : ''}`); }
+    else { const sc = v('s', 1), sy = v('sy', 1), rot = v('rot', 0); el.setAttribute('transform', `translate(${v('x', 0)} ${v('y', 0)})${rot ? ` rotate(${rot})` : ''}${sc !== 1 || sy !== 1 ? ` scale(${sc} ${sc * sy})` : ''}`); }
   }
   if (all || k.o) el.setAttribute('opacity', v('o', 1));
   if (s.t === 'text' && k.n) { const tx = num(Math.round(keyAt(k.n, t))) + (s.suffix || ''); if (el.textContent !== tx) el.textContent = tx; }
@@ -2334,6 +2583,36 @@ const ks = (o) => { const k = {}; for (const p in o) if (o[p]) k[p] = o[p]; retu
 const first = (keys, def) => (keys ? keys[0][1] : def);
 const shift = (keys, d) => keys && keys.map(([t, v, e]) => [t, v + d, e]);
 // запаздывание (follow-through): тот же ход, позже и чуть сильнее
+// разговор: на отрезках [t0, t1] рот «болтает»; улыбка и прочие рты на это время прячутся
+function talkify(o, segs, amp = 1) {
+  const sy = [[0, 0.2]], fang = [[0, 0]], tongue = [[0, 0]], on = [[0, 0]];
+  const PAT = [0.6, 1, 0.45, 0.9, 0.7, 1, 0.5, 0.85];
+  segs.forEach(([t0, t1], si) => {
+    on.push([t0 - 1, 0], [t0, 1], [t1, 1], [t1 + 1, 0]);
+    let t = t0, i = si * 3, n = si * 2, closed = false;
+    sy.push([t0, 0.2]);
+    while (t + 150 < t1) {
+      const step = 115 + ((i * 37) % 4) * 18; t += step;
+      const raw = closed ? 0.15 : PAT[n++ % PAT.length], v = closed ? raw : raw * amp; sy.push([t, v, 'out']);
+      if (!closed && raw >= 0.85) {   // широко открыт: задерживаем, видны клычки, иногда язычок
+        const nx = 115 + ((i * 53) % 3) * 20, show = [[t - 30, 0], [t, 1], [t + 110 + nx * 0.08, 1], [t + 110 + nx * 0.26, 0]];
+        sy.push([t + 110, v * 0.94]); t += 110;
+        fang.push(...show); if (n % 3) tongue.push(...show);
+      }
+      closed = !closed; i++;
+    }
+    sy.push([t1, 0.2]);
+  });
+  const mute = (keys, def) => {
+    let k = keys || [[0, def]];
+    segs.forEach(([t0, t1]) => {
+      const a = keyAt(k, t0 - 60), b = keyAt(k, t1 + 60);
+      k = [...k.filter(([t]) => t < t0 - 60), [t0 - 60, a], [t0, 0], [t1, 0], [t1 + 60, b], ...k.filter(([t]) => t > t1 + 60)];
+    });
+    return k;
+  };
+  return { ...o, talkO: on, talkSY: sy, fangO: fang, tongueO: tongue, smileO: mute(o.smileO, 1), happyO: mute(o.happyO, 0), ohO: mute(o.ohO, 0), ...(o.chadO ? { smirkO: mute(o.chadO, 0) } : {}) };
+}
 const lag = (keys, dt, k = 1.4, base = 0) => keys && keys.map(([t, v, e], i) => [i && i < keys.length - 1 ? t + dt : t, base + (v - keys[0][1]) * k + keys[0][1] * 0.5, e]);
 const ell = (cx, cy, rx, ry) => `M${cx - rx} ${cy}a${rx} ${ry} 0 1 0 ${rx * 2} 0a${rx} ${ry} 0 1 0 ${-rx * 2} 0Z`;
 // кубическая кривая: точка, касательная и кусок [t..1] — чтобы кончик хвоста и полоски лежали точно на хвосте
@@ -2455,6 +2734,13 @@ function catRig(o = {}) {
       { t: 'g', o: first(o.happyO, 0), ...ks({ o: o.happyO }), c: [
         { t: 'path', d: 'M17.6 24Q20 28.6 22.4 24Z', fill: INK }, { t: 'path', d: 'M18.7 26.2Q20 25.3 21.3 26.2Q20 27.3 18.7 26.2Z', fill: PINK }] },
       { t: 'circle', x: 20, y: 25.3, r: 1.05, fill: INK, o: first(o.ohO, 0), ...ks({ o: o.ohO }) },
+      // говорит: рот открывается и закрывается, в отдельных кадрах видны клычки и язычок
+      ...(o.talkO ? [{ t: 'g', x: 20, y: 24.15, o: first(o.talkO, 0), k: { o: o.talkO }, c: [
+        { t: 'g', sy: first(o.talkSY, 0.2), k: { sy: o.talkSY }, c: [
+          { t: 'path', d: 'M-2.3 0.1Q-1.15 0.85 0 0.25Q1.15 0.85 2.3 0.1C2.2 2.3 1.3 3.4 0 3.4S-2.2 2.3-2.3 0.1Z', fill: '#4A1E26' },
+          { t: 'path', d: 'M-1.45 2.75Q-0.75 1.75 0 2.15Q0.75 1.75 1.45 2.75Q0.85 3.35 0 3.35Q-0.85 3.35-1.45 2.75Z', fill: '#F27C91', o: 0, k: { o: o.tongueO } }] },
+        { t: 'path', d: 'M-1.75 0.45L-1.4 1.55L-1.02 0.62ZM1.75 0.45L1.4 1.55L1.02 0.62Z', fill: '#FFFFFF', o: 0, k: { o: o.fangO } },
+        { t: 'path', d: 'M-2.3 0.1Q-1.15 0.85 0 0.25Q1.15 0.85 2.3 0.1', stroke: INK, sw: 0.7 }] }] : []),
       // «гигачад»: тяжёлые брови, скулы, квадратный подбородок с ямочкой, ухмылка
       { t: 'g', o: first(o.chadO, 0), ...ks({ o: o.chadO }), c: [
         { t: 'path', d: 'M10.4 21.4Q12.3 22.8 14.4 22.5M29.6 21.4Q27.7 22.8 25.6 22.5', stroke: FUR_L, sw: 0.6, o: 0.75 },
@@ -2465,7 +2751,7 @@ function catRig(o = {}) {
         ...[[15.6, 27.6], [17, 28.6], [18.6, 29.2], [21.4, 29.2], [23, 28.6], [24.4, 27.6], [16.2, 26.4], [23.8, 26.4], [19.2, 27.8], [20.8, 27.8]].map(([x, y]) => ({ t: 'circle', x, y, r: 0.26, fill: '#B5652E', o: 0.75 })),
         { t: 'path', d: 'M11.4 12.9Q14.7 12.6 17.9 13.9', stroke: INK, sw: 1.15 },
         { t: 'g', y: first(o.browY, 0), ...ks({ y: o.browY }), c: [{ t: 'path', d: 'M22.2 12.2Q25.4 9.2 28.8 10.9', stroke: INK, sw: 1.15 }] },
-        { t: 'path', d: 'M18.7 25.2Q20.9 25.7 22.5 24.2', stroke: INK, sw: 0.9 }] },
+        { t: 'path', d: 'M18.7 25.2Q20.9 25.7 22.5 24.2', stroke: INK, sw: 0.9, ...(o.smirkO ? { o: first(o.smirkO, 1), k: { o: o.smirkO } } : {}) }] },
       { t: 'g', x: 15, y: 9.8, rot: -18, o: 0.3, c: [{ t: 'path', d: ell(0, 0, 3.6, 1.6), fill: '#fff' }] }] }] }] },
     // «гигачад»: лапа у подбородка — большой палец под подбородком, указательный вдоль щеки
     { t: 'g', o: first(o.chinO, 0), ...ks({ o: o.chinO }), c: [
@@ -2559,7 +2845,7 @@ SCENES.catShow = (() => {
       ...Array.from({ length: 20 }, (_, i) => { const t0 = P + 200 + i * 140, a = i * 47; return { t: 'g', x: CAT_X, y: PORTAL_Y, rot: a, k: { rot: [[0, a], [END, a + 900, 'lin']] }, c: [
         { t: 'circle', x: 92, y: 0, r: 1.6 + (i % 3) * 0.6, fill: i % 2 ? 'blue' : SPARK, o: 0, k: { x: [[0, 92], [t0, 92], [t0 + 1100, 6, 'in']], o: [[0, 0], [t0, 0], [t0 + 200, 0.9], [t0 + 1000, 0.9], [t0 + 1100, 0]] } }] }; }),
     ]),
-    catRig({
+    catRig(talkify({
       rootX: [[0, CAT_X], [B, CAT_X], [B + 100, 143, 'out'], [B + 500, CAT_X, 'io']],
       rootY: [[0, 150], [SEE, 150], [SEE + 150, 146, 'out'], [SEE + 400, 150, 'in'], [B, 150], [B + 100, 147, 'out'], [B + 400, 150], [PULL, 150], [FLY, 145], [GONE, PORTAL_Y, 'in']],
       rootS: [[0, 1], [PULL, 1], [FLY, 0.9], [GONE, 0, 'in']], rootRot: [...wob, [GONE, -720, 'in']],
@@ -2579,7 +2865,7 @@ SCENES.catShow = (() => {
       smileO: [[0, 1], [SEE, 1], [SEE + 60, 0], [2800, 0], [2880, 1], [4950, 1], [5050, 0], [6200, 0], [6300, 1], [PULL, 1], [PULL + 100, 0]],
       sootO: [[0, 0], [B + 49, 0], [B + 50, 1]], tuftS: [[0, 0], [B + 50, 0], [B + 350, 1, 'back']], glassRot: [[0, 0], [B, 0], [B + 200, 9, 'out']],
       markO: [[0, 0], [SEE, 0], [SEE + 60, 1], [1500, 1], [1650, 0]], markS: [[0, 0.4], [SEE, 0.4], [SEE + 300, 1, 'back']],
-      ...blinkKeys([400, [B + 50, 500], 6500]) }),
+      ...blinkKeys([400, [B + 50, 500], 6500]) }, [[SEE + 300, SEE + 1150], [PULL + 380, PULL + 1150], [BYE + 40, BYE + 950]])),
     ...labFront({
       flaskX: jit(FLASK_X, 2.2), flaskRot: [...jit(0, 4), [B + 1, 0]], flaskY: [[0, TABLE_Y], [B, TABLE_Y], [B + 120, TABLE_Y - 9, 'out'], [B + 320, TABLE_Y, 'in']],
       blueO: [[0, 0.9], [4300, 0.9], [4800, 0]], purpleO: [[0, 0], [4200, 0], [4800, 0.95], [B, 0.95], [B + 20, 0]],
@@ -2636,7 +2922,7 @@ function catReply(kind) {
         happyO: [[0, 0], [300, 1], [2900, 1], [3000, 0]], smileO: [[0, 1], [300, 0], [2900, 0], [3000, 1]], ...blinkKeys([[300, 1300]]),
         headRot: [[0, 0], [1700, 0], [2000, -7, 'io'], [2600, -7], [2900, 0, 'io']] },
       front: [heart(122, 66, 500, 1), heart(178, 58, 900, 0.8), heart(104, 96, 1300, 0.7), heart(168, 40, 1700, 0.9)] },
-    energy: { lines: ['Тоже хочешь', 'энергию кота Бориса?'],
+    energy: { lines: ['Тоже хочешь', 'энергию кота Бориса?'], talk0: 1050, amp: 0.7,
       zoom: { s: [[0, 1], [300, 1], [1000, 2.2, 'io'], [D - 750, 2.2], [D - 200, 1, 'io']], x: [[0, 0], [300, 0], [1000, -208, 'io'], [D - 750, -208], [D - 200, 0, 'io']], y: [[0, 0], [300, 0], [1000, -72, 'io'], [D - 750, -72], [D - 200, 0, 'io']] },
       o: { armL: [[0, 12], [500, -70, 'io'], [D - 700, -70], [D - 250, 12, 'io']], armR: [[0, -12], [450, 22, 'io'], [D - 650, 22], [D - 250, -12, 'io']],
         armRO: [[0, 1], [380, 1], [520, 0], [D - 700, 0], [D - 560, 1]], chinO: [[0, 0], [400, 0], [560, 1, 'out'], [D - 700, 1], [D - 560, 0]],
@@ -2649,8 +2935,10 @@ function catReply(kind) {
       front: [{ t: 'path', rule: 'evenodd', d: 'M0 0H360V250H0ZM14 138a110 110 0 1 0 220 0a110 110 0 1 0-220 0Z', fill: '#0B0E14', o: 0, k: { o: [[0, 0], [600, 0], [1100, 0.5], [D - 700, 0.5], [D - 300, 0]] } },
         { t: 'circle', x: 124, y: 138, r: 110, stroke: '#FFFFFF', sw: 2, o: 0, k: { o: [[0, 0], [600, 0], [1100, 0.25], [D - 700, 0.25], [D - 300, 0]] } }] },
   }[kind];
-  const o = { ...base, ...P.o };
+  let o = { ...base, ...P.o };
   if (P.o.tail) o.tailTip = lag(P.o.tail, 120, 1.3);
+  const chars = P.lines.join(' ').length, t0 = P.talk0 || 450;
+  o = talkify(o, [[t0, Math.min(D - 800, t0 + 420 + chars * 48)]], P.amp || 1);
   const world = [...labBack(), ...(P.back || []), catRig(o), ...labFront({ bubbles: [[300], [1300, 1.6], [2300]], ...(P.lab || {}) })];
   return { w: 360, h: 250, dur: D, still: 1400, once: true, noFade: true, els: [
     ...(P.zoom ? [{ t: 'g', x: 0, y: 0, s: 1, k: P.zoom, c: world }] : world),
@@ -3166,12 +3454,12 @@ Object.assign(SCENES, {
     { t: 'g', x: 58, y: 92, s: 1.7, c: [
       { t: 'path', d: 'M-5-18h10M-4-18v8L-14 8a3 3 0 0 0 3 4h22a3 3 0 0 0 3-4L4-10v-8', fill: 'field', stroke: 'text2', sw: 1 },
       { t: 'path', d: 'M-9-1h18l4.6 9a1.6 1.6 0 0 1-1.4 2.4h-24.4a1.6 1.6 0 0 1-1.4-2.4z', fill: '#E8D9B8' }] },
-    ttl(58, 138, 'Среда №8'), cap(58, 152, '100 мл + 10 мл образца'),
+    ttl(58, 138, 'Среда №8'), cap(62, 152, '100 мл + 10 мл образца', { fs: 8.5 }),
     pill(58, 40, 90, '1 сут, 32,5 °C', 300),
     ...[[36, 'Мак-Конки / MOS', 'E. coli', 'tube'], [84, 'CET', 'P. aeruginosa', 'dish'], [132, 'MSA', 'S. aureus', 'dish']].map(([y, m, org, kind], i) => ({ t: 'g', o: 0, k: { o: showAt(900 + i * 500) }, c: [
       { t: 'path', d: `M88 ${92 - (1 - i) * 6}C120 ${92 - (1 - i) * 6} 130 ${y} 166 ${y}M160 ${y - 5}l6 5-6 5`, stroke: 'text3', sw: 1.5 },
       kind === 'tube' ? { t: 'g', x: 184, y, c: [R(-5, -13, 10, 24, 5, 'soft', { stroke: 'text2', sw: 1.3 })] } : dishT(184, y, 13, i === 1 ? '#EEF1F0' : MSA_A),
-      TX(204, y - 2, m, { fs: 11, fw: 700 }), TX(204, y + 12, org, { fs: 9.5, fill: 'text2', it: 1 })] }))] },
+      TX(204, y - 2, m, { fs: 10, fw: 700 }), TX(204, y + 12, org, { fs: 9.5, fill: 'text2', it: 1 })] }))] },
   // НВЧ: рост в трёх разведениях → строка таблицы
   sMPN: { w: 300, h: 168, dur: 7200, still: 5200, els: [
     ...[['0,1 г', 44, true], ['0,01 г', 96, false], ['0,001 г', 148, false]].flatMap(([l, x, g], i) => [
@@ -3201,7 +3489,7 @@ Object.assign(SCENES, {
       TX(176, 41, 'Salmonella', { fs: 11, fw: 700, it: 1 }), TX(176, 55, 'красные, чёрный центр', { fs: 9.5, fill: 'text2' })] },
     { t: 'g', o: 0, k: { o: showAt(2700) }, c: [{ t: 'circle', x: 162, y: 86, r: 6, fill: '#F6D46A' },
       TX(176, 83, 'другие', { fs: 11, fw: 700 }), TX(176, 97, 'жёлтые', { fs: 9.5, fill: 'text2' })] },
-    pill(222, 134, 150, 'типичный рост: отклонение', 3300, 'red', 'var(--red-soft)')] },
+    pill(213, 134, 170, 'типичный рост: отклонение', 3300, 'red', 'var(--red-soft)')] },
 });
 const SPORE_C = '#8A6A3A';
 Object.assign(SCENES, {
@@ -3240,8 +3528,8 @@ Object.assign(SCENES, {
       ...[[-8, -4, 20], [6, 8, -30], [-4, 22, 60], [8, 30, 10]].map(([a, b, r]) => rod(a, b, r, 'blue')),
       ...[[7, -8], [-9, 12], [2, 36]].map(([a, b], i) => coccus(a, b, '#E39A4F', { k: { o: [[0, 1], [1600 + i * 150, 1], [2200 + i * 150, 0]] } }))]),
     ...[[-8, 0], [4, 300], [-2, 600], [9, 900]].map(([dx, t]) => ({ t: 'path', d: 'M0-6c-3 4-4 6-4 8a4 4 0 0 0 8 0c0-2-1-4-4-8z', fill: '#C9B24A', o: 0, k: { x: [[0, 150 + dx], [5000, 150 + dx]], y: [[t + 400, 30], [t + 1100, 62, 'in']], o: [[t + 400, 0], [t + 500, 0.9], [t + 1050, 0.9], [t + 1200, 0]] } })),
-    ttl(150, 12, 'желчь'), { t: 'g', o: 0, k: { o: showAt(2400) }, c: [TX(214, 70, 'энтеробактерии', { fs: 10, fw: 700, fill: 'blue' }), TX(214, 84, 'живут', { fs: 9.5, fill: 'text2' }),
-      TX(86, 70, 'остальные', { fs: 10, fw: 700, fill: 'red', anchor: 'end' }), TX(86, 84, 'гибнут', { fs: 9.5, fill: 'text2', anchor: 'end' })] }] },
+    ttl(150, 12, 'желчь'), { t: 'g', o: 0, k: { o: showAt(2400) }, c: [TX(208, 70, 'энтеробактерии', { fs: 9.5, fw: 700, fill: 'blue' }), TX(208, 84, 'живут', { fs: 9.5, fill: 'text2' }),
+      TX(92, 70, 'остальные', { fs: 9.5, fw: 700, fill: 'red', anchor: 'end' }), TX(92, 84, 'гибнут', { fs: 9.5, fill: 'text2', anchor: 'end' })] }] },
   // шкала: где 3.2 среди категорий по ОЧМ
   sScale: { w: 300, h: 168, dur: 6400, still: 4600, els: [
     ...[['1.2Б', 2], ['3А, 2.2', 3], ['3.2', 4], ['4Б', 5], ['4А', 7]].map(([l, p], i) => {
@@ -3319,7 +3607,7 @@ Object.assign(SCENES, {
 });
 // справочник: у каждой категории свои вопросы, без повторов (карточка справа уже отвечает «кто входит» и «почему такие нормы»)
 const SG = {
-  pour: ['Почему заливаем при 42,5 °C', 'sPour', '<p>Агар застывает около 40 °C, а клетки начинают гибнуть уже после 45 °C. Окно узкое, поэтому на чашку с 1 мл разведения льют <b>15–25 мл</b> среды при <b>42,5 ± 2,5 °C</b>.</p><p>Горячее, и часть микробов погибнет: счёт занизится. Холоднее, и агар схватится комками, колонии сольются. Как с желе: чуть остыло, и уже не разольёшь.</p>'],
+  pour: ['Почему заливаем при 42,5 °C', 'sPour', '<p>Агар застывает около 40 °C, а клетки начинают гибнуть уже после 45 °C. Окно узкое, поэтому на чашку с 1 мл разведения льют <b>15–25 мл</b> среды при <b>42,5 ± 2,5 °C</b>.</p><p>Горячее, и часть микробов погибнет: счёт занизится. Холоднее, и агар схватится комками, колонии сольются. Как с желе: чуть остыло, и уже не разольёшь.</p>'],
   water: ['Почему жидкие формы строже', 'sWater', '<p>В таблетке почти нет свободной воды, и случайные микробы в ней просто «спят». В сиропе или суспензии вода есть, и за время хранения они успевают размножиться.</p><p>Поэтому жидкостям для приёма внутрь дают <b>в 10 раз</b> больше запаса прочности.</p>'],
   select: ['Мак-Конки или MOS: в чём разница', 'sSelect', '<p>Оба бульона «отсеивают лишних», но по-разному. <b>Мак-Конки</b> ставят на <b>43 °C</b>: такую жару выдерживает E. coli, а большинство её соседей нет. Температура тут и есть фильтр.</p><p>В <b>MOS</b> есть желчь и бриллиантовый зелёный: грамположительные там не растут, а кишечные растут. Поэтому хватает обычных <b>32,5 °C</b>.</p>'],
   endo: ['Как узнать E. coli на Эндо', 'sEndo', '<p>E. coli сбраживает лактозу, и на Эндо её колонии становятся <b>малиновыми с металлическим блеском</b>. Кто лактозу не трогает, остаётся бледным.</p><p>Блеск даёт фуксин: он выпадает на колонии кристаллами. Похожие колонии отдают на идентификацию.</p>'],
@@ -3466,6 +3754,209 @@ function renderSeed() {
 
 
 /* =====================================================================
+   Передача смены: отметили, что осталось, и скопировали готовое сообщение в чат
+   ===================================================================== */
+const SHIFT_GROUPS = [['m', 'Среды'], ['t', 'Инструменты'], ['s', 'Расходники']];
+const SHIFT_ITEMS = [
+  { k: 'fbr', g: 'm', icon: 'i-bottle100', name: 'FBR', take: 'FBR', unit: 'мл' },
+  { k: 'tsb', g: 'm', icon: 'i-bottle100', name: 'TSB (среда №8)', where: 'холодильник в приёмке', take: 'TSB', unit: 'мл' },
+  { k: 'nacl', g: 'm', icon: 'i-bottle', name: 'NaCl 0,9%', take: 'NaCl', unit: 'мл' },
+  { k: 'mos', g: 'm', icon: 'i-tube', name: 'MOS', where: 'холодильник в приёмке', take: 'MOS' },
+  { k: 'grinders', g: 't', icon: 'i-grinder', name: 'Мельнички', take: 'мельнички', unit: 'шт' },
+  { k: 'scissors', g: 't', icon: 'i-scissors', name: 'Ножницы', take: 'ножницы', unit: 'шт' },
+  { k: 'tweezers', g: 't', icon: 'i-tweezers', name: 'Пинцеты', take: 'пинцеты', unit: 'шт' },
+  { k: 'funnels', g: 't', icon: 'i-funnel', name: 'Воронки', take: 'воронки', unit: 'уп.' },
+  { k: 'hoses', g: 't', icon: 'i-hose', name: 'Шланги', take: 'шланги', unit: 'шт' },
+  { k: 'filters', g: 't', icon: 'i-filter', name: 'Фильтры', take: 'фильтры', unit: 'уп.' },
+  { k: 'pip', g: 's', icon: 'i-pipette', name: 'Серологические пипетки', take: 'серологические пипетки' },
+  { k: 'bags', g: 's', icon: 'i-bag', name: 'Мусорные пакеты', take: 'мусорные пакеты' },
+  { k: 'jars', g: 's', icon: 'i-jarred', name: 'Баночки с красной крышкой', take: 'баночки с красной крышкой' },
+  { k: 'bath', g: 's', icon: 'i-drop', name: 'Вода для бани', take: 'вода для бани' },
+];
+const todayISO = () => { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 10); };
+const shiftBlank = () => ({ date: todayISO(), who: '', note: '', v: {} });
+const shV = (k) => state.shift.v[k] || (state.shift.v[k] = { has: null, ml: '' });
+const escHTML = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// сообщение для чата; **…** — жирный (Telegram, Mattermost и др. понимают такую разметку)
+function shiftMsg() {
+  const sh = state.shift, dt = sh.date ? sh.date.split('-').reverse().join('.') : '';
+  const line = (it) => {
+    const v = sh.v[it.k] || {}, nm = it.name + (it.where ? `, ${it.where}` : '');
+    if (v.has === true) return `✔️ ${nm}: ${it.unit && parseNum(v.ml) ? `${num(parseNum(v.ml))} ${it.unit}` : 'есть'}`;
+    if (v.has === false) return `❌ ${nm}: нет`;
+    return `— ${nm}: не проверено`;
+  };
+  const out = [`Передача смены${dt ? `, ${dt}` : ''}`];
+  if (sh.who.trim()) out.push(`👤 Передаёт: **${sh.who.trim()}**`);
+  SHIFT_GROUPS.forEach(([g, t]) => out.push('', t, ...SHIFT_ITEMS.filter((i) => i.g === g).map(line)));
+  const need = SHIFT_ITEMS.filter((i) => i.g === 's' && (sh.v[i.k] || {}).has === false).map((i) => i.take);
+  if (need.length) out.push('', `Нужно взять: ${need.join(', ')}`);
+  if (sh.note.trim()) out.push('', `Комментарий: ${sh.note.trim()}`);
+  return out.join('\n');
+}
+const msgHTML = (t) => escHTML(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+function shiftRowHTML(it) {
+  const v = shV(it.k);
+  return `<div class="sh-row${v.has === true ? ' yes' : v.has === false ? ' no' : ''}" data-k="${it.k}">
+    <svg class="ico" aria-hidden="true"><use href="#${it.icon}"/></svg>
+    <span class="sh-name">${it.name}${it.where ? `<small>${it.where}</small>` : ''}</span>
+    <span class="sh-yn" role="group" aria-label="${it.name}"><button type="button" data-yn="1" aria-pressed="${v.has === true}">Есть</button><button type="button" data-yn="0" aria-pressed="${v.has === false}">Нет</button></span>
+    ${it.unit && v.has === true ? `<label class="sh-ml"><span>Сколько осталось</span><span class="sh-ml-f"><input class="f" type="text" inputmode="decimal" autocomplete="off" placeholder="0" value="${escHTML(v.ml).replace(/"/g, '')}" data-ml="${it.k}" aria-label="${it.name}, ${it.unit}"><i>${it.unit}</i></span></label>` : ''}
+  </div>`;
+}
+function renderShiftForm() {
+  SHIFT_GROUPS.forEach(([g]) => { $('sh-' + g).innerHTML = SHIFT_ITEMS.filter((i) => i.g === g).map(shiftRowHTML).join(''); });
+}
+function renderShiftMsg() {
+  $('shMsg').innerHTML = msgHTML(shiftMsg());
+  const done = SHIFT_ITEMS.filter((i) => (state.shift.v[i.k] || {}).has != null).length;
+  $('shProgress').textContent = done === SHIFT_ITEMS.length ? 'Всё отмечено' : `Отмечено ${done} из ${SHIFT_ITEMS.length}`;
+  $('shProgress').classList.toggle('ok', done === SHIFT_ITEMS.length);
+}
+let shiftFresh = true;
+function renderShift() {
+  if (!state.shift) state.shift = shiftBlank();
+  if (shiftFresh) { state.shift.date = todayISO(); shiftFresh = false; }
+  renderShiftDate(); $('shWho').value = state.shift.who; $('shNote').value = state.shift.note;
+  renderShiftForm(); renderShiftMsg();
+}
+// копируем и простой текст (**жирный**), и HTML (<b>), чтобы чат взял тот формат, который понимает
+function copyText(text) {
+  const fallback = () => { const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(ta); ta.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e) { ok = false; } ta.remove(); return ok; };
+  if (navigator.clipboard && window.isSecureContext) {
+    if (window.ClipboardItem && navigator.clipboard.write) {
+      const item = new ClipboardItem({ 'text/plain': new Blob([text], { type: 'text/plain' }), 'text/html': new Blob([msgHTML(text)], { type: 'text/html' }) });
+      return navigator.clipboard.write([item]).then(() => true, () => navigator.clipboard.writeText(text).then(() => true, fallback));
+    }
+    return navigator.clipboard.writeText(text).then(() => true, fallback);
+  }
+  return Promise.resolve(fallback());
+}
+function bindShift() {
+  const p = $('panel-shift');
+  p.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-yn]');
+    if (b) {
+      const k = b.closest('[data-k]').dataset.k, v = shV(k), val = b.dataset.yn === '1';
+      v.has = v.has === val ? null : val;
+      renderShiftForm(); renderShiftMsg(); save();
+      const nb = p.querySelector(`[data-k="${k}"] [data-yn="${b.dataset.yn}"]`); if (nb) nb.focus();
+      if (v.has === true) { const inp = p.querySelector(`[data-ml="${k}"]`); if (inp && !inp.value) inp.focus(); }
+      return;
+    }
+    if (e.target.closest('#shCopy')) {
+      copyText(shiftMsg()).then((ok) => toast(ok ? 'Сообщение скопировано, вставьте его в чат' : 'Не получилось скопировать: выделите текст вручную'));
+      return;
+    }
+    if (e.target.closest('#shShare')) { navigator.share({ text: shiftMsg() }).catch(() => {}); return; }
+    if (e.target.closest('#shReset')) {
+      const prev = JSON.parse(JSON.stringify(state.shift));
+      state.shift = shiftBlank(); renderShift(); save();
+      toast('Отметки очищены', () => { state.shift = prev; renderShift(); save(); });
+    }
+  });
+  p.addEventListener('input', (e) => {
+    const t = e.target;
+    if (t.dataset.ml) shV(t.dataset.ml).ml = t.value;
+    else if (t.id === 'shWho') state.shift.who = t.value;
+    else if (t.id === 'shNote') state.shift.note = t.value;
+    else return;
+    renderShiftMsg(); save();
+  });
+  if (navigator.share) $('shShare').hidden = false;
+  bindDatePicker();
+}
+/* ---------- Выбор даты: колёса, как в iPhone ---------- */
+const MON_G = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+const WDAY = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'];
+const isoAdd = (n) => { const d = new Date(); d.setDate(d.getDate() + n); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 10); };
+const isoOf = (y, m, d) => `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+const isoParts = (s) => { const [y, m, d] = (s || todayISO()).split('-').map(Number); return { y, m: m - 1, d }; };
+const daysIn = (y, m) => new Date(y, m + 1, 0).getDate();
+function dateWords(iso) {
+  const { y, m, d } = isoParts(iso), wd = WDAY[new Date(y, m, d).getDay()];
+  const rel = iso === todayISO() ? 'сегодня' : iso === isoAdd(-1) ? 'вчера' : iso === isoAdd(1) ? 'завтра' : '';
+  return { full: `${d} ${MON_G[m]} ${y}`, wd, rel };
+}
+function renderShiftDate() {
+  const w = dateWords(state.shift.date);
+  $('shDateTxt').textContent = w.full;
+  $('shDateSub').textContent = w.rel ? `${w.rel}, ${w.wd}` : w.wd;
+}
+const DP = { y: 0, m: 0, d: 0, years: [] };
+const ROWH = () => document.querySelector('.wh-i')?.offsetHeight || 40;
+function wheelPaint(el) {
+  const h = ROWH(), c = el.scrollTop / h;
+  el.querySelectorAll('.wh-i').forEach((it, i) => {
+    const k = i - c, a = Math.min(Math.abs(k), 3);
+    it.style.transform = `rotateX(${(-k * 18).toFixed(1)}deg)`;
+    it.style.opacity = (1 - a * 0.26).toFixed(2);
+  });
+}
+function wheelFill(el, items, sel) {
+  el.innerHTML = items.map((t, i) => `<div class="wh-i" role="option" data-i="${i}" aria-selected="${i === sel}">${t}</div>`).join('');
+  el.scrollTop = sel * ROWH(); wheelPaint(el);
+}
+const wheel = (w) => document.querySelector(`#dateDlg .wheel[data-w="${w}"]`);
+function dpFillAll() {
+  const ty = isoParts(todayISO()).y;
+  DP.years = []; for (let y = Math.min(ty - 1, DP.y); y <= Math.max(ty + 1, DP.y); y++) DP.years.push(y);
+  wheelFill(wheel('d'), Array.from({ length: daysIn(DP.y, DP.m) }, (_, i) => i + 1), DP.d - 1);
+  wheelFill(wheel('m'), MON_G, DP.m);
+  wheelFill(wheel('y'), DP.years, DP.years.indexOf(DP.y));
+  dpApply();
+}
+function dpApply() {
+  const iso = isoOf(DP.y, DP.m, DP.d), w = dateWords(iso);
+  $('ddNow').textContent = `${w.rel || w.wd}, ${w.full.replace(/ \d{4}$/, '')}`;
+  document.querySelectorAll('#dateDlg [data-dd]').forEach((b) => b.setAttribute('aria-pressed', String(iso === isoAdd(+b.dataset.dd))));
+  if (state.shift.date !== iso) { state.shift.date = iso; renderShiftDate(); renderShiftMsg(); save(); }
+}
+function wheelCommit(el) {
+  const items = el.querySelectorAll('.wh-i'), i = Math.max(0, Math.min(items.length - 1, Math.round(el.scrollTop / ROWH())));
+  items.forEach((it, j) => it.setAttribute('aria-selected', String(j === i)));
+  const w = el.dataset.w;
+  if (w === 'd') DP.d = i + 1; else if (w === 'm') DP.m = i; else DP.y = DP.years[i];
+  if (w !== 'd') {
+    const n = daysIn(DP.y, DP.m), dw = wheel('d');
+    if (dw.children.length !== n) { DP.d = Math.min(DP.d, n); wheelFill(dw, Array.from({ length: n }, (_, k) => k + 1), DP.d - 1); }
+  }
+  dpApply();
+}
+function bindDatePicker() {
+  const dlg = $('dateDlg');
+  const close = () => (dlg.close ? dlg.close() : dlg.removeAttribute('open'));
+  $('shDate').addEventListener('click', () => {
+    Object.assign(DP, isoParts(state.shift.date));
+    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+    dpFillAll();
+    requestAnimationFrame(() => dlg.querySelectorAll('.wheel').forEach(wheelPaint));
+  });
+  $('ddOk').addEventListener('click', close);
+  $('ddClose').addEventListener('click', close);
+  dlg.addEventListener('click', (e) => {
+    if (e.target === dlg) { close(); return; }
+    const chip = e.target.closest('[data-dd]');
+    if (chip) { Object.assign(DP, isoParts(isoAdd(+chip.dataset.dd))); dpFillAll(); return; }
+    const it = e.target.closest('.wh-i');
+    if (it) it.parentElement.scrollTo({ top: +it.dataset.i * ROWH(), behavior: 'smooth' });
+  });
+  dlg.addEventListener('close', () => $('shDate').focus());
+  dlg.querySelectorAll('.wheel').forEach((el) => {
+    let tm = 0, raf = 0;
+    el.addEventListener('scroll', () => {
+      if (!raf) raf = requestAnimationFrame(() => { raf = 0; wheelPaint(el); });
+      clearTimeout(tm); tm = setTimeout(() => wheelCommit(el), 110);
+    }, { passive: true });
+    el.addEventListener('keydown', (e) => {
+      const step = { ArrowUp: -1, ArrowDown: 1, PageUp: -5, PageDown: 5 }[e.key];
+      if (!step) return;
+      e.preventDefault(); el.scrollBy({ top: step * ROWH(), behavior: 'smooth' });
+    });
+  });
+}
+
+/* =====================================================================
    Справка
    ===================================================================== */
 function renderRules() {
@@ -3505,7 +3996,7 @@ function syncPanelAnims() {
 }
 function setTab(tab, focus) {
   state.tab = tab;
-  [['mbch', 'tab-mbch', 'panel-mbch'], ['seed', 'tab-seed', 'panel-seed'], ['dil', 'tab-dil', 'panel-dil']].forEach(([k, t, p]) => {
+  [['mbch', 'tab-mbch', 'panel-mbch'], ['seed', 'tab-seed', 'panel-seed'], ['dil', 'tab-dil', 'panel-dil'], ['shift', 'tab-shift', 'panel-shift']].forEach(([k, t, p]) => {
     const on = k === tab;
     $(t).setAttribute('aria-selected', String(on)); $(t).tabIndex = on ? 0 : -1; $(p).hidden = !on;
   });
@@ -3513,6 +4004,7 @@ function setTab(tab, focus) {
   hideToast();
   if (tab === 'dil') renderBeta();
   if (tab === 'seed') renderSeed();
+  if (tab === 'shift') renderShift();
   syncPanelAnims();
   updateDock(); toTopCheck(); save();
 }
@@ -3520,7 +4012,7 @@ function setTab(tab, focus) {
 /* =====================================================================
    Котик-лаборант: окно из кнопки рядом с подсказками
    ===================================================================== */
-const CAT = { player: null, phase: 'off', timer: 0, asked: 0 };
+const CAT = { player: null, phase: 'off', timer: 0, asked: 0, nudges: 0, waitT: 0 };
 const CAT_HELLO_END = 3060;      // конец «О! Привет!» в сцене catShow; дальше — опыт, взрыв и вихрь
 const CAT_Q = [['hi', 'Привет!'], ['deals', 'Как дела?'], ['news', 'Что нового?'], ['mood', 'Как настроение?'], ['energy', 'Откуда у тебя столько энергии, Борис?']];
 const CAT_SAY = { hi: 'Привет-привет! Я Борис, лаборант. Мур на связи!', deals: 'Отлично! Посевы растут, колбы целы… пока что.', news: 'Вывел новую среду. Пахнет как TSB, но мурчит.', mood: 'Мурчательное! 10 из 10 по шкале мурчания.', energy: 'Тоже хочешь энергию кота Бориса?' };
@@ -3539,7 +4031,24 @@ function catQs(on) {
   if (!box.children.length) box.innerHTML = CAT_Q.map(([k, q]) => `<button class="cat-q" type="button" data-q="${k}">${q}</button>`).join('');
   on = on && CAT.asked < 2;
   box.classList.toggle('off', !on);
-  box.querySelectorAll('button').forEach((b) => { b.disabled = !on; });
+  box.querySelectorAll('button').forEach((b) => b.setAttribute('aria-disabled', String(!on)));
+  catTalking(!on && CAT.phase !== 'finale' && CAT.phase !== 'off');
+}
+// пока Борис говорит — внизу сцены «Борис говорит…»; нажали вопрос раньше времени — вежливое замечание
+const CAT_WAIT = ['Дослушайте Бориса, это вежливо', 'Не перебивайте, это некультурно', 'Борис ещё говорит, подождите'];
+function catTalking(on) {
+  const w = $('catWait');
+  clearTimeout(CAT.waitT);
+  if (on) { w.classList.remove('warn'); $('catWaitT').textContent = 'Борис говорит'; }
+  w.classList.toggle('on', on);
+}
+function catInterrupt(btn) {
+  const w = $('catWait');
+  $('catWaitT').textContent = CAT_WAIT[CAT.nudges++ % CAT_WAIT.length];
+  w.classList.remove('warn'); void w.offsetWidth; w.classList.add('warn', 'on');
+  btn.classList.remove('nudge'); void btn.offsetWidth; btn.classList.add('nudge');
+  clearTimeout(CAT.waitT);
+  CAT.waitT = setTimeout(() => { if (CAT.phase === 'idle') return; w.classList.remove('warn'); $('catWaitT').textContent = 'Борис говорит'; }, 2600);
 }
 function catAsk(k) {
   if (CAT.phase !== 'idle') return;
@@ -3553,7 +4062,7 @@ function catAsk(k) {
 }
 // после двух ответов — опыт, взрыв и «Мне, похоже, пора… Хорошего дня-я-я!»
 function catFinale() {
-  CAT.phase = 'finale'; catQs(false); $('catQs').classList.add('gone');
+  CAT.phase = 'finale'; catQs(false); catTalking(false); $('catQs').classList.add('gone');
   $('catSay').textContent = 'Борис: Мне, похоже, пора… Хорошего дня!';
   catPlay(SCENES.catShow, () => { CAT.timer = setTimeout(closeCat, 250); }, { from: CAT_HELLO_END, still: 7800, reducedMs: 3000 });
 }
@@ -3572,7 +4081,7 @@ function openCat() {
   const dlg = $('catDlg');
   if (dlg.open) return;
   clearTimeout(CAT.timer);
-  CAT.phase = 'hello'; CAT.asked = 0;
+  CAT.phase = 'hello'; CAT.asked = 0; CAT.nudges = 0;
   const you = $('catYou'), qs = $('catQs'), row = $('catYouRow');
   qs.replaceChildren(); qs.classList.remove('gone'); qs.style.minHeight = ''; row.style.minHeight = '';
   $('catSay').textContent = 'Борис: О! Привет!';
@@ -3595,11 +4104,17 @@ function closeCat() {
 function initCat() {
   const dlg = $('catDlg');
   $('catBtn').addEventListener('click', openCat);
+  $('catBtn').addEventListener('pointerdown', () => { CAT.ptr = true; });
+  $('catBtn').addEventListener('keydown', () => { CAT.ptr = false; });
   $('catClose').addEventListener('click', closeCat);
-  $('catQs').addEventListener('click', (e) => { const b = e.target.closest('[data-q]'); if (b) catAsk(b.dataset.q); });
+  $('catQs').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-q]'); if (!b) return;
+    if (CAT.phase === 'idle') catAsk(b.dataset.q); else if (CAT.phase === 'hello' || CAT.phase === 'reply') catInterrupt(b);
+  });
   dlg.addEventListener('cancel', (e) => { e.preventDefault(); closeCat(); });
   dlg.addEventListener('click', (e) => { if (e.target === dlg) closeCat(); });
-  dlg.addEventListener('close', () => { clearTimeout(CAT.timer); if (CAT.player) CAT.player.stop(); $('catStage').replaceChildren(); CAT.player = null; CAT.phase = 'off'; });
+  dlg.addEventListener('close', () => { clearTimeout(CAT.timer); if (CAT.player) CAT.player.stop(); $('catStage').replaceChildren(); CAT.player = null; CAT.phase = 'off'; catTalking(false);
+    if (CAT.ptr) requestAnimationFrame(() => { if (document.activeElement === $('catBtn')) $('catBtn').blur(); }); });
 }
 
 /* =====================================================================
@@ -3791,12 +4306,12 @@ function init() {
   });
 
   // Шапка
-  $('tab-mbch').addEventListener('click', () => setTab('mbch'));
-  $('tab-dil').addEventListener('click', () => setTab('dil'));
-  $('tab-seed').addEventListener('click', () => setTab('seed'));
+  // повторное нажатие на открытую вкладку — наверх (как в приложениях на телефоне)
+  ['mbch', 'dil', 'seed', 'shift'].forEach((k) => $('tab-' + k).addEventListener('click', () => { if (state.tab === k) smoothTop(); else setTab(k); }));
+  bindShift();
   $('seedCats').addEventListener('click', (e) => { const b = e.target.closest('[data-seed]'); if (!b) return; state.seedCat = b.dataset.seed; renderSeed(); save(); });
   document.querySelector('[role="tablist"]').addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); const order = ['mbch', 'seed', 'dil'], i = order.indexOf(state.tab); setTab(order[(i + (e.key === 'ArrowRight' ? 1 : 2)) % 3], true); }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); const order = ['mbch', 'seed', 'dil', 'shift'], i = order.indexOf(state.tab); setTab(order[(i + (e.key === 'ArrowRight' ? 1 : order.length - 1)) % order.length], true); }
   });
   $('themeBtn').addEventListener('click', () => { state.theme = isDark() ? 'light' : 'dark'; applyTheme(); save(); });
   if (mq.addEventListener) mq.addEventListener('change', applyTheme);
@@ -3804,11 +4319,11 @@ function init() {
   // Справка
   const dlg = $('help');
   function openHelp() {
-    const mb = state.tab === 'mbch', which = mb ? 'acc-mbch' : state.tab === 'seed' ? 'acc-seed' : 'acc-beta';
-    ['acc-mbch', 'acc-seed', 'acc-beta'].forEach((id) => { $(id).hidden = id !== which; });
+    const mb = state.tab === 'mbch', which = mb ? 'acc-mbch' : state.tab === 'seed' ? 'acc-seed' : state.tab === 'shift' ? 'acc-shift' : 'acc-beta';
+    ['acc-mbch', 'acc-seed', 'acc-shift', 'acc-beta'].forEach((id) => { $(id).hidden = id !== which; });
     const box = $(which);
     if (!box.querySelector('details[open]')) box.querySelector('details').open = true;
-    $('helpTitle').textContent = mb ? 'Подсказки' : state.tab === 'seed' ? 'Подсказки: категории' : 'Подсказки: эндотоксины';
+    $('helpTitle').textContent = mb ? 'Подсказки' : state.tab === 'seed' ? 'Подсказки: категории' : state.tab === 'shift' ? 'Подсказки: смена' : 'Подсказки: эндотоксины';
     if (typeof dlg.showModal === 'function') { if (!dlg.open) dlg.showModal(); } else dlg.setAttribute('open', '');
   }
   $('helpBtn').addEventListener('click', openHelp);
