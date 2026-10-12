@@ -822,9 +822,12 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 @media print{ .top,.entry-wrap,.dock,.toast,.r-del,.t-foot{display:none!important} }
-/* ---------- Единый стиль кликабельных элементов: мягкий синий, как у блока «Проверьте перед работой» ----------
-   однозначный выбор — синяя «дорожка», выбранный пункт — белая плашка;
-   переключатели и действия — белые плашки с тонкой синей рамкой, включённые — голубые */
+/* ---------- Цветовая логика кликабельного ----------
+   1) навигация (нижнее меню, вкладки) — голубая панель, открытый раздел — белая плашка;
+   2) варианты на выбор — нейтральные (белые/серые, серый текст), выбранный — сплошной синий с белым текстом;
+   3) действия (кнопки-иконки, «Очистить», вопросы Борису) — голубой оттенок и синий текст;
+   4) главное действие («Итог», «Скопировать», «Готово») — сплошной синий, крупная кнопка с иконкой.
+   Повторяющиеся в каждой строке переключатели нейтральные, чтобы список не рябил: цвет появляется только там, где уже выбрано. */
 :root{--on:#2D7DFF;--on-fg:#FFFFFF;--on-sh:0 2px 8px -3px rgba(45,125,255,.7);--tint:rgba(45,125,255,.08);--tint-2:rgba(45,125,255,.15);--tint-solid:#EAF1FD;--tint-ring:rgba(45,125,255,.22);--ink:#2F4F80;
   --pick:#FFFFFF;--pick-fg:#1F63D6;--pick-sh:0 1px 3px rgba(25,55,110,.16),0 0 0 1px rgba(45,125,255,.10);--chip-sh:0 1px 2px rgba(25,55,110,.08)}
 :root[data-theme="dark"]{--on:#3F7FF0;--on-fg:#FFFFFF;--on-sh:0 2px 8px -3px rgba(0,0,0,.6);--tint:rgba(96,150,255,.12);--tint-2:rgba(96,150,255,.22);--tint-solid:#1D2636;--tint-ring:rgba(120,165,255,.26);--ink:#A9C2EC;
@@ -832,59 +835,76 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){--on:#3F7FF0;--on-fg:#FFFFFF;--on-sh:0 2px 8px -3px rgba(0,0,0,.6);--tint:rgba(96,150,255,.12);--tint-2:rgba(96,150,255,.22);--tint-solid:#1D2636;--tint-ring:rgba(120,165,255,.26);--ink:#A9C2EC;
   --pick:#34425D;--pick-fg:#E6EEFF;--pick-sh:0 1px 3px rgba(0,0,0,.45),0 0 0 1px rgba(140,180,255,.16);--chip-sh:0 1px 2px rgba(0,0,0,.3)} }
 
-/* дорожки выбора */
-.seg,.wseg,.sh-yn,.seed-cats{background:var(--tint);box-shadow:inset 0 0 0 1px var(--tint-ring)}
+/* 2) варианты: нейтральная дорожка, выбранное — сплошной синий */
+.seg,.seed-cats{background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}
+.wseg,.sh-yn{background:var(--field);box-shadow:inset 0 0 0 1px var(--line-2)}
 .seg{padding:4px;border-radius:14px}
-.seg label,.seg button{color:var(--ink);border-radius:10px}
-.seg label:hover,.seg button:hover{color:var(--pick-fg)}
+.seg label,.seg button{color:var(--text-2);border-radius:10px}
+.seg label:hover,.seg button:hover{color:var(--text)}
 .seg input:checked+label,.seg button[aria-selected="true"]{background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh);font-weight:600}
-.top .seg button[aria-selected="true"]{background:var(--pick);color:var(--pick-fg);box-shadow:var(--pick-sh)}
 .wseg{padding:3px;border-radius:11px}
-.wseg label{color:var(--ink)}
+.wseg label{color:var(--text-2)}
 .wseg input:checked+label{background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh)}
 .sh-yn{border-radius:12px}
-.sh-yn button{color:var(--ink)}
+.sh-yn button{color:var(--text-2)}
+.sh-yn button:hover{color:var(--text)}
 .sh-yn button[data-yn="1"][aria-pressed="true"]{background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh)}
 .sh-yn button[data-yn="0"][aria-pressed="true"]{background:var(--red);color:#fff;box-shadow:0 2px 8px -3px rgba(215,38,61,.6)}
 .seed-cats{display:inline-flex;max-width:100%;padding:4px;gap:2px;border-radius:16px;margin-top:0}
-.seed-cats .chip{background:transparent;box-shadow:none;color:var(--ink);border-radius:12px;font-weight:500}
-.seed-cats .chip:hover{color:var(--pick-fg)}
+.seed-cats .chip{background:transparent;box-shadow:none;color:var(--text-2);border-radius:12px;font-weight:500}
+.seed-cats .chip:hover{color:var(--text);background:transparent}
 .seed-cats .chip.on{background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh);font-weight:600}
-.seed-sep{background:var(--tint-ring)}
+.seed-sep{background:var(--line-2)}
 @media (max-width:560px){ .seed-sep{flex-basis:100%;width:auto;height:0;margin:0} }
-/* круглые кнопки-иконки */
-.icon-btn{background:var(--tint);color:var(--ink);box-shadow:inset 0 0 0 1px var(--tint-ring)}
-.icon-btn:hover{background:var(--tint-2);color:var(--pick-fg)}
-.icon-btn:disabled{background:var(--tint);opacity:.4}
-.icon-btn.ghost{background:transparent;box-shadow:none;color:var(--text-3)}
-.counter .icon-btn{background:var(--tint);color:var(--ink);box-shadow:inset 0 0 0 1px var(--tint-ring)}
-.counter .icon-btn:hover:not(:disabled){background:var(--tint-2);color:var(--pick-fg);box-shadow:inset 0 0 0 1px var(--tint-ring)}
-/* плашки: вопросы Борису, «Вчера/Сегодня», категории-галочки на телефоне */
-.chip,.cat-q,.dd-chip{background:var(--field);color:var(--ink);box-shadow:var(--chip-sh),inset 0 0 0 1px var(--tint-ring);font-weight:500}
-.chip:hover,.cat-q:hover,.dd-chip:hover{background:var(--tint);color:var(--pick-fg);box-shadow:inset 0 0 0 1px var(--tint-ring)}
-.chip.on,.dd-chip[aria-pressed="true"]{background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh);font-weight:600}
-.chip.on:hover{background:var(--on);color:var(--on-fg)}
+.chip{background:var(--field);color:var(--text-2);box-shadow:inset 0 0 0 1px var(--line-2);font-weight:500}
+.chip:hover{color:var(--text);background:var(--field)}
+.chip.on,.chip.on:hover{background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh);font-weight:600}
 @container list (max-width:779.98px){
-  .r-tog .tick{background:var(--field);color:var(--ink);box-shadow:var(--chip-sh),inset 0 0 0 1px var(--tint-ring)}
+  .r-tog .tick{background:var(--field);color:var(--text-2);box-shadow:inset 0 0 0 1px var(--line-2)}
   .r-tog .tick:has(input:checked){background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh)}
   .r-tog .tick input:checked+.box{background:#fff;box-shadow:none}
   .r-tog .tick input:checked+.box svg{stroke:var(--on)}
 }
-.tick .box{box-shadow:inset 0 0 0 1.6px rgba(45,125,255,.38)}
-/* вторичные кнопки и прочее */
-.sh-ghost{background:var(--tint);color:var(--ink);box-shadow:inset 0 0 0 1px var(--tint-ring)}
-.sh-ghost:hover{background:var(--tint-2);color:var(--pick-fg)}
-.fx-why-btn{box-shadow:var(--chip-sh),inset 0 0 0 1px var(--tint-ring)}
-.stp label{background:var(--tint);color:var(--ink);box-shadow:inset 0 0 0 1px var(--tint-ring)}
-.stp label:hover{box-shadow:inset 0 0 0 1px rgba(45,125,255,.45)}
+.stp label{background:var(--surface);color:var(--text);box-shadow:none}
+.stp label:hover{box-shadow:inset 0 0 0 1px var(--line-2)}
 .stp input:checked+label{background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh)}
 .stp input:checked+label small{color:var(--on-fg);opacity:.85}
 .stp input:checked+label b i{color:#FFD66B}
-.variant:hover,.alt-list label:hover{box-shadow:inset 0 0 0 1px var(--tint-ring)}
-.variant[aria-pressed="true"],.drow[aria-pressed="true"],button.rt-row.on,.alt-list input:checked+label{box-shadow:inset 0 0 0 1.5px var(--blue)}
+.variant:hover,.alt-list label:hover{box-shadow:inset 0 0 0 1px var(--line-2)}
+.variant[aria-pressed="true"],.drow[aria-pressed="true"],button.rt-row.on,.alt-list input:checked+label{box-shadow:inset 0 0 0 2px var(--blue)}
+/* 3) действия: голубой оттенок */
+.icon-btn{background:var(--tint);color:var(--ink);box-shadow:inset 0 0 0 1px var(--tint-ring)}
+.icon-btn:hover{background:var(--tint-2);color:var(--pick-fg)}
+.icon-btn:disabled{background:var(--surface);color:var(--text-3);box-shadow:none;opacity:.7}
+.icon-btn.ghost{background:transparent;box-shadow:none;color:var(--text-3)}
+.counter .icon-btn{background:var(--tint);color:var(--ink);box-shadow:inset 0 0 0 1px var(--tint-ring)}
+.counter .icon-btn:hover:not(:disabled){background:var(--tint-2);color:var(--pick-fg);box-shadow:inset 0 0 0 1px var(--tint-ring)}
+.counter .icon-btn:disabled{background:var(--field);color:var(--text-3);box-shadow:inset 0 0 0 1px var(--line);opacity:1}
+.cat-q,.dd-chip{background:var(--tint);color:var(--ink);box-shadow:inset 0 0 0 1px var(--tint-ring);font-weight:500}
+.cat-q:hover,.dd-chip:hover{background:var(--tint-2);color:var(--pick-fg)}
+.dd-chip[aria-pressed="true"]{background:var(--on);color:var(--on-fg);box-shadow:var(--on-sh);font-weight:600}
+.sh-ghost{background:var(--tint);color:var(--ink);box-shadow:inset 0 0 0 1px var(--tint-ring)}
+.sh-ghost:hover{background:var(--tint-2);color:var(--pick-fg)}
+.fx-why-btn{box-shadow:inset 0 0 0 1px var(--tint-ring)}
 .sh-date .sh-date-chev{color:var(--ink)}
 .to-top{background:var(--tint-solid);color:var(--ink);box-shadow:inset 0 0 0 1px var(--tint-ring),0 10px 26px -10px rgba(25,55,110,.35)}
 .btn{border-radius:14px}
+/* 1) навигация */
+.top .seg{background:var(--tint);box-shadow:inset 0 0 0 1px var(--tint-ring)}
+.top .seg button{color:var(--ink)}
+.top .seg button:hover{color:var(--pick-fg)}
+.top .seg button[aria-selected="true"]{background:var(--pick);color:var(--pick-fg);box-shadow:var(--pick-sh)}
+/* кнопки в шапке: у каждой свой цвет — Борис тёплый, подсказки мятные, тема ночная (луна) или солнечная (солнце) */
+.icon-btn#helpBtn{background:#DFF5EC;color:#1D7F5C;box-shadow:inset 0 0 0 1.5px #A3DCC5}
+.icon-btn#helpBtn:hover{background:#CDEFE2}
+.icon-btn#themeBtn{background:#ECE9FF;color:#5843C8;box-shadow:inset 0 0 0 1.5px #C6BCF6}
+.icon-btn#themeBtn:hover{background:#E1DCFF}
+:root[data-theme="dark"] .icon-btn#helpBtn{background:#16302A;color:#7ED8B3;box-shadow:inset 0 0 0 1.5px #2D6552}
+:root[data-theme="dark"] .icon-btn#themeBtn{background:#382E12;color:#F6C64E;box-shadow:inset 0 0 0 1.5px #846A1E}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .icon-btn#helpBtn{background:#16302A;color:#7ED8B3;box-shadow:inset 0 0 0 1.5px #2D6552}
+  :root:not([data-theme="light"]) .icon-btn#themeBtn{background:#382E12;color:#F6C64E;box-shadow:inset 0 0 0 1.5px #846A1E}
+}
 
 /* ---------- Навигация: на компьютере вкладки сверху, на телефоне панель снизу ---------- */
 .tab-ico{display:none}
