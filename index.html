@@ -4094,19 +4094,23 @@ function shiftMsg() {
     if (v.has === true) return `✔️ ${nm}: ${it.unit && parseNum(v.ml) ? `${num(parseNum(v.ml))} ${it.unit}` : 'есть'}`;
     if (v.has === false) return `❌ ${nm}: нет`;
     if (v.has === 'low') return `⚠️ ${nm}: мало`;
-    return `— ${nm}: не проверено`;
+    return null;   // не отмечено — в сообщение не попадает
   };
   const out = [`Передача смены МБЧ${dt ? `, ${dt}` : ''}`];
   if (sh.who.trim()) out.push(`👤 Передаёт: **${sh.who.trim()}**`);
   const exLine = (r) => {
     const [, nm, unit] = exOpt(r.g, r.k), n = parseNum(r.ml);
-    if (r.g === 'm') return r.ml === '' || r.ml == null ? `— ${nm}: количество не указано` : n ? `✔️ ${nm}: ${num(n)} ${unit}` : `❌ ${nm}: нет`;
+    if (r.g === 'm') return r.ml === '' || r.ml == null ? null : n ? `✔️ ${nm}: ${num(n)} ${unit}` : `❌ ${nm}: нет`;
     if (r.has === true) return `✔️ ${nm}: ${n ? `${num(n)} ${unit}` : 'есть'}`;
     if (r.has === false) return `❌ ${nm}: нет`;
     if (r.has === 'low') return `⚠️ ${nm}: мало`;
-    return `— ${nm}: не проверено`;
+    return null;
   };
-  SHIFT_GROUPS.forEach(([g, t]) => out.push('', t, ...shBase().filter((i) => i.g === g).map(line), ...shExtra().filter((r) => r.g === g).map(exLine)));
+  // группа без отмеченных строк в сообщение не попадает
+  SHIFT_GROUPS.forEach(([g, t]) => {
+    const rows = [...shBase().filter((i) => i.g === g).map(line), ...shExtra().filter((r) => r.g === g).map(exLine)].filter(Boolean);
+    if (rows.length) out.push('', t, ...rows);
+  });
   const need = shBase().filter((i) => i.g === 's' && [false, 'low'].includes((sh.v[i.k] || {}).has)).map((i) => i.take + ((sh.v[i.k] || {}).has === 'low' ? ' (мало)' : ''));
   if (need.length) out.push('', `Нужно взять: ${need.join(', ')}`);
   if (sh.note.trim()) out.push('', `Комментарий: ${sh.note.trim()}`);
