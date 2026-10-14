@@ -1258,7 +1258,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.35)}
     <!-- ================= Передача смены ================= -->
     <section id="panel-shift" role="tabpanel" aria-labelledby="tab-shift" hidden>
       <h1 class="title">Передача смены</h1>
-      <p class="seed-lead">Отметьте, что осталось после смены, и скопируйте готовое сообщение в чат. Отметки сохраняются: в следующий раз поменяйте только то, что изменилось.</p>
+      <p class="seed-lead">Отметьте, что осталось после смены, и скопируйте готовое сообщение в чат. Отметки хранятся в пределах смены: если 3 часа ничего не менялось, форма открывается чистой.</p>
       <div class="sh-grid">
         <div class="sh-form">
           <div class="surface sh-head">
@@ -4149,8 +4149,17 @@ function renderShiftMsg() {
   $('shProgress').classList.toggle('ok', done === total);
 }
 let shiftFresh = true;
+const SHIFT_TTL = 3 * 3600e3;   // через 3 часа без изменений отметки считаются прошлой сменой
+// чистая форма, но с тем же списком строк (убранные остаются убранными, добавленные — пустыми)
+const shiftCleared = (sh) => ({ ...shiftBlank(), who: sh.who || '', hidden: (sh.hidden || []).slice(), extra: (sh.extra || []).map((r) => ({ ...r, ml: '', has: null })) });
+const shiftHasMarks = (sh) => Object.values(sh.v || {}).some((v) => v && (v.has != null || v.ml)) || (sh.extra || []).some((r) => r.has != null || (r.ml !== '' && r.ml != null)) || !!(sh.note || '').trim();
 function renderShift() {
   if (!state.shift) state.shift = shiftBlank();
+  if (!(Date.now() - (state.shift.ts || 0) < SHIFT_TTL) && shiftHasMarks(state.shift)) {
+    const prev = JSON.parse(JSON.stringify(state.shift));
+    state.shift = shiftCleared(prev); save();
+    setTimeout(() => toast('Отметки прошлой смены очищены', () => { state.shift = { ...prev, ts: Date.now() }; renderShift(); save(); }), 0);
+  }
   if (shiftFresh) { state.shift.date = todayISO(); shiftFresh = false; }
   renderShiftDate(); $('shWho').value = state.shift.who; $('shNote').value = state.shift.note;
   renderShiftForm(); renderShiftMsg();
@@ -4169,6 +4178,9 @@ function copyText(text) {
 }
 function bindShift() {
   const p = $('panel-shift');
+  // любое действие в форме продлевает «жизнь» отметок (фаза перехвата — до save() в обработчиках)
+  const touch = () => { if (state.shift) state.shift.ts = Date.now(); };
+  ['click', 'input', 'change'].forEach((ev) => p.addEventListener(ev, touch, true));
   p.addEventListener('click', (e) => {
     const b = e.target.closest('[data-yn]');
     if (b) {
@@ -4220,8 +4232,9 @@ function bindShift() {
     if (e.target.closest('#shShare')) { navigator.share({ text: shiftMsg() }).catch(() => {}); return; }
     if (e.target.closest('#shReset')) {
       const prev = JSON.parse(JSON.stringify(state.shift));
-      state.shift = { ...shiftBlank(), hidden: shHidden().slice(), extra: shExtra().map((r) => ({ ...r, ml: '', has: null })) }; renderShift(); save();
+      state.shift = shiftCleared(prev); renderShift(); save();
       toast('Отметки очищены', () => { state.shift = prev; renderShift(); save(); });
+      return;
     }
   });
   p.addEventListener('input', (e) => {
