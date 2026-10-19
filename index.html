@@ -1268,6 +1268,17 @@ dialog.gd-dlg::backdrop{background:transparent}
 .md-p.bubble{width:9px;height:9px;background:transparent;border:1.5px solid var(--pc)}
 .md-p.flame{width:8px;height:11px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:linear-gradient(#FFD36E,#F08A3C)}
 .md-p.ring{width:5px;height:5px;margin:-2.5px 0 0 -2.5px}
+
+/* Борис снизу экрана: «нам выше!» */
+.gd-peek{position:fixed;left:50%;bottom:0;display:flex;align-items:flex-end;gap:4px;transform:translate(-50%,110%);transition:transform .45s cubic-bezier(.3,1.4,.5,1);pointer-events:none;z-index:3}
+.gd-peek.on{transform:translate(-50%,26%)}
+.gd-peek-b{position:relative;width:118px;height:132px}
+.gd-peek-b svg{width:100%;height:100%;display:block}
+.gd-peek-t{margin-bottom:84px;padding:8px 13px;border-radius:16px 16px 16px 4px;background:var(--raised);color:var(--text);font-size:14px;font-weight:700;box-shadow:0 10px 26px -10px rgba(0,0,0,.45);white-space:nowrap}
+/* переодевание можно пропустить */
+.cat-dlg.skippable .cat-stage-wrap{cursor:pointer}
+/* зрачки следят за курсором */
+.cat-pupil{transition:transform .2s ease-out}
 /* ---------- Навигация: на компьютере вкладки сверху, на телефоне панель снизу ---------- */
 .tab-ico{display:none}
 /* передача смены: только на телефоне: оттуда сообщение сразу уходит в мессенджер */
@@ -1670,6 +1681,7 @@ dialog.gd-dlg::backdrop{background:transparent}
 <dialog class="gd-dlg" id="guide" aria-label="Борис подсказывает">
   <div class="gd-blk" data-b="t"></div><div class="gd-blk" data-b="b"></div><div class="gd-blk" data-b="l"></div><div class="gd-blk" data-b="r"></div><div class="gd-blk" data-b="c"></div>
   <div class="gd-spot" id="gdSpot"></div>
+  <div class="gd-peek" id="gdPeek" aria-hidden="true"><div class="gd-peek-b" id="gdPeekB"></div><span class="gd-peek-t">Нам выше! Мур</span></div>
   <div class="gd-card" id="gdCard">
     <div class="bsay-b gd-boris" id="gdBoris" data-outfit="coat" title="Нажмите, и Борис повторит" aria-hidden="true"></div>
     <div class="gd-main">
@@ -2573,6 +2585,7 @@ function buildNode(spec, parent, list) {
   if (spec.t === 'rect') el.setAttribute('rx', spec.r || 0);
   if (spec.t === 'path') el.setAttribute('d', spec.d);
   if (spec.rule) el.setAttribute('fill-rule', spec.rule);
+  if (spec.cls) el.setAttribute('class', spec.cls);
   if (spec.t === 'use') { el.setAttribute('href', spec.href); el.setAttribute('width', 24); el.setAttribute('height', 24); }
   if (spec.t === 'text') {
     el.setAttribute('font-size', spec.fs || 11);
@@ -3098,8 +3111,8 @@ function glassTube(h, liq, fill = 'url(#cg-liqR)', w = 10) {
 // Котик целиком; начало координат: грудь
 function catRig(o = {}) {
   const eye = (cx) => ({ t: 'g', x: cx, y: 18, s: 1, ...ks({ x: shift(o.lookX, cx), y: shift(o.lookY, 18), s: o.eyeS }), c: [
-    R(-1.4, -1.8, 2.8, 3.6, 1.4, INK, ks({ h: o.blinkH, y: o.blinkY })),
-    { t: 'circle', x: 0.6, y: -1.1, r: 0.6, fill: 'white', ...ks({ o: o.blinkO }) }] });
+    { t: 'g', cls: 'cat-pupil', c: [R(-1.4, -1.8, 2.8, 3.6, 1.4, INK, ks({ h: o.blinkH, y: o.blinkY })),
+    { t: 'circle', x: 0.6, y: -1.1, r: 0.6, fill: 'white', ...ks({ o: o.blinkO }) }] }] });
   // рукав-конус с манжетой и лапка-«варежка» с пальчиками
   const arm = (x, rot, keys, extra = [], oK) => ({ t: 'g', x, y: 4, rot, o: first(oK, 1), ...ks({ rot: keys, o: oK }), c: [
     { t: 'path', d: 'M-8.6-1C-9.2 12-8.6 26-7.4 37H7.4C8.6 26 9.2 12 8.6-1C8.2-8.5-8.2-8.5-8.6-1Z', fill: 'url(#cg-sleeve)', stroke: SEAM, sw: 1.4 },
@@ -4712,6 +4725,93 @@ Object.assign(SCENES, {
     ...labFront({ bubbles: [[200], [1100, 1.6], [2000], [2700, 1.6]] }),
     speechLines(206, 96, 158, ['Продолжим', 'учиться? Мур!'], [[0, 1]])] },
 });
+// ---------- Тренажёр: ещё картинки к вопросам (показывают ситуацию, но не ответ) ----------
+const qzSpiral = (n, R0, r, fill, t0 = 200, step = 30) => Array.from({ length: n }, (_, i) => { const a = i * 2.39996, d = R0 * Math.sqrt((i + 0.5) / n); return colony(+(Math.cos(a) * d).toFixed(1), +(Math.sin(a) * d).toFixed(1), r + (i % 3) * 0.4, fill, t0 + i * step); });
+const qzOnce = (dur, els) => ({ w: 300, h: 150, dur, still: dur, once: true, els });
+const qzJar = (x, label, t, liq = '#F3D9A0') => ({ t: 'g', x, y: 80, o: 0, k: { o: showAt(t) }, c: [
+  R(-14, -40, 28, 10, 3, 'line'), R(-24, -30, 48, 66, 10, 'field', { stroke: 'text2', sw: 1.4 }),
+  { t: 'path', d: 'M-22 -4h44v30a8 8 0 0 1-8 8h-28a8 8 0 0 1-8-8Z', fill: liq },
+  ...(label ? [R(-19, -24, 38, 15, 3, 'surface', { stroke: 'line', sw: 1 }), TX(0, -13.5, label, { fs: 9, fw: 700, anchor: 'middle' })] : [])] });
+const qzMemb = (n, label) => qzOnce(1800, [dishT(150, 75, 64, AGAR, { kids: [{ t: 'circle', r: 48, fill: '#FBFAF6', stroke: '#E2DDD0', sw: 1 },
+  ...[-32, -16, 0, 16, 32].flatMap((v) => { const h = Math.sqrt(48 * 48 - v * v).toFixed(1); return [{ t: 'path', d: `M${v} ${-h}V${h}`, stroke: '#E9E4D8', sw: 0.8 }, { t: 'path', d: `M${-h} ${v}H${h}`, stroke: '#E9E4D8', sw: 0.8 }]; }),
+  ...qzSpiral(n, 40, 2.8, '#D9A85C', 200, 70)] }), qzLabel(label)]);
+const qzScale = (label) => qzOnce(1800, [
+  R(84, 104, 132, 30, 8, 'field', { stroke: 'text2', sw: 1.4 }), R(120, 110, 60, 17, 4, '#1E2430'),
+  TX(150, 122.5, '0,00 г', { fs: 10, fw: 700, fill: '#7CFC9A', anchor: 'middle', k: { text: [[0, '0,00 г'], [700, '4,12 г'], [1000, '7,85 г'], [1300, '? г']] } }),
+  { t: 'path', d: ell(150, 98, 46, 6), fill: 'line' }, R(147, 98, 6, 6, 2, 'text3'),
+  { t: 'g', y: -40, o: 0, k: { y: [[0, -60], [600, -18, 'out']], o: showAt(0, 200) }, c: [qzJar(150, 'среда', 0, '#E9D9B4')] },
+  qzLabel(label)]);
+const qzTube2 = (x, c0, c1, label, t) => qzTubeImg(x, [R(-9, -30, 18, 66, 9, c0), R(-9, -30, 18, 66, 9, c1, { o: 0, k: { o: [[t, 0], [t + 900, 1]] } }),
+  ...[[-3, -12], [3, 0], [-2, 12], [4, 22]].map(([a, b], i) => ({ t: 'circle', x: a, y: b, r: 1.2, fill: '#fff', o: 0, k: { o: [[t + 300 + i * 100, 0], [t + 700 + i * 100, 0.85]] } }))], label);
+Object.assign(SCENES, {
+  qJars: qzOnce(1400, [qzJar(75, 'до 12.11', 100), qzJar(150, 'до 03.11', 300), qzJar(225, 'до 25.11', 500)]),
+  qAutoclave: qzOnce(2000, [
+    R(60, 18, 170, 116, 16, 'field', { stroke: 'text2', sw: 1.5 }), { t: 'circle', x: 120, y: 76, r: 40, fill: 'surface', stroke: 'text2', sw: 1.5 }, { t: 'circle', x: 120, y: 76, r: 30, stroke: 'line', sw: 1.2 },
+    R(156, 72, 10, 8, 3, 'text3'),
+    { t: 'circle', x: 200, y: 46, r: 17, fill: 'surface', stroke: 'text2', sw: 1.4 }, { t: 'path', d: 'M188 52a14 14 0 0 1 24 0', stroke: 'line', sw: 1 },
+    { t: 'g', x: 200, y: 46, rot: -110, k: { rot: [[200, -110], [1800, 45, 'out']] }, c: [{ t: 'path', d: 'M0 0V-12', stroke: 'red', sw: 2 }] }, { t: 'circle', x: 200, y: 46, r: 2, fill: 'text2' },
+    R(196, 74, 8, 46, 4, 'surface', { stroke: 'text2', sw: 1.2 }), R(198, 114, 4, 4, 2, 'red', { k: { y: [[200, 114], [1800, 80, 'out']], h: [[200, 4], [1800, 38, 'out']] } }),
+    TX(120, 128, '20 °C', { fs: 10, fw: 700, fill: 'text2', anchor: 'middle', k: { n: [[200, 20], [1800, 121, 'out']] }, suffix: ' °C' }),
+    ...[0, 1, 2].map((i) => ({ t: 'circle', x: 104 + i * 16, y: 14, r: 0, fill: 'line', k: { r: [[500 + i * 300, 0], [1100 + i * 300, 7]], y: [[500 + i * 300, 16], [1500 + i * 300, 2]], o: [[500 + i * 300, 0.8], [1700 + i * 300, 0]] } }))]),
+  qSettle: qzOnce(2200, [
+    dishT(130, 98, 44, AGAR), { t: 'path', d: ell(216, 120, 30, 6), fill: 'field', stroke: 'text3', sw: 1.2 },
+    ...Array.from({ length: 10 }, (_, i) => ({ t: 'circle', x: 100 + ((i * 37) % 64), y: 10, r: 1.6, fill: 'text3', o: 0, k: { y: [[100 + i * 170, 10], [900 + i * 170, 90 + (i % 3) * 6, 'in']], o: [[100 + i * 170, 0], [200 + i * 170, 0.8], [900 + i * 170, 0.8], [1000 + i * 170, 0]] } })),
+    { t: 'circle', x: 240, y: 44, r: 20, fill: 'surface', stroke: 'text2', sw: 1.5 },
+    { t: 'g', x: 240, y: 44, rot: 0, k: { rot: [[0, 0], [2200, 720, 'lin']] }, c: [{ t: 'path', d: 'M0 0V-14', stroke: 'text', sw: 1.6 }] },
+    { t: 'g', x: 240, y: 44, rot: 0, k: { rot: [[0, 0], [2200, 60, 'lin']] }, c: [{ t: 'path', d: 'M0 0H9', stroke: 'text', sw: 2 }] }]),
+  qContact: qzOnce(2000, [
+    R(40, 118, 220, 8, 4, 'line'), ...[[80, 116], [112, 115], [190, 116], [222, 115]].map(([x, y]) => ({ t: 'path', d: `M${x} ${y - 6}c2 3 3 4 3 5a3 3 0 0 1-6 0c0-1 1-2 3-5z`, fill: '#8EC5FF' })),
+    { t: 'g', x: 150, y: 40, k: { y: [[0, 40], [700, 104, 'out'], [1300, 104], [1900, 56, 'io']] }, c: [
+      R(-42, -20, 84, 14, 5, 'field', { stroke: 'text2', sw: 1.4 }), { t: 'path', d: 'M-36 -6Q0 12 36 -6Z', fill: AGAR, stroke: '#D9C7A3', sw: 1 }] }]),
+  qGlove: qzOnce(2000, [
+    dishT(150, 100, 46, AGAR, { kids: [[-22, -8], [-8, -14], [6, -14], [20, -8]].map(([x, y]) => ({ t: 'path', d: ell(x, y, 4.5, 6), fill: '#C9B98F', o: 0, k: { o: [[1150, 0], [1400, 0.55]] } })) }),
+    { t: 'g', x: 150, y: -40, k: { y: [[0, -40], [700, 26, 'out'], [1100, 26], [1700, -40, 'io']] }, c: [
+      R(-30, -50, 60, 40, 14, '#D5E0F8', { stroke: '#8EA6D8', sw: 1.2 }),
+      ...[-22, -8, 6, 20].map((x) => R(x - 5, -18, 10, 34, 5, '#D5E0F8', { stroke: '#8EA6D8', sw: 1.2 })), R(28, -40, 10, 26, 5, '#D5E0F8', { stroke: '#8EA6D8', sw: 1.2 })] },
+    qzLabel('A')]),
+  qMemb12: qzMemb(12, '10 мл'),
+  qMemb4: qzMemb(4, '100 мл'),
+  qThermo: qzOnce(1800, [
+    R(80, 16, 140, 118, 12, 'field', { stroke: 'text2', sw: 1.5 }), R(92, 54, 116, 70, 6, 'surface', { stroke: 'line', sw: 1 }),
+    R(98, 86, 104, 3, 1.5, 'line'), ...[110, 132, 154, 176].map((x) => ({ t: 'path', d: ell(x + 6, 82, 9, 3), fill: AGAR, stroke: 'text3', sw: 0.8 })),
+    R(150, 24, 58, 22, 5, '#1E2430'),
+    TX(179, 39.5, '32,5', { fs: 12, fw: 800, fill: '#7CFC9A', anchor: 'middle', k: { text: [[0, '32,5'], [500, '33,9'], [900, '35,6'], [1300, '37,9']], fill: [[0, '#7CFC9A'], [1300, '#FF6B6B']] } }),
+    { t: 'path', d: 'M108 26l9 16h-18z', fill: 'red', o: 0, k: { o: [[1300, 0], [1450, 1], [1600, 0.3], [1750, 1]] } }, TX(108, 39, '!', { fs: 10, fw: 800, fill: 'white', anchor: 'middle', o: 0, k: { o: [[1300, 0], [1450, 1]] } })]),
+  qFridge: qzOnce(1600, [
+    R(100, 8, 100, 134, 12, 'field', { stroke: 'text2', sw: 1.5 }), R(104, 52, 92, 2, 1, 'line'), R(186, 64, 4, 24, 2, 'text3'),
+    R(128, 18, 44, 20, 5, '#1E2430'), TX(150, 32, '+12 °C', { fs: 10, fw: 800, fill: '#FF6B6B', anchor: 'middle', o: 1, k: { o: [[0, 1], [400, 0.25], [800, 1], [1200, 0.25], [1600, 1]] } }),
+    ...[118, 140, 162].map((x, i) => ({ t: 'g', x, y: 96, c: [R(-7, -16, 14, 4, 2, 'line'), R(-9, -12, 18, 30, 5, 'surface', { stroke: 'text3', sw: 1 }), R(-8, 2, 16, 15, 4, i === 1 ? '#F3D9A0' : '#E8D8F6')] }))]),
+  qTio: qzOnce(2000, [qzTubeImg(150, [R(-9, -30, 18, 66, 9, '#F2E6B8'), R(-9, -30, 18, 6, 4, '#F28DB0', { o: 0.85, k: { h: [[200, 6], [1600, 30, 'out']] } })], 'TIO')]),
+  qBI: qzOnce(2000, [qzTubeImg(150, [R(-9, -14, 18, 50, 9, '#8E6BD8'), R(-9, -14, 18, 50, 9, '#E8CF4E', { o: 0, k: { o: [[500, 0], [1600, 1]] } })], 'БИ'),
+    ...[0, 1, 2].map((i) => qzSpark(186 + i * 14, 40 + i * 18, 1200 + i * 120, '#F2C14E', 0.7))]),
+  qScale250: qzScale('250 мл'),
+  qScale600: qzScale('600 мл'),
+  qDryPlate: qzOnce(1600, [dishT(150, 75, 64, 'field', { kids: [{ t: 'circle', r: 54, fill: '#E6CC98', stroke: '#C9AE78', sw: 1.5 },
+    ...['M-30 -20l14 10l-4 14', 'M20 -36l-6 16l12 10', 'M10 20l-12 14', 'M36 6l-14 4'].map((d, i) => ({ t: 'path', d, stroke: '#A8885A', sw: 1.4, o: 0, k: { o: showAt(300 + i * 200) } }))] })]),
+  qDarkAgar: qzOnce(1200, [qzJar(105, 'обычно', 100, '#F3D9A0'), qzJar(195, 'новая', 400, '#A86A2E')]),
+  qCount38: qzOnce(2000, [dishT(150, 75, 56, AGAR, { kids: qzSpiral(38, 44, 2.4, '#E9D2A0', 150, 35) }), qzLabel('D')]),
+  qSettle7: qzOnce(1600, [dishT(150, 75, 64, AGAR, { kids: qzSpiral(7, 46, 4, '#E9D2A0', 200, 120) }), qzLabel('B')]),
+  qWater150: qzOnce(2200, [dishT(150, 75, 64, '#F2EBDD', { kids: qzSpiral(64, 54, 1.8, '#E8C88F', 100, 25) }), qzLabel('1 мл')]),
+  qMerged: qzOnce(1500, [dishT(150, 75, 64, AGAR, { kids: [colony(-8, -2, 9, '#EAD6A8', 300, { stroke: '#CDB27A', sw: 1 }), colony(8, 4, 8, '#EAD6A8', 500, { stroke: '#CDB27A', sw: 1 }), ...qzSpiral(5, 50, 3, '#EAD6A8', 700, 120)] })]),
+  qSmear: qzOnce(1600, [dishT(150, 75, 56, AGAR, { kids: [{ t: 'path', d: 'M18 -40c14 2 26 16 22 30c-4 8-14 4-20-4s-10-18-2-26z', fill: '#E3C98E', o: 0, k: { o: showAt(500) } }, ...qzSpiral(8, 40, 2.8, '#E9D2A0', 200, 100).slice(3)] }), qzLabel('C')]),
+  qMold1: qzOnce(1500, [dishT(150, 75, 64, AGAR, { kids: [{ t: 'g', x: -10, y: 6, s: 0, k: { s: [[300, 0], [1100, 1, 'back']] }, c: [
+    { t: 'circle', r: 15, fill: '#FAFBF8', o: 0.8 }, { t: 'circle', r: 15, stroke: '#E6E6E6', sw: 2.6, o: 0.8 }, { t: 'circle', r: 7, fill: '#5F7F6B', o: 0.9 }, { t: 'circle', r: 3, fill: '#4E6E5A' }] }] }), qzLabel('B')]),
+  qTap: qzOnce(2000, [
+    { t: 'path', d: 'M60 30H140a10 10 0 0 1 10 10V54', stroke: 'text2', sw: 9 }, R(60, 20, 14, 22, 3, 'text3'), R(136, 52, 28, 8, 3, 'text3'),
+    ...[0, 1, 2, 3].map((i) => ({ t: 'path', d: 'M150 66c2 3 3 4 3 5a3 3 0 0 1-6 0c0-1 1-2 3-5z', fill: '#8EC5FF', o: 0, k: { y: [[200 + i * 350, 0], [700 + i * 350, 40, 'in']], o: [[200 + i * 350, 0], [260 + i * 350, 1], [700 + i * 350, 0]] } })),
+    { t: 'g', x: 150, y: 116, c: [R(-18, -12, 36, 30, 8, 'surface', { stroke: 'text2', sw: 1.4 }), R(-16, 4, 32, 12, 6, '#CFE4FF'), TX(0, -16, 'проба', { fs: 9, fw: 700, anchor: 'middle', fill: 'text2' })] }]),
+  qTurbid: qzOnce(1800, [qzTube2(115, '#F2E6B8', '#E9DDB4', 'TIO', 300), qzTube2(185, '#F3D9A0', '#EADBB8', 'SDB', 500)]),
+});
+// меню тренажёра: Борис живой, дышит, водит хвостом и головой; глазами следит за курсором (это делает код меню)
+SCENES.qzBHero = (() => {
+  const D = 6400, o = { headRot: [[0, 0], [1400, 4, 'io'], [2800, -3, 'io'], [4300, 2, 'io'], [D, 0, 'io']],
+    rootY: [[0, 150], [1600, 151.4, 'io'], [3200, 150, 'io'], [4800, 151.4, 'io'], [D, 150, 'io']],
+    happyO: [[0, 0], [2000, 0], [2150, 1], [3300, 1], [3450, 0], [D, 0]], smileO: [[0, 1], [2000, 1], [2150, 0], [3300, 0], [3450, 1], [D, 1]],
+    armL: [[0, 12], [4400, 12], [4700, 40, 'out'], [5000, 26], [5300, 40], [5800, 12, 'io'], [D, 12]],
+    tail: [[0, 6], [1100, 18, 'io'], [2200, 0, 'io'], [3300, 16, 'io'], [4400, 2, 'io'], [D, 6, 'io']], ...blinkKeys([900, 3900, 4150]) };
+  o.tailTip = lag(o.tail, 160, 1.3);
+  return qzBust(o, D, [], true);
+})();
 
 /* =====================================================================
    Тренажёр Бориса: банк вопросов
@@ -5133,6 +5233,16 @@ const QZ_ITEMS = [
 ];
 // вопросы о журналах задаются только после основного вопроса о GMP-записях
 QZ_ITEMS.forEach((q) => { if (q.t === 'docs' && !q.q.startsWith('Как по GMP')) q.preQ = 'Как по GMP правильно делать записи в журнале? Отметьте всё.'; });
+// картинки к вопросам: показывают ситуацию, а не ответ
+const QZ_IMGMAP = [['Какую партию среды берут', 'qJars'], ['С какого момента отсчитывают время стерилизации', 'qAutoclave'], ['Можно ли открывать автоклав', 'qAutoclave'],
+  ['Сколько часов максимум экспонируют', 'qSettle'], ['Зачем в контактных чашках нейтрализаторы', 'qContact'], ['Сколько КОЕ допускается на отпечатке перчаток', 'qGlove'],
+  ['Почему плесневые чашки', 'qMold'], ['Через мембрану пропустили 10 мл', 'qMemb12'], ['Через мембрану пропустили 100 мл', 'qMemb4'], ['Термостат ночью ушёл', 'qThermo'],
+  ['Холодильник со средами ночью', 'qFridge'], ['Тиогликолевая среда (TIO) порозовела', 'qTio'], ['Биологический индикатор после цикла', 'qBI'],
+  ['Навеска сухой среды 40 г/л', 'qScale250'], ['Нужно 600 мл среды', 'qScale600'], ['Чашки три недели лежали', 'qDryPlate'], ['Агар после автоклава потемнел', 'qDarkAgar'],
+  ['На контактной чашке класса D 38', 'qCount38'], ['В классе B на седиментационной чашке 7', 'qSettle7'], ['Когда анализируют пробу воды', 'qTap'],
+  ['В воде очищенной получилось 150', 'qWater150'], ['Две колонии срослись', 'qMerged'], ['На контактной чашке колонии в одном углу', 'qSmear'],
+  ['На чашке из класса B одна колония плесени', 'qMold1'], ['Препарат сделал среду мутной', 'qTurbid']];
+QZ_ITEMS.forEach((q) => { const m = QZ_IMGMAP.find(([p]) => q.q.startsWith(p)); if (m && !q.img) q.img = m[1]; });
 
 /* =====================================================================
    Тренажёр Бориса: уровни, раунды, четыре вида вопросов, обучение, награды
@@ -5330,7 +5440,7 @@ function qzAvatar(cls = '') { const src = document.querySelector('#catBtn svg');
 // элементы с data-keep переживают перерисовку: Борис не начинает анимацию заново при выборе раунда или темы
 function qzRender(html, focusSel) {
   qzTipHide();
-  const b = $('qzBody'), keep = new Map([...b.querySelectorAll('[data-keep]')].map((el) => [el.dataset.keep, el])), top = b.scrollTop, kept = new Set();
+  const alive = new Set(qzPlayers.map((x) => x.h)), b = $('qzBody'), keep = new Map([...b.querySelectorAll('[data-keep]')].filter((el) => alive.has(el)).map((el) => [el.dataset.keep, el])), top = b.scrollTop, kept = new Set();
   b.innerHTML = html;
   b.querySelectorAll('[data-keep]').forEach((el) => { const o = keep.get(el.dataset.keep); if (o && o.dataset.scene === el.dataset.scene) { el.replaceWith(o); kept.add(o); } });
   qzPlayers = qzPlayers.filter((x) => { if (kept.has(x.h)) return true; x.p.stop(); return false; });
@@ -5357,7 +5467,7 @@ function qzHome() {
   const rk = qzRank(S.xp), run = qzRunInfo();
   qzRender(`<div class="qz-home">
     ${run ? `<div class="qz-resume"><div><b>Незаконченный раунд</b><small>${run.text}</small></div><button class="btn" type="button" data-qact="resume">Продолжить</button><button class="link" type="button" data-qact="drop">Заново</button></div>` : ''}
-    <div class="qz-hero"><div class="qz-bust big" data-scene="qzBIdle" data-keep="hero"></div><p>${S.total ? 'С возвращением! Продолжим?' : 'Готовы? Выберите направление и начнём.'}</p><small>${rk.to ? `До звания «${QZ_RANKS[rk.i + 1][1]}» ${num(rk.to - S.xp)} XP` : 'У вас высшее звание'}</small></div>
+    <div class="qz-hero"><div class="qz-bust big qz-heroB" data-scene="qzBHero" data-keep="hero"></div><p>${S.total ? 'С возвращением! Продолжим?' : 'Готовы? Выберите направление и начнём.'}</p><small>${rk.to ? `До звания «${QZ_RANKS[rk.i + 1][1]}» ${num(rk.to - S.xp)} XP` : 'У вас высшее звание'}</small></div>
     <div class="qz-field"><span class="qz-lab">Направление</span>
       <div class="seg seg-wide qz-seg" role="radiogroup" aria-label="Направление">${QZ_LEVELS.map((L) => `<input type="radio" name="qzlvl" id="qzl${L.id}" value="${L.id}"${L.id === lvl ? ' checked' : ''}><label for="qzl${L.id}">${L.name}</label>`).join('')}</div>
       <small class="qz-desc">${QZ_LEVELS[lvl - 1].desc}</small></div>
@@ -5675,14 +5785,31 @@ function bindQuiz() {
   $('catQuiz').addEventListener('click', () => {
     if (CAT.phase === 'quiz' || CAT.phase === 'closing') return;
     if (qzRunInfo()) { CAT.ptr = false; closeCat(); setTimeout(() => openQuiz(true), REDUCED.matches ? 50 : 460); return; }
-    if (qzS().dressed) { CAT.ptr = false; closeCat(); setTimeout(() => openQuiz(false), REDUCED.matches ? 50 : 460); return; }
-    qzS().dressed = 1; save();
     CAT.phase = 'quiz'; CAT.ptr = false;
     catQs(false); $('catQs').classList.add('gone'); $('catQuiz').classList.add('gone');
     $('catSay').textContent = 'Борис: Проверим знания? Мур!';
+    $('catWaitT').textContent = 'Нажмите на Бориса, чтобы пропустить'; $('catWait').classList.remove('warn'); $('catWait').classList.add('on'); $('catDlg').classList.add('skippable');
     catPlay(SCENES.catQuiz, () => { CAT.timer = setTimeout(() => { closeCat(); setTimeout(openQuiz, REDUCED.matches ? 50 : 460); }, 200); }, { reducedMs: 1800 });
   });
   $('seedQuiz').addEventListener('click', () => openQuiz(false));
+  // нажали на Бориса во время переодевания: сразу в тренажёр
+  document.querySelector('.cat-stage-wrap').addEventListener('click', () => {
+    if (CAT.phase !== 'quiz') return;
+    clearTimeout(CAT.timer); if (CAT.player) CAT.player.stop();
+    $('catWait').classList.remove('on'); $('catDlg').classList.remove('skippable');
+    closeCat(); setTimeout(() => openQuiz(false), REDUCED.matches ? 50 : 460);
+  });
+  // в меню тренажёра Борис следит глазами за курсором (не дальше края глаза)
+  let lookT = 0;
+  const look = (dx, dy) => { const h = $('qzBody').querySelector('.qz-heroB'); if (h) h.querySelectorAll('.cat-pupil').forEach((p) => { p.style.transform = dx || dy ? `translate(${dx.toFixed(2)}px, ${dy.toFixed(2)}px)` : ''; }); };
+  $('qzDlg').addEventListener('pointermove', (e) => {
+    const h = $('qzBody').querySelector('.qz-heroB'); if (!h || REDUCED.matches) return;
+    const r = h.getBoundingClientRect(); if (!r.width) return;
+    const vx = e.clientX - (r.left + r.width / 2), vy = e.clientY - (r.top + r.height * 0.42), m = Math.hypot(vx, vy) || 1, f = Math.min(1, m / 160);
+    look((vx / m) * f * 1.7, (vy / m) * f * 1.25);
+    clearTimeout(lookT); lookT = setTimeout(() => look(0, 0), 2600);
+  });
+  $('qzDlg').addEventListener('pointerleave', () => look(0, 0));
 }
 // кнопка у Бориса и метка на нём: есть ли незаконченный раунд
 function qzCatBtn() {
@@ -5840,7 +5967,10 @@ const gdRows = () => document.querySelectorAll('#rows > li').length;
 const GD_STEPS = {
   mbch: [
     { el: '.entry .chips', act: 'Нажмите FP или другой префикс', on: ['.entry .chips [data-prefix]', 'click'], say: 'Привет! Я покажу, как тут всё устроено. Сначала нажмите префикс: FP, PPM, PM и другие.' },
-    { el: '.counter', act: 'Впишите число и нажмите Enter', focus: '#count', base: gdRows, until: (b) => gdRows() > b, say: 'Теперь впишите количество проб и нажмите Enter. Можно сразу «2+10». Номер пробы писать не обязательно.' },
+    { el: '#first', act: 'Допишите номер первой пробы, например 1999', focus: '#first', base: () => ({ v: $('first').value, t: Date.now() }),
+      until: (b) => { const v = $('first').value; if (v !== b.v) { b.v = v; b.t = Date.now(); } return /\d{3,}/.test(v) && Date.now() - b.t > 1300; },
+      say: 'Теперь допишите номер первой пробы, например FP-1999. Дальше я сам прибавляю по +1: если проб 20, пойдут 1999, 2000, 2001 и так до конца.' },
+    { el: '.counter', act: 'Впишите число и нажмите Enter', focus: '#count', base: gdRows, until: (b) => gdRows() > b, say: 'Впишите количество проб и нажмите Enter. Можно сразу «2+10». Номера пойдут подряд от первой пробы.' },
     { el: '#first', say: 'Есть список в Excel? Скопируйте пробы и вставьте в это поле. Запись не важна: MP-FP-1124/26, mp-fp-1126 или FP-1127/26, я всё приведу к виду FP-1124.' },
     { el: '.entry .chips', say: 'Нажмёте другой префикс, и он начнётся с нуля, а прежние пробы останутся в списке.' },
     { el: ['#rows > li', '.list'], need: '#rows select', act: 'Откройте «Формат» и выберите другой', on: ['#rows select', 'change'], say: 'Формат подсказывает инструмент: для таблетки мельничка, для порошка ложка. У PPM и PM формат всегда «Упаковка», её режут ножницами.' },
@@ -5898,7 +6028,7 @@ function gdStart() {
 function gdUnwatch() { if (!GD) return; clearInterval(GD.poll); GD.poll = 0; if (GD.off) { GD.off(); GD.off = null; } clearTimeout(GD.okT); }
 function gdEnd() {
   const dlg = $('guide'); if (!GD) return;
-  gdUnwatch(); cancelAnimationFrame(GD.raf); clearTimeout(GD.typing); bsayStop($('gdBoris'));
+  gdUnwatch(); cancelAnimationFrame(GD.raf); clearTimeout(GD.typing); bsayStop($('gdBoris')); gdPeek(false);
   GD = null; document.documentElement.classList.remove('gd-on');
   if (dlg.open) dlg.close();
   $('helpBtn').focus({ preventScroll: true });
@@ -5918,7 +6048,8 @@ function gdPlace(el) {
   box(B.t, 0, 0, vw, top); box(B.b, 0, bot, vw, vh - bot); box(B.l, 0, top, left, bot - top); box(B.r, right, top, vw - right, bot - top);
   box(B.c, left, top, right - left, bot - top); B.c.hidden = !!(GD && GD.act);
   const ch = card.offsetHeight, below = vh - bot, above = top;
-  card.style.top = `${below >= ch + 24 ? Math.min(bot + 14, vh - ch - 12) : above >= ch + 24 ? top - ch - 14 : (r.top + r.height / 2 > vh / 2 ? 12 : vh - ch - 12)}px`;
+  const ct = below >= ch + 24 ? Math.min(bot + 14, vh - ch - 12) : above >= ch + 24 ? top - ch - 14 : (r.top + r.height / 2 > vh / 2 ? 12 : vh - ch - 12);
+  card.style.top = `${Math.max(12, Math.min(vh - ch - 12, ct))}px`;
 }
 function gdTrack(el, ms = 700) {
   cancelAnimationFrame(GD.raf); const t0 = performance.now();
@@ -5934,8 +6065,21 @@ function gdSay(text, ms) {
   GD.typing = setTimeout(() => { txt.classList.add('done'); GD.typing = 0; }, t);
   bsaySpeak($('gdBoris'), Math.max(ms || 0, 1200, t));
 }
+function gdPeek(on) {
+  const p = $('gdPeek'); if (!p) return;
+  if (on) { const b = $('gdPeekB'); b.replaceChildren(); GD.peekP = makePlayer(b, SCENES[GD.tab === 'seed' ? 'gdTalkS' : 'gdTalkC']); GD.peekP.restart(); }
+  else if (GD && GD.peekP) { GD.peekP.stop(); GD.peekP = null; }
+  p.classList.toggle('on', on);
+}
+function gdAway() {
+  if (!GD || !GD.el || GD.peeked || performance.now() < GD.quiet) return;
+  const r = GD.el.getBoundingClientRect(); if (r.bottom > 30) return;
+  GD.peeked = true; gdPeek(true);
+  setTimeout(() => { if (!GD) return; GD.quiet = performance.now() + 1500; GD.el.scrollIntoView({ block: 'center', behavior: REDUCED.matches ? 'auto' : 'smooth' }); }, 900);
+  setTimeout(() => { if (GD) gdPeek(false); }, 2300);
+}
 function gdShow(i) {
-  gdUnwatch();
+  gdUnwatch(); GD.quiet = performance.now() + 1300;
   const st = GD.steps[i]; GD.i = i;
   if (st.prep) st.prep();
   const act = !!st.act && (!st.need || !!document.querySelector(st.need));
@@ -5999,7 +6143,7 @@ function bindGuide() {
     else if (e.key === 'ArrowLeft' && GD.i > 0) { e.preventDefault(); gdShow(GD.i - 1); }
   });
   window.addEventListener('resize', () => { if (GD) gdPlace(GD.el); });
-  window.addEventListener('scroll', () => { if (GD) gdPlace(GD.el); }, { passive: true });
+  window.addEventListener('scroll', () => { if (GD) { gdPlace(GD.el); gdAway(); } }, { passive: true });
   const help = $('help');
   $('helpClose').addEventListener('click', () => help.close());
   help.addEventListener('click', (e) => { if (e.target === help) help.close(); });
@@ -6463,7 +6607,7 @@ function openCat() {
   clearTimeout(CAT.timer);
   CAT.phase = 'hello'; CAT.asked = 0; CAT.nudges = 0;
   const you = $('catYou'), qs = $('catQs'), row = $('catYouRow');
-  qs.replaceChildren(); qs.classList.remove('gone'); qs.style.display = ''; qs.style.minHeight = ''; row.style.minHeight = ''; $('catQuiz').classList.remove('gone'); qzCatBtn();
+  qs.replaceChildren(); qs.classList.remove('gone'); qs.style.display = ''; $('catDlg').classList.remove('skippable'); qs.style.minHeight = ''; row.style.minHeight = ''; $('catQuiz').classList.remove('gone'); qzCatBtn();
   $('catSay').textContent = 'Борис: О! Привет!';
   dlg.showModal();
   catQs(false);
