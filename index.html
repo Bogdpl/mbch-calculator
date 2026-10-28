@@ -1704,6 +1704,26 @@ tr.on .st-cell{box-shadow:inset 0 0 0 1.5px var(--st)}
 @keyframes stOk{40%{transform:scale(1.03)}to{opacity:0;transform:scale(1.08)}}
 @media (max-height:640px){ .st-keys{grid-template-columns:repeat(3,62px);gap:10px 20px} .st-keys button{width:62px;height:62px;font-size:26px} .st-dots{margin-top:14px} }
 @media (prefers-reduced-motion:reduce){ .st-gate-card,.st-dots.shake,.st-boris-av,.kick.out,.st-ok{animation:none!important} }
+
+/* ===== Борис в кружке: живой ===== */
+.cat-paw{opacity:0}
+.cat-btn .cat-paw{opacity:1;transform:translateY(16px);transform-origin:29px 40px;animation:catWave 16s ease-in-out infinite}
+.cat-btn .cat-head{animation:catIdle 16s ease-in-out infinite}
+.cat-btn:hover .cat-head{animation:none;transform:rotate(-8deg)}
+.cat-btn.cat-off .cat-paw,.cat-btn.cat-off .cat-head,.cat-btn.cat-off .cat-eyes{animation-play-state:paused}
+@keyframes catIdle{0%,16%,36%,62%,86%,100%{transform:none}21%,31%{transform:rotate(-6deg) translateY(.3px)}67%,81%{transform:rotate(7deg)}}
+@keyframes catWave{0%,62%{transform:translateY(16px)}66%{transform:translateY(0)}69%{transform:rotate(-16deg)}72%{transform:rotate(12deg)}75%{transform:rotate(-16deg)}78%{transform:rotate(10deg)}81%{transform:rotate(0)}85%,100%{transform:translateY(16px)}}
+@media (prefers-reduced-motion:reduce){ .cat-btn .cat-paw,.cat-btn .cat-head{animation:none} .cat-btn .cat-paw{transform:translateY(16px)} }
+/* ===== производительность: матовое стекло легче (меньше радиус размытия), у скрытого стекла размытия нет ===== */
+.dock{-webkit-backdrop-filter:saturate(1.5) blur(12px);backdrop-filter:saturate(1.5) blur(12px)}
+.toast{-webkit-backdrop-filter:blur(14px) saturate(170%);backdrop-filter:blur(14px) saturate(170%)}
+.toast.hide,.dock.hide{-webkit-backdrop-filter:none;backdrop-filter:none}
+@media (max-width:700px){
+  .top .seg{-webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%);background:linear-gradient(135deg,rgba(108,74,198,.84),rgba(146,108,226,.78))}
+  :root[data-theme="dark"] .top .seg{background:linear-gradient(135deg,rgba(84,58,160,.84),rgba(112,82,196,.74))}
+  .st-tab{-webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%)}
+}
+@media (max-width:700px) and (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .top .seg{background:linear-gradient(135deg,rgba(84,58,160,.84),rgba(112,82,196,.74))} }
 </style>
 </head>
 <body>
@@ -1831,6 +1851,10 @@ tr.on .st-cell{box-shadow:inset 0 0 0 1.5px var(--st)}
           <path d="M18 24.4Q19 25.4 20 24.4Q21 25.4 22 24.4" stroke="#2B2F3A" stroke-width=".9" fill="none" stroke-linecap="round"/>
           <ellipse cx="15" cy="9.8" rx="3.6" ry="1.6" fill="#fff" opacity=".28" transform="rotate(-18 15 9.8)"/>
         </g>
+        <g class="cat-paw"><path d="M26.2 31.4h6v12h-6z" fill="url(#avCoat)" stroke="#C6CFDA" stroke-width=".6"/>
+          <ellipse cx="29.2" cy="28.9" rx="4" ry="4.6" fill="url(#avFur)" stroke="#D47F3C" stroke-width=".4"/>
+          <circle cx="27.4" cy="26.4" r=".7" fill="#EE95A3"/><circle cx="29.2" cy="25.7" r=".7" fill="#EE95A3"/><circle cx="31" cy="26.4" r=".7" fill="#EE95A3"/>
+          <ellipse cx="29.2" cy="29.6" rx="1.5" ry="1.15" fill="#EE95A3"/></g>
       </svg>
     </button>
     <button class="icon-btn" id="helpBtn" type="button" aria-label="Борис подскажет, что и где" title="Борис подскажет"><svg class="ico"><use href="#i-help"/></svg></button>
@@ -3084,17 +3108,18 @@ function buildNode(spec, parent, list) {
 }
 function paint(item, t, all) {
   const { el, spec: s } = item, k = s.k || {};
+  const c = item.c || (item.c = {}), sa = (n, val) => { if (c[n] !== val) { c[n] = val; el.setAttribute(n, val); } };   // пишем в DOM только изменившееся
   const v = (p, d) => (k[p] ? keyAt(k[p], t) : (s[p] !== undefined ? s[p] : d));
   if (all || k.x || k.y || k.w || k.h || k.s || k.sy || k.r || k.rot) {
-    if (s.t === 'rect') { el.setAttribute('x', v('x', 0)); el.setAttribute('y', v('y', 0)); el.setAttribute('width', Math.max(0, v('w', 0))); el.setAttribute('height', Math.max(0, v('h', 0))); }
-    else if (s.t === 'circle') { el.setAttribute('cx', v('x', 0)); el.setAttribute('cy', v('y', 0)); el.setAttribute('r', Math.max(0, v('r', 1))); }
-    else if (s.t === 'text') { el.setAttribute('x', v('x', 0)); el.setAttribute('y', v('y', 0)); }
-    else { const sc = v('s', 1), sy = v('sy', 1), rot = v('rot', 0); el.setAttribute('transform', `translate(${v('x', 0)} ${v('y', 0)})${rot ? ` rotate(${rot})` : ''}${sc !== 1 || sy !== 1 ? ` scale(${sc} ${sc * sy})` : ''}`); }
+    if (s.t === 'rect') { sa('x', v('x', 0)); sa('y', v('y', 0)); sa('width', Math.max(0, v('w', 0))); sa('height', Math.max(0, v('h', 0))); }
+    else if (s.t === 'circle') { sa('cx', v('x', 0)); sa('cy', v('y', 0)); sa('r', Math.max(0, v('r', 1))); }
+    else if (s.t === 'text') { sa('x', v('x', 0)); sa('y', v('y', 0)); }
+    else { const sc = v('s', 1), sy = v('sy', 1), rot = v('rot', 0); sa('transform', `translate(${v('x', 0)} ${v('y', 0)})${rot ? ` rotate(${rot})` : ''}${sc !== 1 || sy !== 1 ? ` scale(${sc} ${sc * sy})` : ''}`); }
   }
-  if (all || k.o) el.setAttribute('opacity', v('o', 1));
+  if (all || k.o) sa('opacity', v('o', 1));
   if (s.t === 'text' && k.n) { const tx = num(Math.round(keyAt(k.n, t))) + (s.suffix || ''); if (el.textContent !== tx) el.textContent = tx; }
   else if (s.t === 'text' && (all || k.text)) { const tx = String(v('text', '')); if (el.textContent !== tx) el.textContent = tx; }
-  if (k.fill) { const f = v('fill'); el.style.fill = ACOL[f] || f; }
+  if (k.fill) { const f0 = v('fill'), f = ACOL[f0] || f0; if (c.fill !== f) { c.fill = f; el.style.fill = f; } }
 }
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
 function makePlayer(host, scene, opts = {}) {
@@ -3108,8 +3133,10 @@ function makePlayer(host, scene, opts = {}) {
   list.forEach((it) => paint(it, STILL, true));
   host.appendChild(svg);
   const live = list.filter((it) => it.spec.k);
-  let raf = 0, t0 = 0;
+  let raf = 0, t0 = 0, lastP = 0;
   const tick = (now) => {
+    if (!scene.once && now - lastP < 30) { raf = requestAnimationFrame(tick); return; }   // фоновые петли: ~30 кадров, плавно и вдвое легче
+    lastP = now;
     const e = now - t0, t = scene.once ? Math.min(FROM + e, UNTIL) : e % scene.dur;
     for (const it of live) paint(it, t);
     if (scene.once && FROM + e >= UNTIL) { raf = 0; if (opts.onEnd) opts.onEnd(); } else raf = requestAnimationFrame(tick);
@@ -3118,6 +3145,7 @@ function makePlayer(host, scene, opts = {}) {
     play() { if (raf || REDUCED.matches) return; t0 = performance.now(); raf = requestAnimationFrame(tick); },
     restart() { cancelAnimationFrame(raf); raf = 0; if (REDUCED.matches) { list.forEach((it) => paint(it, STILL, true)); return; } list.forEach((it) => paint(it, FROM, true)); this.play(); },
     stop() { cancelAnimationFrame(raf); raf = 0; list.forEach((it) => paint(it, STILL, true)); },
+    pause() { cancelAnimationFrame(raf); raf = 0; },
   };
 }
 
@@ -4266,12 +4294,20 @@ Object.assign(SCENES, {
   })(),
 });
 const players = new Map();
+// сцена за краем экрана не крутится: пауза, пока её не видно
+const SCENE_IO = 'IntersectionObserver' in window ? new IntersectionObserver((en) => en.forEach((x) => {
+  const p = players.get(x.target); x.target.stVis = x.isIntersecting; if (!p) return;
+  if (x.isIntersecting) { if (x.target.stWant) p.play(); } else p.pause();
+}), { rootMargin: '80px' }) : null;
 function playScene(host) {
   let p = players.get(host);
   if (!p) { const sc = SCENES[host.dataset.scene]; if (!sc) return; p = makePlayer(host, sc); players.set(host, p); }
+  host.stWant = true;
+  if (SCENE_IO && !host.stObs) { host.stObs = true; SCENE_IO.observe(host); }
+  if (host.stVis === false) return;
   p.play();
 }
-function stopScene(host) { const p = players.get(host); if (p) p.stop(); }
+function stopScene(host) { host.stWant = false; const p = players.get(host); if (p) p.stop(); }
 
 /* =====================================================================
    ПОСЕВ ПО КАТЕГОРИЯМ: по ГФ РФ, ОФС.1.2.4.0002 «Микробиологическая чистота»
@@ -6712,7 +6748,20 @@ const qzStopAnims = () => { qzPlayers.forEach((x) => x.p.stop()); qzPlayers = []
 function qzMount(root) {
   root.querySelectorAll('[data-scene]').forEach((h) => { if (h.dataset.mounted) return; const sc = SCENES[h.dataset.scene]; if (!sc) return; h.dataset.mounted = '1'; const p = makePlayer(h, sc); qzPlayers.push({ p, h }); if (!REDUCED.matches) p.restart(); });
 }
-function qzAvatar(cls = '') { const src = document.querySelector('#catBtn svg'); return `<span class="qz-av ${cls}" aria-hidden="true">${src ? src.outerHTML : ''}</span>`; }
+// копия аватара Бориса: у каждой копии свои id градиентов (одинаковые id в скрытом окне «красят» Бориса в шапке в чёрный)
+// Борис в кружке живёт, только пока кружок на экране
+function initBorisIdle() {
+  const b = $('catBtn'); if (!b || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver((en) => b.classList.toggle('cat-off', !en[0].isIntersecting)).observe(b);
+}
+function borisSVG() {
+  const src = document.querySelector('#catBtn svg'); if (!src) return '';
+  const n = borisSVG.n = (borisSVG.n || 0) + 1;
+  let h = src.outerHTML;
+  [...h.matchAll(/id="([^"]+)"/g)].map((m) => m[1]).forEach((id) => { h = h.split(`id="${id}"`).join(`id="${id}-b${n}"`).split(`#${id})`).join(`#${id}-b${n})`).split(`"#${id}"`).join(`"#${id}-b${n}"`); });
+  return h;
+}
+function qzAvatar(cls = '') { return `<span class="qz-av ${cls}" aria-hidden="true">${borisSVG()}</span>`; }
 // элементы с data-keep переживают перерисовку: Борис не начинает анимацию заново при выборе раунда или темы
 function qzRender(html, focusSel) {
   qzTipHide();
@@ -9306,12 +9355,12 @@ function stGateCheck() {
 // три ошибки: появляется Борис и отправляет на главную
 function stGateKick() {
   const card = $('stGateCard'), say = $('stBorisSay'), txt = 'Мур! Три раза мимо. Поток пока закрыт, отправляю тебя на главную.';
-  $('stBorisAv').innerHTML = (document.querySelector('#catBtn svg') || {}).outerHTML || '';
+  $('stBorisAv').innerHTML = borisSVG();
   $('stGateMsg').textContent = ''; stGateDots();
   card.classList.add('kick'); $('stBoris').hidden = false; say.textContent = '';
   let i = 0; const typer = setInterval(() => { say.textContent = txt.slice(0, ++i); if (i >= txt.length) clearInterval(typer); }, REDUCED.matches ? 0 : 26);
   setTimeout(() => card.classList.add('out'), 2900);
-  setTimeout(() => { clearInterval(typer); stTries = 0; stGateClose(() => { setTab('mbch'); window.scrollTo({ top: 0, behavior: REDUCED.matches ? 'auto' : 'smooth' }); }); }, 3300);
+  setTimeout(() => { clearInterval(typer); stTries = 0; stGateClose(() => { $('stBorisAv').innerHTML = ''; setTab('mbch'); window.scrollTo({ top: 0, behavior: REDUCED.matches ? 'auto' : 'smooth' }); }); }, 3300);
 }
 function bindStGate() {
   const d = $('stGate');
@@ -9717,12 +9766,22 @@ function init() {
       const btns = $('rows').querySelectorAll('.r-del');
       const f = btns[Math.min(idx, btns.length - 1)]; if (f) f.focus({ preventScroll: true });
     };
+    if (document.activeElement === $('count')) $('count').blur();   // иначе при выходе из поля число вернуло бы пробу
     if (REDUCED.matches || !li.animate) { done(); return; }
     li.dataset.out = '1'; li.style.pointerEvents = 'none';
-    const h = li.offsetHeight, gap = parseFloat(getComputedStyle($('rows')).rowGap) || 0;
-    li.animate([{ transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' }, { transform: 'translateX(-36%) scale(.97)', opacity: 0, filter: 'blur(2px)' }], { duration: 200, easing: 'cubic-bezier(.55,0,.8,.4)', fill: 'forwards' }).finished
-      .then(() => { li.style.overflow = 'hidden'; return li.animate([{ height: h + 'px', marginBottom: '0px', paddingTop: getComputedStyle(li).paddingTop, paddingBottom: getComputedStyle(li).paddingBottom }, { height: '0px', marginBottom: -gap + 'px', paddingTop: '0px', paddingBottom: '0px' }], { duration: 150, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'forwards' }).finished; })
-      .then(done, done);
+    // строки ниже, что видны на экране: запомним, где были, чтобы они плавно подъехали
+    const vh = window.innerHeight, below = [];
+    for (let n = li.nextElementSibling; n; n = n.nextElementSibling) { const r = n.getBoundingClientRect(); if (r.top > vh + 100) break; below.push([n.dataset.id, r.top]); }
+    li.style.willChange = 'transform, opacity';
+    li.animate([{ transform: 'translateX(0)', opacity: 1 }, { transform: 'translateX(-34%)', opacity: 0 }], { duration: 170, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' }).finished
+      .then(() => {
+        const was = new Map(below); done();
+        $('rows').querySelectorAll('.row').forEach((x) => {
+          const t = was.get(x.dataset.id); if (t == null) return;
+          const dy = t - x.getBoundingClientRect().top;
+          if (Math.abs(dy) > 1) x.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 190, easing: 'cubic-bezier(.2,.8,.2,1)' });
+        });
+      }, done);
   });
   // Итог
   $('rulesBtn').addEventListener('click', openRules);
@@ -9785,7 +9844,7 @@ function init() {
   bindStGate();
   bindQuiz();
   qzMarkCat();
-  $('seedQuizAv').innerHTML = (document.querySelector('#catBtn svg') || {}).outerHTML || '';
+  $('seedQuizAv').innerHTML = borisSVG();
   initUiSelect();
   $('seedCats').addEventListener('click', (e) => { const b = e.target.closest('[data-seed]'); if (!b) return; state.seedCat = b.dataset.seed; renderSeed(); save(); });
   document.querySelector('[role="tablist"]').addEventListener('keydown', (e) => {
@@ -9798,6 +9857,7 @@ function init() {
   bindGuide();
   initScrollUI();
   initCat();
+  initBorisIdle();
 }
 init();
 </script>
